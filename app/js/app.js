@@ -1,11 +1,11 @@
 (function() {
   'use strict';
-  angular.module("alfredApp", ["ui.router"]).config([
+  angular.module('alfredApp', ['ui.router', 'httpServices']).config([
     '$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
       $urlRouterProvider.otherwise('/view1');
       $stateProvider.state('view1', {
         url: '/view1',
-        templateUrl: 'partials/partial1.html',
+        templateUrl: 'partials/alfredView.html',
         controller: 'AlfredController'
       });
     }

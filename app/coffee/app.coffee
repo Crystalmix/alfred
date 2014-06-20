@@ -1,7 +1,8 @@
 'use strict';
 
-angular.module( "alfredApp", [
-      "ui.router"
+angular.module( 'alfredApp', [
+      'ui.router',
+      'httpServices'
 ]).
 config(['$stateProvider', '$urlRouterProvider', ($stateProvider, $urlRouterProvider) ->
 
@@ -10,7 +11,7 @@ config(['$stateProvider', '$urlRouterProvider', ($stateProvider, $urlRouterProvi
     $stateProvider
         .state('view1', {
             url: '/view1',
-            templateUrl: 'partials/partial1.html'
+            templateUrl: 'partials/alfredView.html'
             controller: 'AlfredController'
         })
     return;

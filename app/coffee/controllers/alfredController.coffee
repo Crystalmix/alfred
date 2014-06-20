@@ -1,10 +1,15 @@
 'use strict';
 
-angular.module('alfredApp')
-    .controller('AlfredController', ($scope) ->
-        $scope.ttt = [
-          'HTML5 Boilerplate',
-          'AngularJS',
-          'Karma'
-        ];
-  );
+class AlfredController
+
+    @$inject: ['$scope', 'Connections', 'Histories']
+
+    constructor: (@scope, @Connections, @Histories) ->
+        @scope.histories   = @Histories.query()
+        @scope.connections = @Connections.query()
+        @scope.isTable = yes
+
+        @scope.entities = @scope.connections;
+
+
+angular.module('alfredApp').controller 'AlfredController', AlfredController

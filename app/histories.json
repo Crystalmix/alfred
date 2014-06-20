@@ -1,0 +1,20 @@
+[
+    {
+        "hostname": "dev.crystalnix.com",
+        "id": 1,
+        "port": 22,
+        "ssh_username": "serverauditor"
+    },
+    {
+        "hostname": "54.193.87.205",
+        "id": 2,
+        "port": 22,
+        "ssh_username": "ubuntu"
+    },
+    {
+        "hostname": "54.193.87.205",
+        "id": 3,
+        "port": 22,
+        "ssh_username": "ubuntu"
+    }
+]
