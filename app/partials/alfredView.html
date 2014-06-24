@@ -1,49 +1,6 @@
 
 <div class="alfred">
-    <input type="text" tabindex="-1" autocomplete="off" class="form-control input-lg input" ng-model="query"/>
 
-
-    <div class="dropdown results infinitylist">
-
-        <ul class="list-group" ng-show="!isTable">
-            <li class="list-group-item" ng-repeat="connection in entities | filter:query">
-                <span ng-if="connection.label != '' ">
-                    {{connection.label}}
-                </span>
-                <span ng-if="connection.label == '' ">
-                    {{connection.ssh_username}}@{{connection.hostname}}
-                </span>
-            </li>
-        </ul>
-
-        <table ng-show="isTable">
-            <tbody>
-                <tr>
-                    <td class="table-data">
-                        <ul class="list-group" >
-                            <li class="list-group-item" ng-repeat="connection in connections">
-                                <span ng-if="connection.label != '' ">
-                                    {{connection.label}}
-                                </span>
-                                <span ng-if="connection.label == '' ">
-                                    {{connection.ssh_username}}@{{connection.hostname}}
-                                </span>
-                            </li>
-                        </ul>
-                    </td>
-                    <td class="table-data">
-                        <ul class="list-group" >
-                            <li class="list-group-item" ng-repeat="history in histories">
-                                <span>
-                                    {{history.ssh_username}}@{{history.hostname}}
-                                </span>
-                            </li>
-                        </ul>
-                    </td>
-                </tr>
-            </tbody>
-
-        </table>
-    </div>
+    <connection-list></connection-list>
 
 </div>

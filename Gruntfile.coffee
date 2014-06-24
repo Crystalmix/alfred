@@ -16,6 +16,9 @@ module.exports = (grunt) ->
                     "app/js/app.js": "#{coffeePath}/app.coffee"
                     "app/js/controllers/alfredController.js": "#{coffeePath}/controllers/alfredController.coffee"
                     "app/js/services/httpService.js": "#{coffeePath}/services/httpService.coffee"
+                    "app/js/directives/connectionItem.js": "#{coffeePath}/directives/connectionItem.coffee"
+                    "app/js/directives/connectionList.js": "#{coffeePath}/directives/connectionList.coffee"
+                    "app/js/directives/typeahead.js": "#{coffeePath}/directives/typeahead.coffee"
 
 
     grunt.loadNpmTasks 'grunt-contrib-watch'

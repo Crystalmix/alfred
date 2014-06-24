@@ -1,0 +1,14 @@
+
+<div class="dropdown results infinitylist">
+        <input type="text" id="alfred-input" class="form-control input-lg input" ng-model="query">
+
+        <ul class="list-group">
+            <li class="list-group-item" ng-repeat="(key,connection) in connections | filter:query" connection-item="connection" key="key">
+                <span>
+                    {{connection.label}}
+                    <i>{{key+1}}</i>
+                </span>
+            </li>
+        </ul>
+
+    </div>
