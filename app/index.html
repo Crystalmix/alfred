@@ -10,11 +10,14 @@
         <link rel="stylesheet" href="../bower_components/html5-boilerplate/css/normalize.css">
         <link rel="stylesheet" href="../bower_components/html5-boilerplate/css/main.css">
         <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.css"/>
-        <link rel="stylesheet" href="css/app.css"/>
+
 
         <script src="../bower_components/html5-boilerplate/js/vendor/modernizr-2.6.2.min.js"></script>
-        <script src="../bower_components/jquery/dist/jquery.min.js"></script>
         <script src="../bower_components/bootstrap/dist/js/bootstrap.js"></script>
+
+        <script src="../bower_components/jquery/dist/jquery.min.js"></script>
+        <link rel="stylesheet" href="css/app.css"/>
+
     </head>
     <body ng-app="alfredApp">
         <div class="container">
@@ -29,6 +32,10 @@
         <script src="../bower_components/angular-ui-router/release/angular-ui-router.js"></script>
         <script src="../bower_components/angular-resource/angular-resource.js"></script>
 
+        <script data-require="typeahead.js@*" data-semver="0.10.0" src="http://twitter.github.com/typeahead.js/releases/latest/typeahead.bundle.js"></script>
+        <script data-require="bloodhound.js@*" data-semver="0.10.0" src="http://twitter.github.com/typeahead.js/releases/latest/bloodhound.js"></script>
+
+        <script src="js/directives/connectionList.js"></script>
         <script src="js/services/httpService.js"></script>
         <script src="js/app.js"></script>
 

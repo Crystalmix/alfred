@@ -2,7 +2,8 @@
 
 angular.module( 'alfredApp', [
       'ui.router',
-      'httpServices'
+      'httpServices',
+      'connectionDirective'
 ]).
 config(['$stateProvider', '$urlRouterProvider', ($stateProvider, $urlRouterProvider) ->
 
