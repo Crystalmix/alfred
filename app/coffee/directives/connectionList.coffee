@@ -12,52 +12,8 @@ angular.module('connectionDirective', [])
         replace: yes
         transclude: yes
 
-        controller: ($scope) ->
-            $scope.connections = []
-            $scope.hide = no
-
-            @activate = (item) ->
-                $scope.active = item
-
-            @activateNextItem = () ->
-                index = $scope.connections.indexOf($scope.active);
-                this.activate($scope.connections[(index + 1) % $scope.connections.length]);
-
-            @activatePreviousItem = () ->
-                index = $scope.items.indexOf($scope.active);
-                this.activate($scope.connections[index is 0 ? $scope.connections.length - 1 : index - 1]);
-
-            @isActive = (item) ->
-                $scope.active is item
-
-            @selectActive = () ->
-                @select($scope.active)
-
-            @select = (item) ->
-                $scope.hide = yes
-                $scope.focused = yes
-                $scope.select({item:item})
-
-            $scope.isVisible = () ->
-                return !$scope.hide && ($scope.focused || $scope.mousedOver);
-
-
-
         link: (scope, element, attrs, controller) ->
-            $input = element.find('#alfred-input')
-
-            $input.bind 'keydown', (e) ->
-                if e.keyCode is 40
-                    e.preventDefault();
-                    scope.$apply(() =>
-                        do controller.activateNextItem
-                    )
-                if e.keyCode is 38
-                    e.preventDefault();
-                    scope.$apply(() =>
-                        do controller.activatePreviousItem
-                    )
-
+            console.log scope
 
 
 
