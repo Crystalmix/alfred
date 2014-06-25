@@ -15,58 +15,25 @@ angular.module("alfredDirective", [])
         scope:
             connections: "="
 
-
         controller: ($scope) ->
-            $scope.connections = []
-            $scope.hide = no
+            $scope.selectedConnection = 0
 
-            @activate = (item) ->
-                $scope.active = item
+            $scope.select = (connection, key) ->
+                $scope.setSelectedConnection(key)
+                console.log connection
 
-            this.activateNextItem = () ->
-                index = $scope.connections.indexOf($scope.active);
-                this.activate($scope.connections[(index + 1) % $scope.connections.length]);
+            $scope.setSelectedConnection = (index) ->
+                $scope.selectedConnection = index
 
-            @activatePreviousItem = () ->
-                index = $scope.items.indexOf($scope.active);
-                this.activate($scope.connections[index is 0 ? $scope.connections.length - 1 : index - 1]);
-
-            @isActive = (item) ->
-                $scope.active is item
-
-            @selectActive = () ->
-                @select($scope.active)
-
-            @select = (item) ->
-                $scope.hide = yes
-                $scope.focused = yes
-                $scope.select({item:item})
-
-            $scope.isVisible = () ->
-                return !$scope.hide && ($scope.focused || $scope.mousedOver);
+            $scope.getSelectedConnection = () ->
+                $scope.selectedConnection
 
 
         link: (scope, element, attrs) ->
             $input = element.find('#alfred-input')
 
-            scope.$watch $input, () =>
-                do setFocus
-
-            $input.bind 'keydown', (e) =>
-                if e.keyCode is 40
-                    e.preventDefault();
-                    do activateNextItem
-
-                if e.keyCode is 38
-                    e.preventDefault();
-                    do activatePreviousItem
-
             setFocus = () ->
                 do $input.focus
-                
-            setActiveItem = (key) ->
-                item = scope.connections[key]
-                item.selected = yes
 
             activateNextItem = () ->
                 current = element.find(".active")
@@ -82,63 +49,13 @@ angular.module("alfredDirective", [])
                     current.removeClass('active')
                     prev.addClass('active')
 
+            scope.$watch $input, () =>
+                do setFocus
 
-
-.directive 'connectionItem',  () ->
-        restrict: 'A'
-
-        link: (scope, element, attrs, controller) ->
-            #console.log scope
-
-            item = scope.$eval attrs.connectionItem
-            key = scope.$eval(attrs.key)
-
-            scope.$watch(
-                () ->
-                    if key is 0
-                        element.addClass('active')
-                (active) ->
-                    if (active)
-                        element.addClass('active')
-                    else
-                        element.removeClass('active')
-            )
-
-###
-.directive "alfred", () ->
-        restrict: "E"
-        templateUrl: "partials/alfred.html"
-        replace: yes
-        transclude: yes
-        scope:
-            connections: "="
-
-        controller: ($scope) ->
-            $scope.connections = []
-            $scope.hide = no
-
-            @activate = (item) ->
-                $scope.active = item
-
-            this.activateNextItem = () ->
-                index = $scope.connections.indexOf($scope.active);
-                this.activate($scope.connections[(index + 1) % $scope.connections.length]);
-
-            @activatePreviousItem = () ->
-                index = $scope.items.indexOf($scope.active);
-                this.activate($scope.connections[index is 0 ? $scope.connections.length - 1 : index - 1]);
-
-            @isActive = (item) ->
-                $scope.active is item
-
-            @selectActive = () ->
-                @select($scope.active)
-
-            @select = (item) ->
-                $scope.hide = yes
-                $scope.focused = yes
-                $scope.select({item:item})
-
-            $scope.isVisible = () ->
-                return !$scope.hide && ($scope.focused || $scope.mousedOver);
-###
+            $input.bind 'keydown', (e) =>
+                if e.keyCode is 40
+                    e.preventDefault();
+                    do activateNextItem
+                if e.keyCode is 38
+                    e.preventDefault();
+                    do activatePreviousItem
