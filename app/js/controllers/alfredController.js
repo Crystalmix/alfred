@@ -23,44 +23,6 @@
           return _results;
         };
       })(this));
-
-      /*
-      numbers = new Bloodhound({
-          datumTokenizer: (d) ->
-               return Bloodhound.tokenizers.whitespace(d.label)
-          queryTokenizer: Bloodhound.tokenizers.whitespace,
-          local: [
-              {
-                label: "digital"
-              },
-              {
-                label: "ubuntu@54.193.87.205"
-              },
-              {
-                label: "dev.crystalnix.com"
-              },
-              {
-                label: "test"
-              },
-              {
-                label: "dev.sa"
-              },
-              {
-                label: "zhulduz@localhost"
-              }
-          ]
-      })
-      
-      numbers.initialize();
-      
-      @scope.connections = {
-          displayKey: 'label',
-          source: numbers.ttAdapter()
-      };
-      @scope.exampleOptions =
-          editable: false
-       */
-      this.scope.entities = this.scope.connections;
       this.scope.query = null;
     }
 
