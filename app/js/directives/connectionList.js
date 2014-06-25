@@ -1,6 +1,6 @@
 (function() {
   'use strict';
-  angular.module("connectionDirective", []).directive("connectionList", function() {
+  angular.module("alfredDirective", []).directive("connectionList", function() {
     return {
       restrict: "E",
       templateUrl: "partials/connectionList.html",
@@ -44,27 +44,52 @@
           return !$scope.hide && ($scope.focused || $scope.mousedOver);
         };
       },
-      link: function(scope, element, attrs, controller) {
-        var $input;
+      link: function(scope, element, attrs) {
+        var $input, activateNextItem, activatePreviousItem, setActiveItem, setFocus;
         $input = element.find('#alfred-input');
-        return $input.bind('keydown', function(e) {
-          if (e.keyCode === 40) {
-            e.preventDefault();
-            scope.$apply((function(_this) {
-              return function() {
-                return controller.activateNextItem();
-              };
-            })(this));
+        scope.$watch($input, (function(_this) {
+          return function() {
+            return setFocus();
+          };
+        })(this));
+        $input.bind('keydown', (function(_this) {
+          return function(e) {
+            if (e.keyCode === 40) {
+              e.preventDefault();
+              activateNextItem();
+            }
+            if (e.keyCode === 38) {
+              e.preventDefault();
+              return activatePreviousItem();
+            }
+          };
+        })(this));
+        setFocus = function() {
+          return $input.focus();
+        };
+        setActiveItem = function(key) {
+          var item;
+          item = scope.connections[key];
+          return item.selected = true;
+        };
+        activateNextItem = function() {
+          var current, next;
+          current = element.find(".active");
+          next = element.find(".active").next();
+          if (next.length) {
+            current.removeClass('active');
+            return next.addClass('active');
           }
-          if (e.keyCode === 38) {
-            e.preventDefault();
-            return scope.$apply((function(_this) {
-              return function() {
-                return controller.activatePreviousItem();
-              };
-            })(this));
+        };
+        return activatePreviousItem = function() {
+          var current, prev;
+          current = element.find(".active");
+          prev = element.find(".active").prev();
+          if (prev.length) {
+            current.removeClass('active');
+            return prev.addClass('active');
           }
-        });
+        };
       }
     };
   }).directive('connectionItem', function() {
@@ -85,21 +110,48 @@
             return element.removeClass('active');
           }
         });
-
-        /*element.bind('mouseenter', (e) =>
-            scope.$apply(() ->
-                controller.activate(item);
-            );
-        );
-        
-        element.bind('click', (e) =>
-            scope.$apply(() ->
-                 controller.select(item);
-            );
-        );
-         */
       }
     };
   });
+
+
+  /*
+  .directive "alfred", () ->
+          restrict: "E"
+          templateUrl: "partials/alfred.html"
+          replace: yes
+          transclude: yes
+          scope:
+              connections: "="
+  
+          controller: ($scope) ->
+              $scope.connections = []
+              $scope.hide = no
+  
+              @activate = (item) ->
+                  $scope.active = item
+  
+              this.activateNextItem = () ->
+                  index = $scope.connections.indexOf($scope.active);
+                  this.activate($scope.connections[(index + 1) % $scope.connections.length]);
+  
+              @activatePreviousItem = () ->
+                  index = $scope.items.indexOf($scope.active);
+                  this.activate($scope.connections[index is 0 ? $scope.connections.length - 1 : index - 1]);
+  
+              @isActive = (item) ->
+                  $scope.active is item
+  
+              @selectActive = () ->
+                  @select($scope.active)
+  
+              @select = (item) ->
+                  $scope.hide = yes
+                  $scope.focused = yes
+                  $scope.select({item:item})
+  
+              $scope.isVisible = () ->
+                  return !$scope.hide && ($scope.focused || $scope.mousedOver);
+   */
 
 }).call(this);

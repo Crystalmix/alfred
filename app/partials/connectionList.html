@@ -2,7 +2,7 @@
     <input type="text" id="alfred-input" class="form-control input-lg input" ng-model="query">
     <div class="dropdown results infinitylist">
         <ul class="list-group">
-            <li class="list-group-item" ng-repeat="(key,connection) in connections | filter:query" connection-item="connection" key="key">
+            <li class="list-group-item connection" ng-repeat="(key,connection) in connections | filter:query" connection-item="connection" key="key">
                 <span>
                     {{connection.label}}
                     <i>{{key+1}}</i>
