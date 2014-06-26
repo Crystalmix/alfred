@@ -1,17 +1,19 @@
 <div class="alfred">
     <input type="text" id="alfred-input" class="form-control input-lg input" ng-model="query">
-    <div class="dropdown results infinitylist">
-        <ul class="list-group">
-            <li ng-repeat="(key,connection) in connections | filter:query"
-                ng-click="select(connection, key)"
-                connection-item="connection"
-                key="{{key}}"
-                ng-class="{ active: (key === selectedConnection) }">
-                <span>
-                    {{connection.label}}
-                    <i>{{key+1}}</i>
-                </span>
-            </li>
-        </ul>
-    </div>
+        <div id="fixed" when-scrolled="loadMore()" width-cell="42">
+            <ul class="list-group">
+                <li ng-repeat="(key,connection) in connections | filter:query"
+                    id="{{key}}"
+                    ng-click="select(connection, key)"
+                    connection-item="connection"
+                    key="{{key}}"
+                    ng-class="{ active: (key === selectedConnection) }">
+                    <span>
+                        {{connection.label}}
+                        <i>{{key+1}}</i>
+                    </span>
+                </li>
+            </ul>
+
+        </div>
 </div>

@@ -14,8 +14,15 @@ angular.module("alfredDirective", [])
         transclude: yes
         scope:
             connections: "="
+            amount: "="
 
+        # subConnetions is a visible array
         controller: ($scope) ->
+            $scope.counter = 0;
+
+            $scope.subConnections = $scope.connections.slice($scope.counter, $scope.step)
+            $scope.counter += 5;
+
             $scope.selectedConnection = 0
 
             $scope.select = (connection, key) ->
@@ -28,6 +35,22 @@ angular.module("alfredDirective", [])
             $scope.getSelectedConnection = () ->
                 $scope.selectedConnection
 
+            $scope.loadMore = (params) ->
+                console.log $scope.subConnections
+                if $scope.counter < $scope.connections.length
+                    $scope.subConnections = $scope.subConnections.slice(0)
+                    $scope.subConnections.push($scope.connections[$scope.counter])
+                    $scope.counter += 1;
+
+            $scope.loadUp = () ->
+                console.log true
+            $scope.loadDown = () ->
+                console.log true
+
+
+            @somethingDo = () ->
+                console.log '@somethingDo'
+
 
         link: (scope, element, attrs) ->
             $input = element.find('#alfred-input')
@@ -36,6 +59,8 @@ angular.module("alfredDirective", [])
                 do $input.focus
 
             activateNextItem = () ->
+                index = scope.getSelectedConnection() + 1;
+                console.log index
                 current = element.find(".active")
                 next = element.find(".active").next()
                 if next.length
@@ -59,3 +84,14 @@ angular.module("alfredDirective", [])
                 if e.keyCode is 38
                     e.preventDefault();
                     do activatePreviousItem
+
+
+.directive "connectionItem",  () ->
+        restrict: "A"
+        require: "^connectionList"
+        link: (scope, element, attrs, connectionListCtrl) ->
+            element.bind 'mouseleave', () ->
+                #do connectionListCtrl.somethingDo
+
+
+

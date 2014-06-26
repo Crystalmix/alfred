@@ -3,7 +3,8 @@
 angular.module( 'alfredApp', [
       'ui.router',
       'httpServices',
-      'alfredDirective'
+      'alfredDirective',
+      'scroll'
 ]).
 config(['$stateProvider', '$urlRouterProvider', ($stateProvider, $urlRouterProvider) ->
 

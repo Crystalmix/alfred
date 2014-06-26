@@ -7,9 +7,13 @@
       replace: true,
       transclude: true,
       scope: {
-        connections: "="
+        connections: "=",
+        amount: "="
       },
       controller: function($scope) {
+        $scope.counter = 0;
+        $scope.subConnections = $scope.connections.slice($scope.counter, $scope.step);
+        $scope.counter += 5;
         $scope.selectedConnection = 0;
         $scope.select = function(connection, key) {
           $scope.setSelectedConnection(key);
@@ -18,8 +22,25 @@
         $scope.setSelectedConnection = function(index) {
           return $scope.selectedConnection = index;
         };
-        return $scope.getSelectedConnection = function() {
+        $scope.getSelectedConnection = function() {
           return $scope.selectedConnection;
+        };
+        $scope.loadMore = function(params) {
+          console.log($scope.subConnections);
+          if ($scope.counter < $scope.connections.length) {
+            $scope.subConnections = $scope.subConnections.slice(0);
+            $scope.subConnections.push($scope.connections[$scope.counter]);
+            return $scope.counter += 1;
+          }
+        };
+        $scope.loadUp = function() {
+          return console.log(true);
+        };
+        $scope.loadDown = function() {
+          return console.log(true);
+        };
+        return this.somethingDo = function() {
+          return console.log('@somethingDo');
         };
       },
       link: function(scope, element, attrs) {
@@ -29,7 +50,9 @@
           return $input.focus();
         };
         activateNextItem = function() {
-          var current, next;
+          var current, index, next;
+          index = scope.getSelectedConnection() + 1;
+          console.log(index);
           current = element.find(".active");
           next = element.find(".active").next();
           if (next.length) {
@@ -63,6 +86,14 @@
             }
           };
         })(this));
+      }
+    };
+  }).directive("connectionItem", function() {
+    return {
+      restrict: "A",
+      require: "^connectionList",
+      link: function(scope, element, attrs, connectionListCtrl) {
+        return element.bind('mouseleave', function() {});
       }
     };
   });
