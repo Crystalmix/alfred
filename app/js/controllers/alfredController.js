@@ -6,6 +6,7 @@
     AlfredController.$inject = ['$scope', 'Connections', 'Histories'];
 
     function AlfredController(scope, Connections, Histories) {
+      var connection, _i, _len, _ref;
       this.scope = scope;
       this.Connections = Connections;
       this.Histories = Histories;
@@ -159,6 +160,11 @@
           "updated_at": "2014-06-20T05:24:50"
         }
       ];
+      _ref = this.scope.connections;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        connection = _ref[_i];
+        this.modifiedConnection(connection);
+      }
     }
 
     AlfredController.prototype.modifiedConnection = function(connection) {

@@ -1,26 +1,34 @@
 (function() {
   angular.module('scroll', []).directive('whenScrolled', function() {
-    return function(scope, element, attrs) {
-      var width;
-      width = scope.$eval(attrs.widthCell);
-      return element.bind('mousewheel', function(event) {
-        var st;
-        st = $(this).scrollTop();
-        if (event.originalEvent.wheelDelta < 0) {
-          element.scrollTop(st + width);
-          console.log("Down");
-          scope.loadDown();
-        } else {
-          element.scrollTop(st - width);
-          console.log("Up");
-          scope.loadUp();
-        }
-        return event.preventDefault();
+    return {
+      restrict: 'A',
+      link: function(scope, element, attrs) {
 
-        /*if (raw.scrollTop + raw.offsetHeight >= raw.scrollHeight)
-            scope.$apply(attrs.whenScrolled)
+        /*
+            Set element height
          */
-      });
+        var amountOfCell, widthCell;
+        amountOfCell = scope.amount;
+        widthCell = scope.$eval(attrs.widthCell);
+        element.height(amountOfCell * widthCell);
+        scope.setHeight = function() {
+          return {
+            height: widthCell + 'px'
+          };
+        };
+        return element.bind('mousewheel', function(event) {
+          var st;
+          st = element.scrollTop();
+          if (event.originalEvent.wheelDelta < 0) {
+            scope.loadDown();
+            element.scrollTop(st + widthCell);
+          } else {
+            scope.loadUp();
+            element.scrollTop(st - widthCell);
+          }
+          return event.preventDefault();
+        });
+      }
     };
   });
 

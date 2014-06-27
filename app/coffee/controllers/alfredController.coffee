@@ -157,6 +157,7 @@ class AlfredController
               "updated_at": "2014-06-20T05:24:50"
             }
         ]
+        @modifiedConnection connection for connection in @scope.connections
 
     modifiedConnection: (connection) ->
         if not connection.label

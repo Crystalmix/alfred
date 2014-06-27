@@ -1,23 +1,30 @@
 angular.module('scroll', [])
 
 .directive('whenScrolled', () ->
-    (scope, element, attrs) ->
+        restrict: 'A'
 
-        width = scope.$eval(attrs.widthCell)
+        link: (scope, element, attrs) ->
 
-        element.bind('mousewheel', (event) ->
-            st = $(this).scrollTop();
-            if(event.originalEvent.wheelDelta < 0)
-                element.scrollTop(st + width)
-                console.log "Down"
-                do scope.loadDown
-            else
-                element.scrollTop(st - width)
-                console.log "Up"
-                do scope.loadUp
-            event.preventDefault();
-            ###if (raw.scrollTop + raw.offsetHeight >= raw.scrollHeight)
-                scope.$apply(attrs.whenScrolled)###
-        )
+            ###
+                Set element height
+            ###
+            amountOfCell = scope.amount
+            widthCell = scope.$eval(attrs.widthCell)
+            #element.height((amountOfCell-1) * (widthCell-1) + widthCell)
+            #
+            element.height(amountOfCell * widthCell)
 
+            scope.setHeight = () ->
+                height: widthCell + 'px'
+
+            element.bind('mousewheel', (event) ->
+                st = element.scrollTop();
+                if(event.originalEvent.wheelDelta < 0)
+                    do scope.loadDown
+                    element.scrollTop(st + widthCell)
+                else
+                    do scope.loadUp
+                    element.scrollTop(st - widthCell)
+                event.preventDefault();
+            )
 )

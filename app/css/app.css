@@ -57,25 +57,22 @@
     transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
 }
 
+li.active {
+    background-color: #9FB6CD;
+}
 li {
     position: relative;
     display: block;
-    margin-bottom: -1px;
+    padding: 10px 15px;
+    #margin-bottom: -1px;
     background-color: #fff;
     border: 1px solid #ddd;
-}
-li.active {
-    background-color: gray;
-}
-li {
-  position: relative;
-  display: block;
-  padding: 10px 15px;
-  margin-bottom: -1px;
-  background-color: #fff;
-  border: 1px solid #ddd;
 }
 #fixed {
     height: 206px;
     overflow: auto;
+}
+.list-group {
+    padding-left: 0;
+    margin-bottom: 0;
 }

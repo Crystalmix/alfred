@@ -12,8 +12,8 @@
       },
       controller: function($scope) {
         $scope.counter = 0;
-        $scope.subConnections = $scope.connections.slice($scope.counter, $scope.step);
-        $scope.counter += 5;
+        $scope.subConnections = $scope.connections.slice($scope.counter, $scope.amount);
+        $scope.counter += $scope.amount;
         $scope.selectedConnection = 0;
         $scope.select = function(connection, key) {
           $scope.setSelectedConnection(key);
@@ -25,19 +25,23 @@
         $scope.getSelectedConnection = function() {
           return $scope.selectedConnection;
         };
-        $scope.loadMore = function(params) {
-          console.log($scope.subConnections);
-          if ($scope.counter < $scope.connections.length) {
-            $scope.subConnections = $scope.subConnections.slice(0);
-            $scope.subConnections.push($scope.connections[$scope.counter]);
-            return $scope.counter += 1;
-          }
-        };
+
+        /*$scope.loadMore = (params) ->
+            console.log $scope.subConnections
+            if $scope.counter < $scope.connections.length
+                $scope.subConnections = $scope.subConnections.slice(0)
+                $scope.subConnections.push($scope.connections[$scope.counter])
+                $scope.counter += 1;
+         */
         $scope.loadUp = function() {
           return console.log(true);
         };
         $scope.loadDown = function() {
-          return console.log(true);
+          if ($scope.counter < $scope.connections.length) {
+            $scope.subConnections.shift();
+            $scope.subConnections.push($scope.connections[$scope.counter]);
+            return $scope.counter += 1;
+          }
         };
         return this.somethingDo = function() {
           return console.log('@somethingDo');
