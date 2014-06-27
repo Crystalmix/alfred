@@ -10,21 +10,16 @@ angular.module('scroll', [])
             ###
             amountOfCell = scope.amount
             widthCell = scope.$eval(attrs.widthCell)
-            #element.height((amountOfCell-1) * (widthCell-1) + widthCell)
-            #
-            element.height(amountOfCell * widthCell)
+            element.height amountOfCell * widthCell + 1
 
             scope.setHeight = () ->
                 height: widthCell + 'px'
 
             element.bind('mousewheel', (event) ->
-                st = element.scrollTop();
                 if(event.originalEvent.wheelDelta < 0)
-                    do scope.loadDown
-                    element.scrollTop(st + widthCell)
+                    scope.$apply scope.loadDown
                 else
-                    do scope.loadUp
-                    element.scrollTop(st - widthCell)
+                    scope.$apply scope.loadUp
                 event.preventDefault();
             )
 )

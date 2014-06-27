@@ -18,11 +18,8 @@ angular.module("alfredDirective", [])
 
         # subConnetions is a visible array
         controller: ($scope) ->
-            $scope.counter = 0;
-
-            $scope.subConnections = $scope.connections.slice($scope.counter, $scope.amount)
-            $scope.counter += $scope.amount;
-
+            $scope.from = 0;
+            $scope.offset = $scope.amount;
             $scope.selectedConnection = 0
 
             $scope.select = (connection, key) ->
@@ -35,23 +32,15 @@ angular.module("alfredDirective", [])
             $scope.getSelectedConnection = () ->
                 $scope.selectedConnection
 
-            ###$scope.loadMore = (params) ->
-                console.log $scope.subConnections
-                if $scope.counter < $scope.connections.length
-                    $scope.subConnections = $scope.subConnections.slice(0)
-                    $scope.subConnections.push($scope.connections[$scope.counter])
-                    $scope.counter += 1;
-            ###
-
             $scope.loadUp = () ->
-                console.log true
+                if $scope.connections[$scope.from-1]
+                    --$scope.from
+                    --$scope.offset
 
             $scope.loadDown = () ->
-                if $scope.counter < $scope.connections.length
-                    do $scope.subConnections.shift
-                    $scope.subConnections.push($scope.connections[$scope.counter])
-                    $scope.counter += 1;
-
+                if $scope.connections[$scope.offset]
+                    ++$scope.from
+                    ++$scope.offset
 
             @somethingDo = () ->
                 console.log '@somethingDo'
@@ -79,6 +68,11 @@ angular.module("alfredDirective", [])
                     current.removeClass('active')
                     prev.addClass('active')
 
+            createCounter = () ->
+                scope.counter = []
+                for i in [1 .. scope.amount]
+                    scope.counter.push i
+
             scope.$watch $input, () =>
                 do setFocus
 
@@ -90,6 +84,8 @@ angular.module("alfredDirective", [])
                     e.preventDefault();
                     do activatePreviousItem
 
+            do createCounter
+
 
 .directive "connectionItem",  () ->
         restrict: "A"
@@ -99,4 +95,6 @@ angular.module("alfredDirective", [])
                 #do connectionListCtrl.somethingDo
 
 
-
+.filter 'truncate', () ->
+        (input, arg1, arg2) ->
+            return @.connections.slice arg1, arg2

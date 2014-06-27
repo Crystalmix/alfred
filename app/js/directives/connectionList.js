@@ -11,9 +11,8 @@
         amount: "="
       },
       controller: function($scope) {
-        $scope.counter = 0;
-        $scope.subConnections = $scope.connections.slice($scope.counter, $scope.amount);
-        $scope.counter += $scope.amount;
+        $scope.from = 0;
+        $scope.offset = $scope.amount;
         $scope.selectedConnection = 0;
         $scope.select = function(connection, key) {
           $scope.setSelectedConnection(key);
@@ -25,22 +24,16 @@
         $scope.getSelectedConnection = function() {
           return $scope.selectedConnection;
         };
-
-        /*$scope.loadMore = (params) ->
-            console.log $scope.subConnections
-            if $scope.counter < $scope.connections.length
-                $scope.subConnections = $scope.subConnections.slice(0)
-                $scope.subConnections.push($scope.connections[$scope.counter])
-                $scope.counter += 1;
-         */
         $scope.loadUp = function() {
-          return console.log(true);
+          if ($scope.connections[$scope.from - 1]) {
+            --$scope.from;
+            return --$scope.offset;
+          }
         };
         $scope.loadDown = function() {
-          if ($scope.counter < $scope.connections.length) {
-            $scope.subConnections.shift();
-            $scope.subConnections.push($scope.connections[$scope.counter]);
-            return $scope.counter += 1;
+          if ($scope.connections[$scope.offset]) {
+            ++$scope.from;
+            return ++$scope.offset;
           }
         };
         return this.somethingDo = function() {
@@ -48,7 +41,7 @@
         };
       },
       link: function(scope, element, attrs) {
-        var $input, activateNextItem, activatePreviousItem, setFocus;
+        var $input, activateNextItem, activatePreviousItem, createCounter, setFocus;
         $input = element.find('#alfred-input');
         setFocus = function() {
           return $input.focus();
@@ -73,12 +66,21 @@
             return prev.addClass('active');
           }
         };
+        createCounter = function() {
+          var i, _i, _ref, _results;
+          scope.counter = [];
+          _results = [];
+          for (i = _i = 1, _ref = scope.amount; 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
+            _results.push(scope.counter.push(i));
+          }
+          return _results;
+        };
         scope.$watch($input, (function(_this) {
           return function() {
             return setFocus();
           };
         })(this));
-        return $input.bind('keydown', (function(_this) {
+        $input.bind('keydown', (function(_this) {
           return function(e) {
             if (e.keyCode === 40) {
               e.preventDefault();
@@ -90,6 +92,7 @@
             }
           };
         })(this));
+        return createCounter();
       }
     };
   }).directive("connectionItem", function() {
@@ -99,6 +102,10 @@
       link: function(scope, element, attrs, connectionListCtrl) {
         return element.bind('mouseleave', function() {});
       }
+    };
+  }).filter('truncate', function() {
+    return function(input, arg1, arg2) {
+      return this.connections.slice(arg1, arg2);
     };
   });
 
