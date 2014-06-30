@@ -17,8 +17,6 @@
         amount: "="
       },
       controller: function($scope) {
-        $scope.from = 0;
-        $scope.offset = $scope.amount;
         $scope.selectedConnection = 0;
         $scope.select = function(connection, key) {
           $scope.setSelectedConnection(key);
@@ -32,24 +30,28 @@
         };
         $scope.loadUp = function() {
           if ($scope.filteredConnections[$scope.from - 1]) {
-            console.log($scope.filteredConnections);
             --$scope.from;
             return --$scope.offset;
           }
         };
         $scope.loadDown = function() {
           if ($scope.filteredConnections[$scope.offset]) {
-            console.log($scope.filteredConnections);
             ++$scope.from;
             return ++$scope.offset;
           }
         };
-        return this.somethingDo = function() {
+        this.somethingDo = function() {
           return console.log('@somethingDo');
         };
+        $scope.initFromOffset = function() {
+          $scope.from = 0;
+          return $scope.offset = $scope.amount;
+        };
+        return $scope.initFromOffset();
       },
       link: function(scope, element, attrs) {
         var $input, activateNextItem, activatePreviousItem, setFocus;
+        scope.prevquery = scope.query = null;
         $input = element.find('#alfred-input');
         setFocus = function() {
           return $input.focus();
@@ -100,6 +102,10 @@
     '$filter', function($filter) {
       return function(input, query, arg1, arg2) {
         var filterFilter;
+        if (this.prevquery !== this.query) {
+          this.initFromOffset();
+          this.prevquery = this.query;
+        }
         filterFilter = $filter('filter');
         this.filteredConnections = filterFilter(this.connections, query);
         return this.filteredConnections.slice(arg1, arg2);

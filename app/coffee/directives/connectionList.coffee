@@ -24,8 +24,6 @@ angular.module("alfredDirective", [])
 
         # subConnetions is a visible array
         controller: ($scope) ->
-            $scope.from = 0;
-            $scope.offset = $scope.amount;
 
             $scope.selectedConnection = 0
 
@@ -41,21 +39,27 @@ angular.module("alfredDirective", [])
 
             $scope.loadUp = () ->
                 if $scope.filteredConnections[$scope.from-1]
-                    console.log $scope.filteredConnections
                     --$scope.from
                     --$scope.offset
 
             $scope.loadDown = () ->
                 if $scope.filteredConnections[$scope.offset]
-                    console.log $scope.filteredConnections
                     ++$scope.from
                     ++$scope.offset
 
             @somethingDo = () ->
                 console.log '@somethingDo'
 
+            $scope.initFromOffset = () ->
+                $scope.from = 0;
+                $scope.offset = $scope.amount
+
+            do $scope.initFromOffset
+
 
         link: (scope, element, attrs) ->
+            scope.prevquery = scope.query = null
+
             $input = element.find('#alfred-input')
 
             setFocus = () ->
@@ -98,6 +102,9 @@ angular.module("alfredDirective", [])
 
 .filter 'filterConnections', ['$filter', ($filter) ->
         (input, query, arg1, arg2) ->
+            if @prevquery isnt @query
+                @initFromOffset()
+                @prevquery = @query
             filterFilter = $filter('filter')
             @filteredConnections = filterFilter @connections, query
             return @filteredConnections.slice arg1, arg2
