@@ -7,7 +7,7 @@
                     ng-click="select(connection, key)"
                     connection-item="connection"
                     key="{{key}}"
-                    ng-class="{ active: (key === selectedConnection) }"
+                    ng-class="{ active: (key === selectedIndex) }"
                     ng-style="setHeight()">
                     <span>
                         {{connection.label}}

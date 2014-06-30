@@ -17,16 +17,16 @@
         amount: "="
       },
       controller: function($scope) {
-        $scope.selectedConnection = 0;
+        $scope.selectedIndex = 0;
         $scope.select = function(connection, key) {
           $scope.setSelectedConnection(key);
           return console.log(connection);
         };
         $scope.setSelectedConnection = function(index) {
-          return $scope.selectedConnection = index;
+          return $scope.selectedIndex = index;
         };
         $scope.getSelectedConnection = function() {
-          return $scope.selectedConnection;
+          return $scope.selectedIndex;
         };
         $scope.loadUp = function() {
           if ($scope.filteredConnections[$scope.from - 1]) {
@@ -56,38 +56,53 @@
         setFocus = function() {
           return $input.focus();
         };
-        activateNextItem = function() {
-          var current, next;
-          current = element.find(".active");
-          next = element.find(".active").next();
-          if (next.length) {
-            current.removeClass('active');
-            return next.addClass('active');
-          }
-        };
-        activatePreviousItem = function() {
-          var current, prev;
-          current = element.find(".active");
-          prev = element.find(".active").prev();
-          if (prev.length) {
-            current.removeClass('active');
-            return prev.addClass('active');
-          }
-        };
-        return scope.$watch($input, (function(_this) {
+        scope.$watch($input, (function(_this) {
           return function() {
             return setFocus();
           };
         })(this));
-
-        /*$input.bind 'keydown', (e) =>
-            if e.keyCode is 40
-                e.preventDefault();
-                do activateNextItem
-            if e.keyCode is 38
-                e.preventDefault();
-                do activatePreviousItem
-         */
+        $input.bind('keydown', (function(_this) {
+          return function(e) {
+            if (e.keyCode === 40) {
+              e.preventDefault();
+              activateNextItem();
+            }
+            if (e.keyCode === 38) {
+              e.preventDefault();
+              return activatePreviousItem();
+            }
+          };
+        })(this));
+        activateNextItem = function() {
+          var current, currentIndex, next;
+          current = element.find(".active");
+          next = current.next();
+          currentIndex = scope.getSelectedConnection();
+          if (next.length === 0) {
+            scope.$apply(scope.loadDown);
+            next = current.next();
+            if (next.length !== 0) {
+              return scope.$apply(scope.setSelectedConnection(currentIndex));
+            }
+          } else {
+            return scope.$apply(scope.setSelectedConnection(++currentIndex));
+          }
+        };
+        return activatePreviousItem = function() {
+          var current, currentIndex, prev;
+          current = element.find(".active");
+          prev = current.prev();
+          currentIndex = scope.getSelectedConnection();
+          if (prev.length === 0) {
+            scope.$apply(scope.loadUp);
+            prev = current.prev();
+            if (prev.length !== 0) {
+              return scope.$apply(scope.setSelectedConnection(currentIndex));
+            }
+          } else {
+            return scope.$apply(scope.setSelectedConnection(--currentIndex));
+          }
+        };
       }
     };
   }).directive("connectionItem", function() {
@@ -95,18 +110,18 @@
       restrict: "A",
       require: "^connectionList",
       link: function(scope, element, attrs, connectionListCtrl) {
-        return element.bind('mouseleave', function() {});
+        return element.bind("mouseleave", function() {});
       }
     };
-  }).filter('filterConnections', [
-    '$filter', function($filter) {
+  }).filter("filterConnections", [
+    "$filter", function($filter) {
       return function(input, query, arg1, arg2) {
         var filterFilter;
         if (this.prevquery !== this.query) {
           this.initFromOffset();
           this.prevquery = this.query;
         }
-        filterFilter = $filter('filter');
+        filterFilter = $filter("filter");
         this.filteredConnections = filterFilter(this.connections, query);
         return this.filteredConnections.slice(arg1, arg2);
       };
