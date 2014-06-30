@@ -76,3 +76,6 @@ li {
     padding-left: 0;
     margin-bottom: 0;
 }
+i {
+    float: right;
+}

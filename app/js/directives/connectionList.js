@@ -1,5 +1,11 @@
 (function() {
   'use strict';
+
+  /*
+      connections         --  array of all hosts
+      filteredConnections --  array of queried hosts
+      subConnections      --  array of visible hosts
+   */
   angular.module("alfredDirective", []).directive("connectionList", function() {
     return {
       restrict: "E",
@@ -25,13 +31,15 @@
           return $scope.selectedConnection;
         };
         $scope.loadUp = function() {
-          if ($scope.connections[$scope.from - 1]) {
+          if ($scope.filteredConnections[$scope.from - 1]) {
+            console.log($scope.filteredConnections);
             --$scope.from;
             return --$scope.offset;
           }
         };
         $scope.loadDown = function() {
-          if ($scope.connections[$scope.offset]) {
+          if ($scope.filteredConnections[$scope.offset]) {
+            console.log($scope.filteredConnections);
             ++$scope.from;
             return ++$scope.offset;
           }
@@ -41,15 +49,13 @@
         };
       },
       link: function(scope, element, attrs) {
-        var $input, activateNextItem, activatePreviousItem, createCounter, setFocus;
+        var $input, activateNextItem, activatePreviousItem, setFocus;
         $input = element.find('#alfred-input');
         setFocus = function() {
           return $input.focus();
         };
         activateNextItem = function() {
-          var current, index, next;
-          index = scope.getSelectedConnection() + 1;
-          console.log(index);
+          var current, next;
           current = element.find(".active");
           next = element.find(".active").next();
           if (next.length) {
@@ -66,33 +72,20 @@
             return prev.addClass('active');
           }
         };
-        createCounter = function() {
-          var i, _i, _ref, _results;
-          scope.counter = [];
-          _results = [];
-          for (i = _i = 1, _ref = scope.amount; 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
-            _results.push(scope.counter.push(i));
-          }
-          return _results;
-        };
-        scope.$watch($input, (function(_this) {
+        return scope.$watch($input, (function(_this) {
           return function() {
             return setFocus();
           };
         })(this));
-        $input.bind('keydown', (function(_this) {
-          return function(e) {
-            if (e.keyCode === 40) {
-              e.preventDefault();
-              activateNextItem();
-            }
-            if (e.keyCode === 38) {
-              e.preventDefault();
-              return activatePreviousItem();
-            }
-          };
-        })(this));
-        return createCounter();
+
+        /*$input.bind 'keydown', (e) =>
+            if e.keyCode is 40
+                e.preventDefault();
+                do activateNextItem
+            if e.keyCode is 38
+                e.preventDefault();
+                do activatePreviousItem
+         */
       }
     };
   }).directive("connectionItem", function() {
@@ -103,10 +96,15 @@
         return element.bind('mouseleave', function() {});
       }
     };
-  }).filter('truncate', function() {
-    return function(input, arg1, arg2) {
-      return this.connections.slice(arg1, arg2);
-    };
-  });
+  }).filter('filterConnections', [
+    '$filter', function($filter) {
+      return function(input, query, arg1, arg2) {
+        var filterFilter;
+        filterFilter = $filter('filter');
+        this.filteredConnections = filterFilter(this.connections, query);
+        return this.filteredConnections.slice(arg1, arg2);
+      };
+    }
+  ]);
 
 }).call(this);

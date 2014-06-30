@@ -4,8 +4,14 @@
 # histories = histories
 #
 
-angular.module("alfredDirective", [])
 
+###
+    connections         --  array of all hosts
+    filteredConnections --  array of queried hosts
+    subConnections      --  array of visible hosts
+###
+
+angular.module("alfredDirective", [])
 
 .directive "connectionList",  () ->
         restrict: "E"
@@ -20,6 +26,7 @@ angular.module("alfredDirective", [])
         controller: ($scope) ->
             $scope.from = 0;
             $scope.offset = $scope.amount;
+
             $scope.selectedConnection = 0
 
             $scope.select = (connection, key) ->
@@ -33,12 +40,14 @@ angular.module("alfredDirective", [])
                 $scope.selectedConnection
 
             $scope.loadUp = () ->
-                if $scope.connections[$scope.from-1]
+                if $scope.filteredConnections[$scope.from-1]
+                    console.log $scope.filteredConnections
                     --$scope.from
                     --$scope.offset
 
             $scope.loadDown = () ->
-                if $scope.connections[$scope.offset]
+                if $scope.filteredConnections[$scope.offset]
+                    console.log $scope.filteredConnections
                     ++$scope.from
                     ++$scope.offset
 
@@ -53,8 +62,6 @@ angular.module("alfredDirective", [])
                 do $input.focus
 
             activateNextItem = () ->
-                index = scope.getSelectedConnection() + 1;
-                console.log index
                 current = element.find(".active")
                 next = element.find(".active").next()
                 if next.length
@@ -68,23 +75,17 @@ angular.module("alfredDirective", [])
                     current.removeClass('active')
                     prev.addClass('active')
 
-            createCounter = () ->
-                scope.counter = []
-                for i in [1 .. scope.amount]
-                    scope.counter.push i
-
             scope.$watch $input, () =>
                 do setFocus
 
-            $input.bind 'keydown', (e) =>
+            ###$input.bind 'keydown', (e) =>
                 if e.keyCode is 40
                     e.preventDefault();
                     do activateNextItem
                 if e.keyCode is 38
                     e.preventDefault();
                     do activatePreviousItem
-
-            do createCounter
+            ###
 
 
 .directive "connectionItem",  () ->
@@ -95,6 +96,9 @@ angular.module("alfredDirective", [])
                 #do connectionListCtrl.somethingDo
 
 
-.filter 'truncate', () ->
-        (input, arg1, arg2) ->
-            return @.connections.slice arg1, arg2
+.filter 'filterConnections', ['$filter', ($filter) ->
+        (input, query, arg1, arg2) ->
+            filterFilter = $filter('filter')
+            @filteredConnections = filterFilter @connections, query
+            return @filteredConnections.slice arg1, arg2
+    ]
