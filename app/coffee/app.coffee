@@ -18,3 +18,4 @@ config(['$stateProvider', '$urlRouterProvider', ($stateProvider, $urlRouterProvi
         })
     return;
 ])
+

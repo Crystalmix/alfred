@@ -9,7 +9,7 @@
   angular.module("alfredDirective", []).directive("connectionList", function() {
     return {
       restrict: "E",
-      templateUrl: "partials/connectionList.html",
+      template: " <div class=\"alfred\">\n<input type=\"text\" id=\"alfred-input\" class=\"form-control input-lg input\" ng-model=\"query\">\n    <div id=\"fixed\" when-scrolled=\"loadMore()\" width-cell=\"42\">\n        <ul class=\"list-group\">\n            <li ng-repeat=\"(key,connection) in subConnections = (connections | filterConnections:query:from:offset)\"\n                id=\"{{key}}\"\n                ng-click=\"select(connection, key)\"\n                connection-item=\"connection\"\n                key=\"{{key}}\"\n                ng-class=\"{ active: (key === selectedIndex) }\"\n                ng-style=\"setHeight()\">\n                <span>\n                    {{connection.label}}\n                    <i class=\"icon enter\">{{key+1}}</i>\n                </span>\n            </li>\n        </ul>\n    </div>\n</div>",
       replace: true,
       transclude: true,
       scope: {
@@ -127,5 +127,9 @@
       };
     }
   ]);
+
+  angular.module('template.html', []).config(function($templateCache) {
+    return $templateCache.put('partials/connectionList.html', '<div>something</div>');
+  });
 
 }).call(this);

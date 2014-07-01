@@ -14,7 +14,25 @@ angular.module("alfredDirective", [])
 
 .directive "connectionList",  () ->
         restrict: "E"
-        templateUrl: "partials/connectionList.html"
+        template: """ <div class="alfred">
+    <input type="text" id="alfred-input" class="form-control input-lg input" ng-model="query">
+        <div id="fixed" when-scrolled="loadMore()" width-cell="42">
+            <ul class="list-group">
+                <li ng-repeat="(key,connection) in subConnections = (connections | filterConnections:query:from:offset)"
+                    id="{{key}}"
+                    ng-click="select(connection, key)"
+                    connection-item="connection"
+                    key="{{key}}"
+                    ng-class="{ active: (key === selectedIndex) }"
+                    ng-style="setHeight()">
+                    <span>
+                        {{connection.label}}
+                        <i class="icon enter">{{key+1}}</i>
+                    </span>
+                </li>
+            </ul>
+        </div>
+</div>"""
         replace: yes
         transclude: yes
         scope:
@@ -117,3 +135,7 @@ angular.module("alfredDirective", [])
             @filteredConnections = filterFilter @connections, query
             return @filteredConnections.slice arg1, arg2
     ]
+
+angular.module('template.html', []).config(($templateCache) ->
+    $templateCache.put('partials/connectionList.html', '<div>something</div>');
+);
