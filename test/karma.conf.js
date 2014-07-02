@@ -3,22 +3,23 @@ module.exports = function(config){
 
         basePath : '../',
 
+        preprocessors: {
+            'app/partials/*.html': ['ng-html2js']
+        },
+
         files : [
+            'bower_components/jquery/dist/jquery.min.js',
             'bower_components/angular/angular.js',
             'bower_components/angular-ui-route/release/angular-ui-route.js',
             'bower_components/angular-mocks/angular-mocks.js',
             'app/js/**/*.js',
-            'test/unit/**/*.js',
+            'test/unit/*.js',
             'app/partials/*.html'
         ],
 
-        /*preprocessors: {
-            'app/partials*//*.html': 'html2js'
-        },
         ngHtml2JsPreprocessor: {
-            // strip app from the file path
             stripPrefix: 'app/'
-        },*/
+        },
 
         autoWatch : true,
 
@@ -30,7 +31,8 @@ module.exports = function(config){
                 'karma-chrome-launcher',
                 'karma-firefox-launcher',
                 'karma-jasmine',
-                'karma-junit-reporter'
+                'karma-junit-reporter',
+                'karma-ng-html2js-preprocessor'
                 ],
 
         junitReporter : {
