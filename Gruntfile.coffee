@@ -19,8 +19,15 @@ module.exports = (grunt) ->
                     "app/js/directives/scroll.js": "#{coffeePath}/directives/scroll.coffee"
                     "app/js/directives/connectionList.js": "#{coffeePath}/directives/connectionList.coffee"
 
+        karma:
+            unit:
+                configFile: 'test/karma.conf.js',
+                singleRun: true,
+                logLevel: 'DEBUG'
 
     grunt.loadNpmTasks 'grunt-contrib-watch'
     grunt.loadNpmTasks 'grunt-contrib-coffee'
+    grunt.loadNpmTasks 'grunt-karma'
 
     grunt.registerTask 'default', ['coffee']
+    grunt.registerTask 'test', ['karma']
