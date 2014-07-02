@@ -110,15 +110,15 @@
     };
   }).filter("filterConnections", [
     "$filter", function($filter) {
-      return function(input, query, arg1, arg2) {
+      return function(input, scope, arg1, arg2) {
         var filterFilter;
-        if (this.prevquery !== this.query) {
-          this.initFromOffset();
-          this.prevquery = this.query;
+        if (scope.prevquery !== scope.query) {
+          scope.initFromOffset();
+          scope.prevquery = scope.query;
         }
         filterFilter = $filter("filter");
-        this.filteredConnections = filterFilter(this.connections, query);
-        return this.filteredConnections.slice(arg1, arg2);
+        scope.filteredConnections = filterFilter(scope.connections, scope.query);
+        return scope.filteredConnections.slice(arg1, arg2);
       };
     }
   ]);

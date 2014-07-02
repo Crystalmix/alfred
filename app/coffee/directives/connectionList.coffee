@@ -109,13 +109,13 @@ angular.module("alfredDirective", [])
 
 
 .filter "filterConnections", ["$filter", ($filter) ->
-        (input, query, arg1, arg2) ->
-            if @prevquery isnt @query
-                @initFromOffset()
-                @prevquery = @query
+        (input, scope, arg1, arg2) ->
+            if scope.prevquery isnt scope.query
+                scope.initFromOffset()
+                scope.prevquery = scope.query
             filterFilter = $filter("filter")
-            @filteredConnections = filterFilter @connections, query
-            return @filteredConnections.slice arg1, arg2
+            scope.filteredConnections = filterFilter scope.connections, scope.query
+            return scope.filteredConnections.slice arg1, arg2
     ]
 
 angular.module('template.html', []).config(($templateCache) ->

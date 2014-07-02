@@ -2,7 +2,7 @@
     <input type="text" id="alfred-input" class="form-control input-lg input" ng-model="query">
         <div id="fixed" when-scrolled="loadMore()" width-cell="42">
             <ul class="list-group">
-                <li ng-repeat="(key,connection) in subConnections = (connections | filterConnections:query:from:offset)"
+                <li ng-repeat="(key,connection) in subConnections = (connections | filterConnections:this:from:offset)"
                     id="{{key}}"
                     ng-click="select(connection, key)"
                     connection-item="connection"
