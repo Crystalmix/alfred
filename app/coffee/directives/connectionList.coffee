@@ -52,8 +52,11 @@ angular.module("alfredDirective", [])
                     do checkQuery
                 ), 10
                 if event.keyCode is 37 or event.keyCode is 39
-                    scope.isLeftActive = !scope.isLeftActive
-                    scope.isRightActive = !scope.isRightActive
+                    scope.isLeftActive  = yes
+                    scope.isRightActive = no
+                if event.keyCode is 39
+                    scope.isLeftActive  = no
+                    scope.isRightActive = yes
 
 
 .directive "connectionListNotActive",  () ->

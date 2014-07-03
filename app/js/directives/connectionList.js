@@ -54,8 +54,12 @@
             return checkQuery();
           }), 10);
           if (event.keyCode === 37 || event.keyCode === 39) {
-            scope.isLeftActive = !scope.isLeftActive;
-            return scope.isRightActive = !scope.isRightActive;
+            scope.isLeftActive = true;
+            scope.isRightActive = false;
+          }
+          if (event.keyCode === 39) {
+            scope.isLeftActive = false;
+            return scope.isRightActive = true;
           }
         };
       }
