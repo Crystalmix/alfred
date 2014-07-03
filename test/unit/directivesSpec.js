@@ -1,7 +1,7 @@
 'use strict';
 
 
-describe('Unit test alfredDirectives', function() {
+describe('Unit test alfredDirectives: connectionList', function() {
     var $rootScope,
         $compile,
         scope,
@@ -202,6 +202,94 @@ describe('Unit test scroll', function() {
 
             expect(scopeDirective.from).toBe(0);
             expect(scopeDirective.offset).toBe(2);
+    });
+
+});
+
+describe('Unit test alfredDirective: connectionItem', function() {
+    var $rootScope,
+        $compile,
+        scope,
+        templateOutHtml = "<connection-list connections='connections' amount='4'></connection-list>",
+        connectionsArray = [
+                {
+                      "color_scheme": null,
+                      "hostname": "dev.crystalnix.com",
+                      "id": 3444,
+                      "label": "0. digital",
+                      "port": 22,
+                      "resource_uri": "/api/v1/terminal/connection/3444/",
+                      "ssh_key": null,
+                      "ssh_password": "",
+                      "ssh_username": "serverauditor",
+                      "updated_at": "2014-06-20T05:24:31"
+                },
+                {
+                      "color_scheme": null,
+                      "hostname": "54.193.87.205",
+                      "id": 3445,
+                      "label": "",
+                      "port": 22,
+                      "resource_uri": "/api/v1/terminal/connection/3445/",
+                      "ssh_key": null,
+                      "ssh_password": "",
+                      "ssh_username": "1. ubuntu",
+                      "updated_at": "2014-06-06T07:18:41"
+                },
+                {
+                      "color_scheme": null,
+                      "hostname": "54.193.87.205",
+                      "id": 3447,
+                      "label": "2. dev.crystalnix.com",
+                      "port": 22,
+                      "resource_uri": "/api/v1/terminal/connection/3447/",
+                      "ssh_key": null,
+                      "ssh_password": "",
+                      "ssh_username": "ubuntu",
+                      "updated_at": "2014-06-11T09:58:03"
+                },
+                {
+                      "color_scheme": null,
+                      "hostname": "dev.crystalnix.com",
+                      "id": 3448,
+                      "label": "3. test",
+                      "port": 22,
+                      "resource_uri": "/api/v1/terminal/connection/3448/",
+                      "ssh_key": null,
+                      "ssh_password": "",
+                      "ssh_username": "admin",
+                      "updated_at": "2014-06-16T03:43:22"
+                },
+            ]
+
+    beforeEach(module('alfredDirective'));
+    beforeEach(module('partials/connectionList.html'));
+
+    beforeEach(inject(
+        function(_$compile_, _$rootScope_){
+            $compile = _$compile_;
+            $rootScope = _$rootScope_;
+            scope = $rootScope.$new();
+        })
+    );
+
+    it("should change selectedItem on event mouseenter",
+        function() {
+            scope.connections = connectionsArray
+            var element = $compile(templateOutHtml)(scope);
+            $rootScope.$digest();
+            var scopeDirective = scope.$$childTail;
+            var liElems = element.find('li');
+
+            expect(scopeDirective.selectedIndex).toBe(0);
+            expect(liElems.eq(0).hasClass('active')).toBe(true);
+            expect(liElems.eq(2).hasClass('active')).toBe(false);
+
+            liElems.eq(2).trigger('mouseenter');
+            
+            expect(scopeDirective.selectedIndex).toBe(2);
+            expect(liElems.eq(0).hasClass('active')).toBe(false);
+            expect(liElems.eq(2).hasClass('active')).toBe(true);
     });
 
 });

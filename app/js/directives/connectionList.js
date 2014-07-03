@@ -17,7 +17,6 @@
         amount: "="
       },
       controller: function($scope) {
-        $scope.selectedIndex = 0;
         $scope.select = function(connection, key) {
           $scope.setSelectedConnection(key);
           return console.log(connection);
@@ -27,6 +26,11 @@
         };
         $scope.getSelectedConnection = function() {
           return $scope.selectedIndex;
+        };
+        $scope.initParameters = function() {
+          $scope.from = 0;
+          $scope.offset = $scope.amount;
+          return $scope.selectedIndex = 0;
         };
         $scope.loadUp = function() {
           if ($scope.filteredConnections[$scope.from - 1]) {
@@ -40,14 +44,11 @@
             return ++$scope.offset;
           }
         };
-        this.somethingDo = function() {
-          return console.log('@somethingDo');
+        this.select = function(key) {
+          $scope.setSelectedConnection(key);
+          return $scope.$apply();
         };
-        $scope.initFromOffset = function() {
-          $scope.from = 0;
-          return $scope.offset = $scope.amount;
-        };
-        return $scope.initFromOffset();
+        return $scope.initParameters();
       },
       link: function(scope, element, attrs) {
         var $input, activateNextItem, activatePreviousItem, setFocus;
@@ -105,7 +106,9 @@
       restrict: "A",
       require: "^connectionList",
       link: function(scope, element, attrs, connectionListCtrl) {
-        return element.bind("mouseleave", function() {});
+        return element.bind("mouseenter", function() {
+          return connectionListCtrl.select(scope.key);
+        });
       }
     };
   }).filter("filterConnections", [
@@ -113,7 +116,7 @@
       return function(input, scope, arg1, arg2) {
         var filterFilter;
         if (scope.prevquery !== scope.query) {
-          scope.initFromOffset();
+          scope.initParameters();
           scope.prevquery = scope.query;
         }
         filterFilter = $filter("filter");
@@ -122,9 +125,5 @@
       };
     }
   ]);
-
-  angular.module('template.html', []).config(function($templateCache) {
-    return $templateCache.put('partials/connectionList.html', '<div>something</div>');
-  });
 
 }).call(this);
