@@ -34,7 +34,7 @@ describe('Unit test alfredDirectives: connectionList', function() {
             ]
 
     beforeEach(module('alfredDirective'));
-    beforeEach(module('partials/connectionList.html'));
+    beforeEach(module('partials/alfred.html'));
 
     beforeEach(inject(
         function(_$compile_, _$rootScope_){
@@ -168,7 +168,7 @@ describe('Unit test scroll', function() {
             ]
 
     beforeEach(module('alfredDirective', 'scroll'));
-    beforeEach(module('partials/connectionList.html'));
+    beforeEach(module('partials/alfred.html'));
 
     beforeEach(inject(
         function(_$compile_, _$rootScope_){
@@ -263,7 +263,7 @@ describe('Unit test alfredDirective: connectionItem', function() {
             ]
 
     beforeEach(module('alfredDirective'));
-    beforeEach(module('partials/connectionList.html'));
+    beforeEach(module('partials/alfred.html'));
 
     beforeEach(inject(
         function(_$compile_, _$rootScope_){
@@ -286,7 +286,7 @@ describe('Unit test alfredDirective: connectionItem', function() {
             expect(liElems.eq(2).hasClass('active')).toBe(false);
 
             liElems.eq(2).trigger('mouseenter');
-            
+
             expect(scopeDirective.selectedIndex).toBe(2);
             expect(liElems.eq(0).hasClass('active')).toBe(false);
             expect(liElems.eq(2).hasClass('active')).toBe(true);

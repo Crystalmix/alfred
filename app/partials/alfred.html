@@ -1,0 +1,38 @@
+<div class="alfred">
+    <input type="text"
+           id="alfred-input"
+           class="form-control input-lg input"
+           ng-model="query"
+           ng-keydown="keydown($event)">
+        <div ng-show="isTable">
+            <div id="left" ng-class="{ active: isLeftActive }">
+                <div class="header">
+                    <span>Hosts</span>
+                </div>
+                <div class="left-list" ng-if="isLeftActive">
+                    <connection-list connections="connections" amount="6" width-cell="42"></connection-list>
+                </div>
+                <div class="left-list" ng-if="isRightActive">
+                    <connection-list-not-active connections="connections" amount="6" width-cell="42"></connection-list-not-active>
+                </div>
+
+            </div>
+            <div id="right" ng-class="{ active: isRightActive }">
+                <div class="header">
+                    <span>History</span>
+                </div>
+                <div class="left-list" ng-if="isLeftActive">
+                    <connection-list-not-active connections="histories" amount="6" width-cell="42"></connection-list-not-active>
+                </div>
+                <div class="left-list" ng-if="isRightActive">
+                    <connection-list connections="histories" amount="6" width-cell="42"></connection-list>
+                </div>
+
+            </div>
+
+        </div>
+        <div ng-show="!isTable">
+            <connection-list connections="connections" amount="6">
+            </connection-list>
+        </div>
+</div>

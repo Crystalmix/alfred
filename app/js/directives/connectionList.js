@@ -6,17 +6,81 @@
       filteredConnections --  array of queried hosts
       subConnections      --  array of visible hosts
    */
-  angular.module("alfredDirective", []).directive("connectionList", function() {
+  angular.module("alfredDirective", []).directive("alfred", function() {
     return {
       restrict: "E",
-      templateUrl: "partials/connectionList.html",
+      templateUrl: "partials/alfred.html",
       replace: true,
       transclude: true,
       scope: {
         connections: "=",
-        amount: "="
+        histories: "=",
+        amount: "=",
+        widthCell: "="
       },
       controller: function($scope) {
+        return console.log($scope);
+      },
+      link: function(scope, element, attrs) {
+        var $input, checkQuery, setFocus;
+        $input = element.find('#alfred-input');
+        setFocus = function() {
+          return $input.focus();
+        };
+        scope.$watch($input, (function(_this) {
+          return function() {
+            return setFocus();
+          };
+        })(this));
+        scope.isTable = true;
+        scope.isLeftActive = true;
+        scope.isRightActive = false;
+        if (scope.isLeftActive) {
+          scope.notActiveConnections = scope.histories.slice(0, scope.amount);
+        } else {
+          scope.notActiveConnections = scope.connections.slice(0, scope.amount);
+        }
+        checkQuery = function() {
+          if (scope.query) {
+            scope.isTable = false;
+            return scope.$apply();
+          } else {
+            scope.isTable = true;
+            return scope.$apply();
+          }
+        };
+        return scope.keydown = function(event) {
+          setTimeout((function() {
+            return checkQuery();
+          }), 10);
+          if (event.keyCode === 37 || event.keyCode === 39) {
+            scope.isLeftActive = !scope.isLeftActive;
+            return scope.isRightActive = !scope.isRightActive;
+          }
+        };
+      }
+    };
+  }).directive("connectionListNotActive", function() {
+    return {
+      restrict: "AE",
+      templateUrl: "partials/connections-not-active.html",
+      scope: {
+        connections: "=",
+        amount: "=",
+        widthCell: "="
+      }
+    };
+  }).directive("connectionList", function() {
+    return {
+      restrict: "AE",
+      templateUrl: "partials/connections.html",
+      scope: {
+        connections: "=",
+        amount: "=",
+        widthCell: "="
+      },
+      controller: function($scope) {
+        $scope.isTable = true;
         $scope.select = function(connection, key) {
           $scope.setSelectedConnection(key);
           return console.log(connection);
@@ -51,24 +115,17 @@
         return $scope.initParameters();
       },
       link: function(scope, element, attrs) {
-        var $input, activateNextItem, activatePreviousItem, setFocus;
+        var activateNextItem, activatePreviousItem;
         scope.prevquery = scope.query = null;
-        $input = element.find('#alfred-input');
-        setFocus = function() {
-          return $input.focus();
-        };
-        $input.bind('keydown', (function(_this) {
-          return function(e) {
-            if (e.keyCode === 40) {
-              e.preventDefault();
-              activateNextItem();
-            }
-            if (e.keyCode === 38) {
-              e.preventDefault();
-              return activatePreviousItem();
-            }
-          };
-        })(this));
+
+        /*$input.bind 'keydown', (e) =>
+            if e.keyCode is 40
+                e.preventDefault();
+                do activateNextItem
+            if e.keyCode is 38
+                e.preventDefault();
+                do activatePreviousItem
+         */
         activateNextItem = function() {
           var current, currentIndex, next;
           current = element.find(".active");

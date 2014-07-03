@@ -5,12 +5,59 @@ class AlfredController
     @$inject: ['$scope', 'Connections', 'Histories']
 
     constructor: (@scope, @Connections, @Histories) ->
-        @scope.histories   = @Histories.query()
-        @Connections.query {},
-                            (response) =>
+
+        ###@Histories.query {},(response) =>
+                                @scope.histories = response
+        @Connections.query {}, (response) =>
                                 @scope.connections = response
-                                @modifiedConnection connection for connection in @scope.connections
+                                #@modifiedConnection connection for connection in @scope.connections
+
+        ###
         @scope.query = null
+        @scope.histories = [
+            {
+                "hostname": "dev.crystalnix.com",
+                "id": 1,
+                "port": 22,
+                "ssh_username": "1. serverauditor"
+            },
+            {
+                "hostname": "54.193.87.205",
+                "id": 2,
+                "port": 22,
+                "ssh_username": "2. ubuntu"
+            },
+            {
+                "hostname": "55.193.87.205",
+                "id": 3,
+                "port": 22,
+                "ssh_username": "3. ubuntu"
+            },
+            {
+                "hostname": "56.193.87.205",
+                "id": 2,
+                "port": 22,
+                "ssh_username": "4. ubuntu"
+            },
+            {
+                "hostname": "57.193.87.205",
+                "id": 3,
+                "port": 22,
+                "ssh_username": "5. ubuntu"
+            },
+            {
+                "hostname": "58.193.87.205",
+                "id": 2,
+                "port": 22,
+                "ssh_username": "6. ubuntu"
+            },
+            {
+                "hostname": "59.193.87.205",
+                "id": 3,
+                "port": 22,
+                "ssh_username": "7. ubuntu"
+            }
+        ]
         @scope.connections = [
             {
               "color_scheme": null,

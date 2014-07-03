@@ -10,21 +10,52 @@
       this.scope = scope;
       this.Connections = Connections;
       this.Histories = Histories;
-      this.scope.histories = this.Histories.query();
-      this.Connections.query({}, (function(_this) {
-        return function(response) {
-          var connection, _i, _len, _ref, _results;
-          _this.scope.connections = response;
-          _ref = _this.scope.connections;
-          _results = [];
-          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-            connection = _ref[_i];
-            _results.push(_this.modifiedConnection(connection));
-          }
-          return _results;
-        };
-      })(this));
+
+      /*@Histories.query {},(response) =>
+                              @scope.histories = response
+      @Connections.query {}, (response) =>
+                              @scope.connections = response
+                               *@modifiedConnection connection for connection in @scope.connections
+       */
       this.scope.query = null;
+      this.scope.histories = [
+        {
+          "hostname": "dev.crystalnix.com",
+          "id": 1,
+          "port": 22,
+          "ssh_username": "1. serverauditor"
+        }, {
+          "hostname": "54.193.87.205",
+          "id": 2,
+          "port": 22,
+          "ssh_username": "2. ubuntu"
+        }, {
+          "hostname": "55.193.87.205",
+          "id": 3,
+          "port": 22,
+          "ssh_username": "3. ubuntu"
+        }, {
+          "hostname": "56.193.87.205",
+          "id": 2,
+          "port": 22,
+          "ssh_username": "4. ubuntu"
+        }, {
+          "hostname": "57.193.87.205",
+          "id": 3,
+          "port": 22,
+          "ssh_username": "5. ubuntu"
+        }, {
+          "hostname": "58.193.87.205",
+          "id": 2,
+          "port": 22,
+          "ssh_username": "6. ubuntu"
+        }, {
+          "hostname": "59.193.87.205",
+          "id": 3,
+          "port": 22,
+          "ssh_username": "7. ubuntu"
+        }
+      ];
       this.scope.connections = [
         {
           "color_scheme": null,

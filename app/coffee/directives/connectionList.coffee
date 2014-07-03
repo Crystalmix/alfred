@@ -1,8 +1,4 @@
 'use strict';
-#
-# connections = connections
-# histories = histories
-#
 
 ###
     connections         --  array of all hosts
@@ -12,17 +8,76 @@
 
 angular.module("alfredDirective", [])
 
-.directive "connectionList",  () ->
+.directive "alfred", () ->
         restrict: "E"
-        templateUrl: "partials/connectionList.html"
+        templateUrl: "partials/alfred.html"
         replace: yes
         transclude: yes
         scope:
             connections: "="
-            amount: "="
+            histories:   "="
+            amount:      "="
+            widthCell:   "="
+
+        controller: ($scope) ->
+            console.log $scope
+
+        link: (scope, element, attrs) ->
+            $input = element.find('#alfred-input')
+
+            setFocus = () ->
+                do $input.focus
+
+            scope.$watch $input, () =>
+                do setFocus
+            scope.isTable = yes
+            scope.isLeftActive = yes
+            scope.isRightActive = no
+
+            if scope.isLeftActive
+                scope.notActiveConnections = scope.histories.slice(0, scope.amount)
+            else
+                scope.notActiveConnections = scope.connections.slice(0, scope.amount)
+
+            checkQuery = () ->
+                if scope.query
+                    scope.isTable = no
+                    do scope.$apply
+                else
+                    scope.isTable = yes
+                    do scope.$apply
+
+            scope.keydown = (event) ->
+                setTimeout (->
+                    do checkQuery
+                ), 10
+                if event.keyCode is 37 or event.keyCode is 39
+                    scope.isLeftActive = !scope.isLeftActive
+                    scope.isRightActive = !scope.isRightActive
+
+
+.directive "connectionListNotActive",  () ->
+        restrict: "AE"
+        templateUrl: "partials/connections-not-active.html"
+        scope:
+            connections: "="
+            amount:      "="
+            widthCell:   "="
+
+
+.directive "connectionList",  () ->
+        restrict: "AE"
+        templateUrl: "partials/connections.html"
+        scope:
+            connections: "="
+            amount:      "="
+            widthCell:   "="
+
 
         # subConnetions is a visible array
         controller: ($scope) ->
+
+            $scope.isTable = true;
 
             $scope.select = (connection, key) ->
                 $scope.setSelectedConnection(key)
@@ -59,22 +114,15 @@ angular.module("alfredDirective", [])
         link: (scope, element, attrs) ->
             scope.prevquery = scope.query = null
 
-            $input = element.find('#alfred-input')
 
-            setFocus = () ->
-                do $input.focus
-
-            #scope.$watch $input, () =>
-            #    do setFocus
-
-            $input.bind 'keydown', (e) =>
+            ###$input.bind 'keydown', (e) =>
                 if e.keyCode is 40
                     e.preventDefault();
                     do activateNextItem
                 if e.keyCode is 38
                     e.preventDefault();
                     do activatePreviousItem
-
+            ###
             activateNextItem = () ->
                 current = element.find(".active")
                 next = current.next()
@@ -118,4 +166,3 @@ angular.module("alfredDirective", [])
             scope.filteredConnections = filterFilter scope.connections, scope.query
             return scope.filteredConnections.slice arg1, arg2
     ]
-

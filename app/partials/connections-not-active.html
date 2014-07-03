@@ -1,0 +1,12 @@
+<div>
+    <ul class="list-group">
+        <li ng-repeat="(key,connection) in connections">
+            <span ng-if="connection.label">
+                {{connection.label}}
+            </span>
+            <span ng-if="!connection.label">
+                {{connection.ssh_username}}@{{connection.hostname}}
+            </span>
+        </li>
+    </ul>
+</div>

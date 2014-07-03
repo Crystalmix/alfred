@@ -1,0 +1,20 @@
+<div id="fixed" when-scrolled="loadMore()" width-cell="42">
+    <ul class="list-group">
+        <li ng-repeat="(key,connection) in subConnections = (connections | filterConnections:this:from:offset)"
+            id="{{key}}"
+            ng-click="select(connection, key)"
+            connection-item="connection"
+            key="{{key}}"
+            ng-class="{ active: (key === selectedIndex) }"
+            ng-style="setHeight()">
+            <span ng-if="connection.label">
+                {{connection.label}}
+                <i class="icon enter">{{key+1}}</i>
+            </span>
+            <span ng-if="!connection.label">
+                {{connection.ssh_username}}@{{connection.hostname}}
+                <i class="icon enter">{{key+1}}</i>
+            </span>
+        </li>
+    </ul>
+</div>
