@@ -19,7 +19,9 @@
         widthCell: "="
       },
       controller: function($scope) {
-        return console.log($scope);
+        return this.changeFrom = function(index) {
+          return $scope.fromConnection = index;
+        };
       },
       link: function(scope, element, attrs) {
         var $input, checkQuery, setFocus;
@@ -32,14 +34,15 @@
             return setFocus();
           };
         })(this));
+        scope.$watch("isTable", function() {
+          if (scope.isTable) {
+            scope.fromConnection = 0;
+            return scope.fromHistory = 0;
+          }
+        });
         scope.isTable = true;
         scope.isLeftActive = true;
         scope.isRightActive = false;
-        if (scope.isLeftActive) {
-          scope.notActiveConnections = scope.histories.slice(0, scope.amount);
-        } else {
-          scope.notActiveConnections = scope.connections.slice(0, scope.amount);
-        }
         checkQuery = function() {
           if (scope.query) {
             scope.isTable = false;
@@ -52,7 +55,7 @@
         return scope.keydown = function(event) {
           setTimeout((function() {
             return checkQuery();
-          }), 10);
+          }), 0);
           if (event.keyCode === 37 || event.keyCode === 39) {
             scope.isLeftActive = true;
             scope.isRightActive = false;
@@ -71,20 +74,58 @@
       scope: {
         connections: "=",
         amount: "=",
-        widthCell: "="
+        widthCell: "=",
+        from: "="
+      },
+      controller: function($scope) {
+        $scope.setHeight = function() {
+          return {
+            height: $scope.widthCell + 'px'
+          };
+        };
+        $scope.setHeightList = function() {
+          return {
+            height: $scope.amount * $scope.widthCell
+          };
+        };
+        return $scope.initParameters = function() {
+          $scope.from = $scope.from;
+          $scope.offset = $scope.from + $scope.amount;
+          return $scope.selectedIndex = 0;
+        };
+      },
+      link: function(scope, element, attrs) {
+        return scope.initParameters();
       }
     };
   }).directive("connectionList", function() {
     return {
       restrict: "AE",
+      require: "^alfred",
       templateUrl: "partials/connections.html",
       scope: {
         connections: "=",
         amount: "=",
-        widthCell: "="
+        widthCell: "=",
+        query: "=scopeQuery",
+        from: "="
       },
       controller: function($scope) {
-        $scope.isTable = true;
+        $scope.setHeight = function() {
+          return {
+            height: $scope.widthCell + 'px'
+          };
+        };
+        $scope.setHeightList = function() {
+          return {
+            height: $scope.amount * $scope.widthCell
+          };
+        };
+        $scope.initParameters = function() {
+          $scope.from = $scope.from;
+          $scope.offset = $scope.from + $scope.amount;
+          return $scope.selectedIndex = 0;
+        };
         $scope.select = function(connection, key) {
           $scope.setSelectedConnection(key);
           return console.log(connection);
@@ -94,11 +135,6 @@
         };
         $scope.getSelectedConnection = function() {
           return $scope.selectedIndex;
-        };
-        $scope.initParameters = function() {
-          $scope.from = 0;
-          $scope.offset = $scope.amount;
-          return $scope.selectedIndex = 0;
         };
         $scope.loadUp = function() {
           if ($scope.filteredConnections[$scope.from - 1]) {
@@ -118,9 +154,19 @@
         };
         return $scope.initParameters();
       },
-      link: function(scope, element, attrs) {
+      link: function(scope, element, attrs, alfredCtrl) {
         var activateNextItem, activatePreviousItem;
         scope.prevquery = scope.query = null;
+
+        /*scope.$watch "from", () ->
+            if scope.from isnt 0
+                if scope.$parent.$parent.isRightActive
+                    ++ scope.$parent.$parent.fromHistory
+                    scope.$apply()
+                if scope.$parent.$parent.isLeftActive
+                    ++ scope.$parent.$parent.fromConnectoins
+                    scope.$apply()
+         */
 
         /*$input.bind 'keydown', (e) =>
             if e.keyCode is 40

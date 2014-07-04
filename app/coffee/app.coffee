@@ -13,7 +13,7 @@ config(['$stateProvider', '$urlRouterProvider', ($stateProvider, $urlRouterProvi
     $stateProvider
         .state('view1', {
             url: '/view1',
-            templateUrl: 'partials/alfredView.html'
+            templateUrl: 'partials/mainView.html'
             controller: 'AlfredController'
         })
     return;

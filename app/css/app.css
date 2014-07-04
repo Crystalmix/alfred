@@ -68,10 +68,6 @@ li {
     background-color: #fff;
     border: 1px solid #ddd;
 }
-#fixed {
-    height: 206px;
-    overflow: auto;
-}
 .list-group {
     padding-left: 0;
     margin-bottom: 0;

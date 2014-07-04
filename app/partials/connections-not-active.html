@@ -1,6 +1,7 @@
 <div>
     <ul class="list-group">
-        <li ng-repeat="(key,connection) in connections">
+        <li ng-repeat="(key,connection) in connections | filterConnections:this:from:offset"
+            ng-style="setHeight()">
             <span ng-if="connection.label">
                 {{connection.label}}
             </span>

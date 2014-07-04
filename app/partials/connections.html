@@ -1,4 +1,4 @@
-<div id="fixed" when-scrolled="loadMore()" width-cell="42">
+<div id="fixed" when-scrolled="loadMore()">
     <ul class="list-group">
         <li ng-repeat="(key,connection) in subConnections = (connections | filterConnections:this:from:offset)"
             id="{{key}}"

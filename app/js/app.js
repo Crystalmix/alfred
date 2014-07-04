@@ -5,7 +5,7 @@
       $urlRouterProvider.otherwise('/view1');
       $stateProvider.state('view1', {
         url: '/view1',
-        templateUrl: 'partials/alfredView.html',
+        templateUrl: 'partials/mainView.html',
         controller: 'AlfredController'
       });
     }

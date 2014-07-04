@@ -19,43 +19,55 @@ class AlfredController
                 "hostname": "dev.crystalnix.com",
                 "id": 1,
                 "port": 22,
-                "ssh_username": "1. serverauditor"
+                "ssh_username": "0. serverauditor"
             },
             {
                 "hostname": "54.193.87.205",
                 "id": 2,
                 "port": 22,
-                "ssh_username": "2. ubuntu"
+                "ssh_username": "1. ubuntu"
             },
             {
                 "hostname": "55.193.87.205",
                 "id": 3,
                 "port": 22,
-                "ssh_username": "3. ubuntu"
+                "ssh_username": "2. ubuntu"
             },
             {
                 "hostname": "56.193.87.205",
-                "id": 2,
+                "id": 4,
+                "port": 22,
+                "ssh_username": "3. ubuntu"
+            },
+            {
+                "hostname": "57.193.87.205",
+                "id": 5,
                 "port": 22,
                 "ssh_username": "4. ubuntu"
             },
             {
-                "hostname": "57.193.87.205",
-                "id": 3,
+                "hostname": "58.193.87.205",
+                "id": 6,
                 "port": 22,
                 "ssh_username": "5. ubuntu"
             },
             {
-                "hostname": "58.193.87.205",
-                "id": 2,
+                "hostname": "59.193.87.205",
+                "id": 7,
                 "port": 22,
                 "ssh_username": "6. ubuntu"
             },
             {
-                "hostname": "59.193.87.205",
-                "id": 3,
+                "hostname": "58.193.87.205",
+                "id": 8,
                 "port": 22,
                 "ssh_username": "7. ubuntu"
+            },
+            {
+                "hostname": "59.193.87.205",
+                "id": 9,
+                "port": 22,
+                "ssh_username": "8. ubuntu"
             }
         ]
         @scope.connections = [

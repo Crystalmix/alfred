@@ -8,12 +8,12 @@ angular.module('scroll', [])
             ###
                 Set element height
             ###
-            amountOfCell = scope.amount
-            widthCell = scope.$eval(attrs.widthCell)
-            element.height amountOfCell * widthCell + 1
+            #amountOfCell = scope.amount
+           # widthCell = scope.$eval(attrs.widthCell)
+            #element.height amountOfCell * widthCell + 1
 
-            scope.setHeight = () ->
-                height: widthCell + 'px'
+            #scope.setHeight = () ->
+            #    height: widthCell + 'px'
 
             element.bind('mousewheel', (event) ->
                 if(event.originalEvent.wheelDelta < 0)

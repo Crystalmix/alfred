@@ -20,7 +20,11 @@ angular.module("alfredDirective", [])
             widthCell:   "="
 
         controller: ($scope) ->
-            console.log $scope
+
+
+            @changeFrom = (index) ->
+                $scope.fromConnection = index
+
 
         link: (scope, element, attrs) ->
             $input = element.find('#alfred-input')
@@ -30,14 +34,15 @@ angular.module("alfredDirective", [])
 
             scope.$watch $input, () =>
                 do setFocus
+
+            scope.$watch "isTable", () ->
+                if scope.isTable
+                    scope.fromConnection = 0
+                    scope.fromHistory    = 0
+
             scope.isTable = yes
             scope.isLeftActive = yes
             scope.isRightActive = no
-
-            if scope.isLeftActive
-                scope.notActiveConnections = scope.histories.slice(0, scope.amount)
-            else
-                scope.notActiveConnections = scope.connections.slice(0, scope.amount)
 
             checkQuery = () ->
                 if scope.query
@@ -50,13 +55,15 @@ angular.module("alfredDirective", [])
             scope.keydown = (event) ->
                 setTimeout (->
                     do checkQuery
-                ), 10
+                ), 0
                 if event.keyCode is 37 or event.keyCode is 39
                     scope.isLeftActive  = yes
                     scope.isRightActive = no
                 if event.keyCode is 39
                     scope.isLeftActive  = no
                     scope.isRightActive = yes
+
+
 
 
 .directive "connectionListNotActive",  () ->
@@ -66,21 +73,49 @@ angular.module("alfredDirective", [])
             connections: "="
             amount:      "="
             widthCell:   "="
+            from:        "="
+
+        controller: ($scope) ->
+            $scope.setHeight = () ->
+                height: $scope.widthCell + 'px'
+
+            $scope.setHeightList = () ->
+                height: $scope.amount * $scope.widthCell
+
+            $scope.initParameters = () ->
+                $scope.from = $scope.from
+                $scope.offset = $scope.from + $scope.amount
+                $scope.selectedIndex = 0
+
+        link: (scope, element, attrs) ->
+            do scope.initParameters
+
 
 
 .directive "connectionList",  () ->
         restrict: "AE"
+        require: "^alfred"
         templateUrl: "partials/connections.html"
         scope:
             connections: "="
             amount:      "="
             widthCell:   "="
-
+            query:       "=scopeQuery"
+            from:        "="
 
         # subConnetions is a visible array
         controller: ($scope) ->
 
-            $scope.isTable = true;
+            $scope.setHeight = () ->
+                height: $scope.widthCell + 'px'
+
+            $scope.setHeightList = () ->
+                height: $scope.amount * $scope.widthCell
+
+            $scope.initParameters = () ->
+                $scope.from = $scope.from
+                $scope.offset = $scope.from + $scope.amount
+                $scope.selectedIndex = 0
 
             $scope.select = (connection, key) ->
                 $scope.setSelectedConnection(key)
@@ -91,11 +126,6 @@ angular.module("alfredDirective", [])
 
             $scope.getSelectedConnection = () ->
                 $scope.selectedIndex
-
-            $scope.initParameters = () ->
-                $scope.from = 0
-                $scope.offset = $scope.amount
-                $scope.selectedIndex = 0
 
             $scope.loadUp = () ->
                 if $scope.filteredConnections[$scope.from-1]
@@ -114,9 +144,18 @@ angular.module("alfredDirective", [])
             do $scope.initParameters
 
 
-        link: (scope, element, attrs) ->
+        link: (scope, element, attrs, alfredCtrl) ->
             scope.prevquery = scope.query = null
 
+            ###scope.$watch "from", () ->
+                if scope.from isnt 0
+                    if scope.$parent.$parent.isRightActive
+                        ++ scope.$parent.$parent.fromHistory
+                        scope.$apply()
+                    if scope.$parent.$parent.isLeftActive
+                        ++ scope.$parent.$parent.fromConnectoins
+                        scope.$apply()
+            ###
 
             ###$input.bind 'keydown', (e) =>
                 if e.keyCode is 40
