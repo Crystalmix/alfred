@@ -3,8 +3,7 @@
            id="alfred-input"
            class="form-control input-lg input"
            ng-model="query"
-           ng-keydown="keydown($event)"
-            >
+           ng-keydown="keydown($event)">
 
     <div ng-show="isTable">
         <div id="left" ng-class="{ active: isLeftActive }">
@@ -15,15 +14,16 @@
             <div class="left-list" ng-if="isLeftActive">
                 <connection-list connections="connections"
                                  amount="amount"
-                                 width-cell="widthCell"
+                                 height-cell="heightCell"
                                  scope-query="query"
-                                 from="fromConnection">
+                                 from="fromConnection"
+                                 selected-index="selectedIndex">
                 </connection-list>
             </div>
             <div class="left-list" ng-if="isRightActive">
                 <connection-list-not-active connections="connections"
                                             amount="amount"
-                                            width-cell="widthCell"
+                                            height-cell="heightCell"
                                             from="fromConnection">
                 </connection-list-not-active>
             </div>
@@ -36,27 +36,29 @@
             <div class="left-list" ng-if="isLeftActive">
                 <connection-list-not-active connections="histories"
                                             amount="amount"
-                                            width-cell="widthCell"
+                                            height-cell="heightCell"
                                             from="fromHistory">
                 </connection-list-not-active>
             </div>
             <div class="left-list" ng-if="isRightActive">
                 <connection-list connections="histories"
                                  amount="amount"
-                                 width-cell="widthCell"
+                                 height-cell="heightCell"
                                  scope-query="query"
-                                 from="fromHistory">
+                                 from="fromHistory"
+                                 selected-index="selectedIndex">
                 </connection-list>
             </div>
         </div>
     </div>
 
     <div ng-show="!isTable">
-        <connection-list connections="connections"
+        <connection-list connections="entities"
                          amount="amount"
-                         width-cell="widthCell"
+                         height-cell="heightCell"
                          scope-query="query"
-                         from={{0}}>
+                         from="fromConnection"
+                         selected-index="selectedIndex">
         </connection-list>
     </div>
 

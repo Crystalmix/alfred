@@ -6,7 +6,11 @@
       filteredConnections --  array of queried hosts
       subConnections      --  array of visible hosts
    */
-  angular.module("alfredDirective", []).directive("alfred", function() {
+  var alfredDirective;
+
+  alfredDirective = angular.module("alfredDirective", []);
+
+  alfredDirective.directive("alfred", function() {
     return {
       restrict: "E",
       templateUrl: "partials/alfred.html",
@@ -16,14 +20,20 @@
         connections: "=",
         histories: "=",
         amount: "=",
-        widthCell: "="
+        heightCell: "="
       },
       controller: function($scope) {
-        return this.changeFrom = function(index) {
-          return $scope.fromConnection = index;
+        $scope.entities = $scope.connections.concat($scope.histories);
+        $scope.selectedIndex = 0;
+        $scope.setSelectedConnection = function(index) {
+          return $scope.selectedIndex = index;
+        };
+        return this.setSelectedIndex = function(key) {
+          $scope.setSelectedConnection(key);
+          return $scope.$apply();
         };
       },
-      link: function(scope, element, attrs) {
+      link: function(scope, element) {
         var $input, checkQuery, setFocus;
         $input = element.find('#alfred-input');
         setFocus = function() {
@@ -37,7 +47,8 @@
         scope.$watch("isTable", function() {
           if (scope.isTable) {
             scope.fromConnection = 0;
-            return scope.fromHistory = 0;
+            scope.fromHistory = 0;
+            return scope.selectedIndex = 0;
           }
         });
         scope.isTable = true;
@@ -56,75 +67,94 @@
           setTimeout((function() {
             return checkQuery();
           }), 0);
-          if (event.keyCode === 37 || event.keyCode === 39) {
-            scope.isLeftActive = true;
-            scope.isRightActive = false;
-          }
-          if (event.keyCode === 39) {
-            scope.isLeftActive = false;
-            return scope.isRightActive = true;
+          if (scope.isTable) {
+            event.preventDefault();
+            if (event.keyCode === 37) {
+              scope.isLeftActive = true;
+              scope.isRightActive = false;
+            }
+            if (event.keyCode === 39) {
+              scope.isLeftActive = false;
+              scope.isRightActive = true;
+            }
+            if (event.keyCode === 40) {
+              scope.$broadcast("arrow", "up");
+            }
+            if (event.keyCode === 38) {
+              return scope.$broadcast("arrow", "down");
+            }
           }
         };
+
+        /*$input.bind 'keydown', (e) =>
+            if e.keyCode is 40
+                e.preventDefault();
+                do activateNextItem
+            if e.keyCode is 38
+                e.preventDefault();
+                do activatePreviousItem
+         */
       }
     };
-  }).directive("connectionListNotActive", function() {
+  });
+
+  alfredDirective.directive("connectionListNotActive", function() {
     return {
       restrict: "AE",
       templateUrl: "partials/connections-not-active.html",
       scope: {
         connections: "=",
         amount: "=",
-        widthCell: "=",
+        heightCell: "=",
         from: "="
       },
       controller: function($scope) {
         $scope.setHeight = function() {
           return {
-            height: $scope.widthCell + 'px'
+            height: $scope.heightCell + 'px'
           };
         };
         $scope.setHeightList = function() {
           return {
-            height: $scope.amount * $scope.widthCell
+            height: $scope.amount * $scope.heightCell
           };
         };
         return $scope.initParameters = function() {
-          $scope.from = $scope.from;
-          $scope.offset = $scope.from + $scope.amount;
-          return $scope.selectedIndex = 0;
+          return $scope.offset = $scope.from + $scope.amount;
         };
       },
-      link: function(scope, element, attrs) {
+      link: function(scope) {
         return scope.initParameters();
       }
     };
-  }).directive("connectionList", function() {
+  });
+
+  alfredDirective.directive("connectionList", function() {
     return {
-      restrict: "AE",
       require: "^alfred",
+      restrict: "AE",
       templateUrl: "partials/connections.html",
       scope: {
         connections: "=",
         amount: "=",
-        widthCell: "=",
+        heightCell: "=",
         query: "=scopeQuery",
-        from: "="
+        from: "=",
+        selectedIndex: "="
       },
       controller: function($scope) {
         $scope.setHeight = function() {
           return {
-            height: $scope.widthCell + 'px'
+            height: $scope.heightCell + 'px'
           };
         };
         $scope.setHeightList = function() {
           return {
-            height: $scope.amount * $scope.widthCell
+            height: $scope.amount * $scope.heightCell
           };
         };
         $scope.initParameters = function() {
-          $scope.from = $scope.from;
-          $scope.offset = $scope.from + $scope.amount;
-          return $scope.selectedIndex = 0;
+          return $scope.offset = $scope.from + $scope.amount;
         };
         $scope.select = function(connection, key) {
           $scope.setSelectedConnection(key);
@@ -157,6 +187,22 @@
       link: function(scope, element, attrs, alfredCtrl) {
         var activateNextItem, activatePreviousItem;
         scope.prevquery = scope.query = null;
+        scope.offset = scope.from + scope.amount;
+        scope.$watch("selectedIndex", function(key) {
+          return scope.$parent.$parent.selectedIndex = key;
+        });
+        scope.$on('arrow', function(event, orientation) {
+          if (orientation === 'up') {
+            return activateNextItem();
+          } else {
+            return activatePreviousItem();
+          }
+        });
+        scope.$watch("from", function() {
+          scope.offset = scope.from + scope.amount;
+          console.log(scope.from);
+          return console.log(scope.offset);
+        });
 
         /*scope.$watch "from", () ->
             if scope.from isnt 0
@@ -167,28 +213,19 @@
                     ++ scope.$parent.$parent.fromConnectoins
                     scope.$apply()
          */
-
-        /*$input.bind 'keydown', (e) =>
-            if e.keyCode is 40
-                e.preventDefault();
-                do activateNextItem
-            if e.keyCode is 38
-                e.preventDefault();
-                do activatePreviousItem
-         */
         activateNextItem = function() {
           var current, currentIndex, next;
           current = element.find(".active");
           next = current.next();
           currentIndex = scope.getSelectedConnection();
           if (next.length === 0) {
-            scope.$apply(scope.loadDown);
+            scope.loadDown();
             next = current.next();
             if (next.length !== 0) {
-              return scope.$apply(scope.setSelectedConnection(currentIndex));
+              return scope.setSelectedConnection(currentIndex);
             }
           } else {
-            return scope.$apply(scope.setSelectedConnection(++currentIndex));
+            return scope.setSelectedConnection(++currentIndex);
           }
         };
         return activatePreviousItem = function() {
@@ -197,18 +234,20 @@
           prev = current.prev();
           currentIndex = scope.getSelectedConnection();
           if (prev.length === 0) {
-            scope.$apply(scope.loadUp);
+            scope.loadUp;
             prev = current.prev();
             if (prev.length !== 0) {
-              return scope.$apply(scope.setSelectedConnection(currentIndex));
+              return scope.setSelectedConnection(currentIndex);
             }
           } else {
-            return scope.$apply(scope.setSelectedConnection(--currentIndex));
+            return scope.setSelectedConnection(--currentIndex);
           }
         };
       }
     };
-  }).directive("connectionItem", function() {
+  });
+
+  alfredDirective.directive("connectionItem", function() {
     return {
       restrict: "A",
       require: "^connectionList",
@@ -218,7 +257,9 @@
         });
       }
     };
-  }).filter("filterConnections", [
+  });
+
+  alfredDirective.filter("filterConnections", [
     "$filter", function($filter) {
       return function(input, scope, arg1, arg2) {
         var filterFilter;

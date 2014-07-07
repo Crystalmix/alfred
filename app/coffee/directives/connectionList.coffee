@@ -6,28 +6,37 @@
     subConnections      --  array of visible hosts
 ###
 
-angular.module("alfredDirective", [])
+alfredDirective = angular.module("alfredDirective", [])
 
-.directive "alfred", () ->
+alfredDirective.directive "alfred", () ->
         restrict: "E"
         templateUrl: "partials/alfred.html"
         replace: yes
         transclude: yes
         scope:
-            connections: "="
-            histories:   "="
-            amount:      "="
-            widthCell:   "="
+            connections:  "="
+            histories:    "="
+            amount:       "="
+            heightCell:   "="
 
         controller: ($scope) ->
+            $scope.entities = $scope.connections.concat $scope.histories
+
+            $scope.selectedIndex = 0
+
+            $scope.setSelectedConnection = (index) ->
+                $scope.selectedIndex = index
+
+            @setSelectedIndex = (key) ->
+                $scope.setSelectedConnection key
+                do $scope.$apply
+
+            #@changeFrom = (index) ->
+            #    $scope.fromConnection = index
 
 
-            @changeFrom = (index) ->
-                $scope.fromConnection = index
-
-
-        link: (scope, element, attrs) ->
-            $input = element.find('#alfred-input')
+        link: (scope, element) ->
+            $input = element.find '#alfred-input'
 
             setFocus = () ->
                 do $input.focus
@@ -39,6 +48,7 @@ angular.module("alfredDirective", [])
                 if scope.isTable
                     scope.fromConnection = 0
                     scope.fromHistory    = 0
+                    scope.selectedIndex  = 0
 
             scope.isTable = yes
             scope.isLeftActive = yes
@@ -56,66 +66,77 @@ angular.module("alfredDirective", [])
                 setTimeout (->
                     do checkQuery
                 ), 0
-                if event.keyCode is 37 or event.keyCode is 39
-                    scope.isLeftActive  = yes
-                    scope.isRightActive = no
-                if event.keyCode is 39
-                    scope.isLeftActive  = no
-                    scope.isRightActive = yes
+                if scope.isTable
+                    do event.preventDefault
+                    if event.keyCode is 37
+                        scope.isLeftActive  = yes
+                        scope.isRightActive = no
+                    if event.keyCode is 39
+                        scope.isLeftActive  = no
+                        scope.isRightActive = yes
+                    if event.keyCode is 40
+                        scope.$broadcast("arrow", "up");
+                    if event.keyCode is 38
+                        scope.$broadcast("arrow", "down");
+
+            ###$input.bind 'keydown', (e) =>
+                if e.keyCode is 40
+                    e.preventDefault();
+                    do activateNextItem
+                if e.keyCode is 38
+                    e.preventDefault();
+                    do activatePreviousItem
+            ###
 
 
-
-
-.directive "connectionListNotActive",  () ->
+alfredDirective.directive "connectionListNotActive",  () ->
         restrict: "AE"
         templateUrl: "partials/connections-not-active.html"
         scope:
-            connections: "="
-            amount:      "="
-            widthCell:   "="
-            from:        "="
+            connections:   "="
+            amount:        "="
+            heightCell:    "="
+            from:          "="
 
         controller: ($scope) ->
             $scope.setHeight = () ->
-                height: $scope.widthCell + 'px'
+                height: $scope.heightCell + 'px'
 
             $scope.setHeightList = () ->
-                height: $scope.amount * $scope.widthCell
+                height: $scope.amount * $scope.heightCell
 
             $scope.initParameters = () ->
-                $scope.from = $scope.from
                 $scope.offset = $scope.from + $scope.amount
-                $scope.selectedIndex = 0
 
-        link: (scope, element, attrs) ->
+
+        link: (scope) ->
             do scope.initParameters
 
 
 
-.directive "connectionList",  () ->
-        restrict: "AE"
+alfredDirective.directive "connectionList",  () ->
         require: "^alfred"
+        restrict: "AE"
         templateUrl: "partials/connections.html"
         scope:
-            connections: "="
-            amount:      "="
-            widthCell:   "="
-            query:       "=scopeQuery"
-            from:        "="
+            connections:   "="
+            amount:        "="
+            heightCell:    "="
+            query:         "=scopeQuery"
+            from:          "="
+            selectedIndex: "="
 
         # subConnetions is a visible array
         controller: ($scope) ->
 
             $scope.setHeight = () ->
-                height: $scope.widthCell + 'px'
+                height: $scope.heightCell + 'px'
 
             $scope.setHeightList = () ->
-                height: $scope.amount * $scope.widthCell
+                height: $scope.amount * $scope.heightCell
 
             $scope.initParameters = () ->
-                $scope.from = $scope.from
                 $scope.offset = $scope.from + $scope.amount
-                $scope.selectedIndex = 0
 
             $scope.select = (connection, key) ->
                 $scope.setSelectedConnection(key)
@@ -146,6 +167,23 @@ angular.module("alfredDirective", [])
 
         link: (scope, element, attrs, alfredCtrl) ->
             scope.prevquery = scope.query = null
+            scope.offset    = scope.from + scope.amount
+
+            scope.$watch "selectedIndex", (key) ->
+                #TODO call parent controller
+                scope.$parent.$parent.selectedIndex = key
+
+            scope.$on('arrow', (event, orientation) ->
+                if orientation is 'up'
+                    do activateNextItem
+                else
+                    do activatePreviousItem
+            );
+
+            scope.$watch "from", () ->
+                scope.offset = scope.from + scope.amount
+                console.log scope.from
+                console.log scope.offset
 
             ###scope.$watch "from", () ->
                 if scope.from isnt 0
@@ -157,40 +195,35 @@ angular.module("alfredDirective", [])
                         scope.$apply()
             ###
 
-            ###$input.bind 'keydown', (e) =>
-                if e.keyCode is 40
-                    e.preventDefault();
-                    do activateNextItem
-                if e.keyCode is 38
-                    e.preventDefault();
-                    do activatePreviousItem
-            ###
             activateNextItem = () ->
                 current = element.find(".active")
                 next = current.next()
                 currentIndex = scope.getSelectedConnection()
                 if next.length is 0
-                    scope.$apply scope.loadDown
+                    do scope.loadDown
                     next = current.next()
                     if next.length isnt 0
-                        scope.$apply scope.setSelectedConnection(currentIndex)
+                        scope.setSelectedConnection(currentIndex)
                 else
-                    scope.$apply scope.setSelectedConnection(++currentIndex)
+                    scope.setSelectedConnection(++currentIndex)
+
 
             activatePreviousItem = () ->
                 current = element.find(".active")
                 prev = current.prev()
                 currentIndex = scope.getSelectedConnection()
                 if prev.length is 0
-                    scope.$apply scope.loadUp
+                    scope.loadUp
                     prev = current.prev()
                     if prev.length isnt 0
-                        scope.$apply scope.setSelectedConnection(currentIndex)
+                        scope.setSelectedConnection(currentIndex)
                 else
-                    scope.$apply scope.setSelectedConnection(--currentIndex)
+                    scope.setSelectedConnection(--currentIndex)
 
 
-.directive "connectionItem",  () ->
+
+
+alfredDirective.directive "connectionItem",  () ->
         restrict: "A"
         require: "^connectionList"
 
@@ -199,7 +232,7 @@ angular.module("alfredDirective", [])
                 connectionListCtrl.select scope.key
 
 
-.filter "filterConnections", ["$filter", ($filter) ->
+alfredDirective.filter "filterConnections", ["$filter", ($filter) ->
         (input, scope, arg1, arg2) ->
             if scope.prevquery isnt scope.query
                 scope.initParameters()
