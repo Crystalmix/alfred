@@ -68,7 +68,6 @@
             return checkQuery();
           }), 0);
           if (scope.isTable) {
-            event.preventDefault();
             if (event.keyCode === 37) {
               scope.isLeftActive = true;
               scope.isRightActive = false;

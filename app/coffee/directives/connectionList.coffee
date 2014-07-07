@@ -67,7 +67,6 @@ alfredDirective.directive "alfred", () ->
                     do checkQuery
                 ), 0
                 if scope.isTable
-                    do event.preventDefault
                     if event.keyCode is 37
                         scope.isLeftActive  = yes
                         scope.isRightActive = no
