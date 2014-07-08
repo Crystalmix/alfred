@@ -5,7 +5,7 @@
            ng-model="query"
            ng-keydown="keydown($event)">
 
-    <div ng-show="isTable">
+    <div ng-if="isTable">
         <div id="left" ng-class="{ active: isLeftActive }">
             <div class="header">
                 <span>Hosts</span>
@@ -52,7 +52,7 @@
         </div>
     </div>
 
-    <div ng-show="!isTable">
+    <div ng-if="!isTable">
         <active-list connections    = "entities"
                      amount         = "amount"
                      height-cell    = "heightCell"

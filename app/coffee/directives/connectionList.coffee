@@ -1,12 +1,7 @@
 'use strict';
 
-###
-    connections         --  array of all hosts
-    filteredConnections --  array of queried hosts
-    subConnections      --  array of visible hosts
-###
-
 alfredDirective = angular.module("alfredDirective", [])
+
 
 alfredDirective.directive "alfred", () ->
         restrict: "E"
@@ -20,7 +15,7 @@ alfredDirective.directive "alfred", () ->
             heightCell:   "="
 
         controller: ($scope) ->
-            #$scope.entities = $scope.connections.concat $scope.histories
+            $scope.entities = $scope.connections.concat $scope.histories
 
             $scope.selectedIndex = 0
 
@@ -47,22 +42,23 @@ alfredDirective.directive "alfred", () ->
 
             scope.$watch "isTable", () ->
                 if scope.isTable
-                    scope.fromConnection = 0
-                    scope.fromHistory    = 0
-                    scope.selectedIndex  = 0
+                    do initParameters
 
             scope.isTable = yes
             scope.isLeftActive = yes
             scope.isRightActive = no
 
-
             checkQuery = () ->
                 if scope.query
                     scope.isTable = no
-                    do scope.$apply
                 else
                     scope.isTable = yes
-                    do scope.$apply
+                do scope.$apply
+
+            initParameters = () ->
+                scope.fromConnection = 0
+                scope.fromHistory    = 0
+                scope.selectedIndex  = 0
 
 
             scope.keydown = (event) ->
@@ -76,11 +72,12 @@ alfredDirective.directive "alfred", () ->
                     if event.keyCode is 39
                         scope.isLeftActive  = no
                         scope.isRightActive = yes
-                    if event.keyCode is 38
-                        scope.$broadcast "arrow", "up"
-                    if event.keyCode is 40
-                        scope.$broadcast "arrow", "down"
+                if event.keyCode is 38
+                    scope.$broadcast "arrow", "up"
+                if event.keyCode is 40
+                    scope.$broadcast "arrow", "down"
 
+            do initParameters
 
 
 alfredDirective.directive "inactiveList",  () ->
@@ -102,13 +99,17 @@ alfredDirective.directive "inactiveList",  () ->
             $scope.initParameters = () ->
                 $scope.offset = $scope.from + $scope.amount
 
-
         link: (scope) ->
+            console.log "inactive #{scope.connections.length}"
             do scope.initParameters
 
 
-
 alfredDirective.directive "activeList",  () ->
+        ###
+            connections         --  array of all hosts
+            filteredConnections --  array of queried hosts
+            subConnections      --  array of visible hosts
+        ###
         require: "^alfred"
         restrict: "AE"
         templateUrl: "partials/active-connections.html"
@@ -122,7 +123,6 @@ alfredDirective.directive "activeList",  () ->
 
         # subConnetions is a visible array
         controller: ($scope) ->
-
             $scope.setHeight = () ->
                 height: $scope.heightCell + 'px'
 
@@ -160,6 +160,8 @@ alfredDirective.directive "activeList",  () ->
 
 
         link: (scope, element, attrs, alfredCtrl) ->
+            console.log "active #{scope.connections.length}"
+
             scope.prevquery = scope.query = null
             scope.offset    = scope.from + scope.amount
 
@@ -185,9 +187,14 @@ alfredDirective.directive "activeList",  () ->
                 currentIndex = scope.getSelectedConnection()
                 if next.length is 0
                     do scope.loadDown
-                    next = current.next()
-                    if next.length isnt 0
-                        scope.setSelectedConnection(currentIndex)
+                    setTimeout (->
+                        next = current.next()
+                        if next.length is 0
+                            scope.from   = 0
+                            scope.offset = scope.amount
+                            scope.setSelectedConnection(0)
+                            scope.$apply()
+                    ), 100
                 else
                     scope.setSelectedConnection(++currentIndex)
 
@@ -196,14 +203,17 @@ alfredDirective.directive "activeList",  () ->
                 prev = current.prev()
                 currentIndex = scope.getSelectedConnection()
                 if prev.length is 0
-                    scope.loadUp
-                    prev = current.prev()
-                    if prev.length isnt 0
-                        scope.setSelectedConnection(currentIndex)
+                    do scope.loadUp
+                    setTimeout (->
+                        prev = current.prev()
+                        if prev.length is 0
+                            scope.from   = scope.filteredConnections.length - scope.amount
+                            scope.offset = scope.filteredConnections.length - 1
+                            scope.setSelectedConnection(scope.amount-1)
+                            scope.$apply()
+                    ), 100
                 else
                     scope.setSelectedConnection(--currentIndex)
-
-
 
 
 alfredDirective.directive "connectionItem",  () ->
@@ -216,12 +226,14 @@ alfredDirective.directive "connectionItem",  () ->
 
 
 alfredDirective.filter "filterConnections", ["$filter", ($filter) ->
-        (input, scope, arg1, arg2) ->
+        (input, query, arg1, arg2) ->
+            scope = this
             if scope.prevquery isnt scope.query
                 scope.initParameters()
                 scope.prevquery = scope.query
             filterFilter = $filter("filter")
             scope.filteredConnections = filterFilter scope.connections, scope.query
-            console.log arg1, arg2, scope.connections
+            console.log scope.query
+            console.log arg1, arg2, scope.filteredConnections.length
             return scope.filteredConnections.slice arg1, arg2
     ]

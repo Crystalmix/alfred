@@ -1,11 +1,5 @@
 (function() {
   'use strict';
-
-  /*
-      connections         --  array of all hosts
-      filteredConnections --  array of queried hosts
-      subConnections      --  array of visible hosts
-   */
   var alfredDirective;
 
   alfredDirective = angular.module("alfredDirective", []);
@@ -23,6 +17,7 @@
         heightCell: "="
       },
       controller: function($scope) {
+        $scope.entities = $scope.connections.concat($scope.histories);
         $scope.selectedIndex = 0;
         $scope.setSelectedConnection = function(index) {
           return $scope.selectedIndex = index;
@@ -33,7 +28,7 @@
         };
       },
       link: function(scope, element) {
-        var $input, checkQuery, setFocus;
+        var $input, checkQuery, initParameters, setFocus;
         $input = element.find('#alfred-input');
         setFocus = function() {
           return $input.focus();
@@ -45,9 +40,7 @@
         })(this));
         scope.$watch("isTable", function() {
           if (scope.isTable) {
-            scope.fromConnection = 0;
-            scope.fromHistory = 0;
-            return scope.selectedIndex = 0;
+            return initParameters();
           }
         });
         scope.isTable = true;
@@ -56,13 +49,17 @@
         checkQuery = function() {
           if (scope.query) {
             scope.isTable = false;
-            return scope.$apply();
           } else {
             scope.isTable = true;
-            return scope.$apply();
           }
+          return scope.$apply();
         };
-        return scope.keydown = function(event) {
+        initParameters = function() {
+          scope.fromConnection = 0;
+          scope.fromHistory = 0;
+          return scope.selectedIndex = 0;
+        };
+        scope.keydown = function(event) {
           setTimeout((function() {
             return checkQuery();
           }), 0);
@@ -75,14 +72,15 @@
               scope.isLeftActive = false;
               scope.isRightActive = true;
             }
-            if (event.keyCode === 38) {
-              scope.$broadcast("arrow", "up");
-            }
-            if (event.keyCode === 40) {
-              return scope.$broadcast("arrow", "down");
-            }
+          }
+          if (event.keyCode === 38) {
+            scope.$broadcast("arrow", "up");
+          }
+          if (event.keyCode === 40) {
+            return scope.$broadcast("arrow", "down");
           }
         };
+        return initParameters();
       }
     };
   });
@@ -113,6 +111,7 @@
         };
       },
       link: function(scope) {
+        console.log("inactive " + scope.connections.length);
         return scope.initParameters();
       }
     };
@@ -120,6 +119,12 @@
 
   alfredDirective.directive("activeList", function() {
     return {
+
+      /*
+          connections         --  array of all hosts
+          filteredConnections --  array of queried hosts
+          subConnections      --  array of visible hosts
+       */
       require: "^alfred",
       restrict: "AE",
       templateUrl: "partials/active-connections.html",
@@ -175,6 +180,7 @@
       },
       link: function(scope, element, attrs, alfredCtrl) {
         var activateNextItem, activatePreviousItem;
+        console.log("active " + scope.connections.length);
         scope.prevquery = scope.query = null;
         scope.offset = scope.from + scope.amount;
         scope.$watch("selectedIndex", function(key) {
@@ -199,10 +205,15 @@
           currentIndex = scope.getSelectedConnection();
           if (next.length === 0) {
             scope.loadDown();
-            next = current.next();
-            if (next.length !== 0) {
-              return scope.setSelectedConnection(currentIndex);
-            }
+            return setTimeout((function() {
+              next = current.next();
+              if (next.length === 0) {
+                scope.from = 0;
+                scope.offset = scope.amount;
+                scope.setSelectedConnection(0);
+                return scope.$apply();
+              }
+            }), 100);
           } else {
             return scope.setSelectedConnection(++currentIndex);
           }
@@ -213,11 +224,16 @@
           prev = current.prev();
           currentIndex = scope.getSelectedConnection();
           if (prev.length === 0) {
-            scope.loadUp;
-            prev = current.prev();
-            if (prev.length !== 0) {
-              return scope.setSelectedConnection(currentIndex);
-            }
+            scope.loadUp();
+            return setTimeout((function() {
+              prev = current.prev();
+              if (prev.length === 0) {
+                scope.from = scope.filteredConnections.length - scope.amount;
+                scope.offset = scope.filteredConnections.length - 1;
+                scope.setSelectedConnection(scope.amount - 1);
+                return scope.$apply();
+              }
+            }), 100);
           } else {
             return scope.setSelectedConnection(--currentIndex);
           }
@@ -240,15 +256,17 @@
 
   alfredDirective.filter("filterConnections", [
     "$filter", function($filter) {
-      return function(input, scope, arg1, arg2) {
-        var filterFilter;
+      return function(input, query, arg1, arg2) {
+        var filterFilter, scope;
+        scope = this;
         if (scope.prevquery !== scope.query) {
           scope.initParameters();
           scope.prevquery = scope.query;
         }
         filterFilter = $filter("filter");
         scope.filteredConnections = filterFilter(scope.connections, scope.query);
-        console.log(arg1, arg2, scope.connections);
+        console.log(scope.query);
+        console.log(arg1, arg2, scope.filteredConnections.length);
         return scope.filteredConnections.slice(arg1, arg2);
       };
     }
