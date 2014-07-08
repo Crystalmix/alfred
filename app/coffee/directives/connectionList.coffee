@@ -15,6 +15,7 @@ alfredDirective.directive "alfred", () ->
             heightCell:   "="
 
         controller: ($scope) ->
+            $scope.query = null
             $scope.entities = $scope.connections.concat $scope.histories
 
             $scope.selectedIndex = 0
@@ -60,7 +61,6 @@ alfredDirective.directive "alfred", () ->
                 scope.fromHistory    = 0
                 scope.selectedIndex  = 0
 
-
             scope.keydown = (event) ->
                 setTimeout (->
                     do checkQuery
@@ -76,7 +76,6 @@ alfredDirective.directive "alfred", () ->
                     scope.$broadcast "arrow", "up"
                 if event.keyCode is 40
                     scope.$broadcast "arrow", "down"
-
             do initParameters
 
 
@@ -100,7 +99,6 @@ alfredDirective.directive "inactiveList",  () ->
                 $scope.offset = $scope.from + $scope.amount
 
         link: (scope) ->
-            console.log "inactive #{scope.connections.length}"
             do scope.initParameters
 
 
@@ -117,7 +115,7 @@ alfredDirective.directive "activeList",  () ->
             connections:   "="
             amount:        "="
             heightCell:    "="
-            query:         "=scopeQuery"
+            query:         "="
             from:          "="
             selectedIndex: "="
 
@@ -160,9 +158,8 @@ alfredDirective.directive "activeList",  () ->
 
 
         link: (scope, element, attrs, alfredCtrl) ->
-            console.log "active #{scope.connections.length}"
 
-            scope.prevquery = scope.query = null
+            scope.prevquery = null
             scope.offset    = scope.from + scope.amount
 
             scope.$watch "selectedIndex", (key) ->
@@ -178,8 +175,6 @@ alfredDirective.directive "activeList",  () ->
 
             scope.$watch "from", () ->
                 scope.offset = scope.from + scope.amount
-                console.log scope.from
-                console.log scope.offset
 
             activateNextItem = () ->
                 current = element.find(".active")
@@ -207,9 +202,13 @@ alfredDirective.directive "activeList",  () ->
                     setTimeout (->
                         prev = current.prev()
                         if prev.length is 0
-                            scope.from   = scope.filteredConnections.length - scope.amount
-                            scope.offset = scope.filteredConnections.length - 1
-                            scope.setSelectedConnection(scope.amount-1)
+                            from = scope.filteredConnections.length - scope.amount
+                            if from > 0
+                                scope.from   = from
+                                scope.offset = scope.filteredConnections.length - 1
+                                scope.setSelectedConnection(scope.amount - 1)
+                            else
+                                scope.setSelectedConnection(scope.filteredConnections.length - 1)
                             scope.$apply()
                     ), 100
                 else
@@ -233,7 +232,7 @@ alfredDirective.filter "filterConnections", ["$filter", ($filter) ->
                 scope.prevquery = scope.query
             filterFilter = $filter("filter")
             scope.filteredConnections = filterFilter scope.connections, scope.query
-            console.log scope.query
+            console.log "query #{scope.query}"
             console.log arg1, arg2, scope.filteredConnections.length
             return scope.filteredConnections.slice arg1, arg2
     ]

@@ -17,6 +17,7 @@
         heightCell: "="
       },
       controller: function($scope) {
+        $scope.query = null;
         $scope.entities = $scope.connections.concat($scope.histories);
         $scope.selectedIndex = 0;
         $scope.setSelectedConnection = function(index) {
@@ -111,7 +112,6 @@
         };
       },
       link: function(scope) {
-        console.log("inactive " + scope.connections.length);
         return scope.initParameters();
       }
     };
@@ -132,7 +132,7 @@
         connections: "=",
         amount: "=",
         heightCell: "=",
-        query: "=scopeQuery",
+        query: "=",
         from: "=",
         selectedIndex: "="
       },
@@ -180,8 +180,7 @@
       },
       link: function(scope, element, attrs, alfredCtrl) {
         var activateNextItem, activatePreviousItem;
-        console.log("active " + scope.connections.length);
-        scope.prevquery = scope.query = null;
+        scope.prevquery = null;
         scope.offset = scope.from + scope.amount;
         scope.$watch("selectedIndex", function(key) {
           return scope.$parent.$parent.selectedIndex = key;
@@ -194,9 +193,7 @@
           }
         });
         scope.$watch("from", function() {
-          scope.offset = scope.from + scope.amount;
-          console.log(scope.from);
-          return console.log(scope.offset);
+          return scope.offset = scope.from + scope.amount;
         });
         activateNextItem = function() {
           var current, currentIndex, next;
@@ -226,11 +223,17 @@
           if (prev.length === 0) {
             scope.loadUp();
             return setTimeout((function() {
+              var from;
               prev = current.prev();
               if (prev.length === 0) {
-                scope.from = scope.filteredConnections.length - scope.amount;
-                scope.offset = scope.filteredConnections.length - 1;
-                scope.setSelectedConnection(scope.amount - 1);
+                from = scope.filteredConnections.length - scope.amount;
+                if (from > 0) {
+                  scope.from = from;
+                  scope.offset = scope.filteredConnections.length - 1;
+                  scope.setSelectedConnection(scope.amount - 1);
+                } else {
+                  scope.setSelectedConnection(scope.filteredConnections.length - 1);
+                }
                 return scope.$apply();
               }
             }), 100);
@@ -265,7 +268,7 @@
         }
         filterFilter = $filter("filter");
         scope.filteredConnections = filterFilter(scope.connections, scope.query);
-        console.log(scope.query);
+        console.log("query " + scope.query);
         console.log(arg1, arg2, scope.filteredConnections.length);
         return scope.filteredConnections.slice(arg1, arg2);
       };
