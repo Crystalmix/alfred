@@ -23,7 +23,6 @@
         heightCell: "="
       },
       controller: function($scope) {
-        $scope.entities = $scope.connections.concat($scope.histories);
         $scope.selectedIndex = 0;
         $scope.setSelectedConnection = function(index) {
           return $scope.selectedIndex = index;
@@ -76,31 +75,22 @@
               scope.isLeftActive = false;
               scope.isRightActive = true;
             }
-            if (event.keyCode === 40) {
+            if (event.keyCode === 38) {
               scope.$broadcast("arrow", "up");
             }
-            if (event.keyCode === 38) {
+            if (event.keyCode === 40) {
               return scope.$broadcast("arrow", "down");
             }
           }
         };
-
-        /*$input.bind 'keydown', (e) =>
-            if e.keyCode is 40
-                e.preventDefault();
-                do activateNextItem
-            if e.keyCode is 38
-                e.preventDefault();
-                do activatePreviousItem
-         */
       }
     };
   });
 
-  alfredDirective.directive("connectionListNotActive", function() {
+  alfredDirective.directive("inactiveList", function() {
     return {
       restrict: "AE",
-      templateUrl: "partials/connections-not-active.html",
+      templateUrl: "partials/inactive-connections.html",
       scope: {
         connections: "=",
         amount: "=",
@@ -128,11 +118,11 @@
     };
   });
 
-  alfredDirective.directive("connectionList", function() {
+  alfredDirective.directive("activeList", function() {
     return {
       require: "^alfred",
       restrict: "AE",
-      templateUrl: "partials/connections.html",
+      templateUrl: "partials/active-connections.html",
       scope: {
         connections: "=",
         amount: "=",
@@ -192,9 +182,9 @@
         });
         scope.$on('arrow', function(event, orientation) {
           if (orientation === 'up') {
-            return activateNextItem();
-          } else {
             return activatePreviousItem();
+          } else {
+            return activateNextItem();
           }
         });
         scope.$watch("from", function() {
@@ -202,16 +192,6 @@
           console.log(scope.from);
           return console.log(scope.offset);
         });
-
-        /*scope.$watch "from", () ->
-            if scope.from isnt 0
-                if scope.$parent.$parent.isRightActive
-                    ++ scope.$parent.$parent.fromHistory
-                    scope.$apply()
-                if scope.$parent.$parent.isLeftActive
-                    ++ scope.$parent.$parent.fromConnectoins
-                    scope.$apply()
-         */
         activateNextItem = function() {
           var current, currentIndex, next;
           current = element.find(".active");
@@ -249,7 +229,7 @@
   alfredDirective.directive("connectionItem", function() {
     return {
       restrict: "A",
-      require: "^connectionList",
+      require: "^activeList",
       link: function(scope, element, attrs, connectionListCtrl) {
         return element.bind("mouseenter", function() {
           return connectionListCtrl.select(scope.key);
@@ -268,6 +248,7 @@
         }
         filterFilter = $filter("filter");
         scope.filteredConnections = filterFilter(scope.connections, scope.query);
+        console.log(arg1, arg2, scope.connections);
         return scope.filteredConnections.slice(arg1, arg2);
       };
     }

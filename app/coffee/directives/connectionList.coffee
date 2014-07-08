@@ -20,7 +20,7 @@ alfredDirective.directive "alfred", () ->
             heightCell:   "="
 
         controller: ($scope) ->
-            $scope.entities = $scope.connections.concat $scope.histories
+            #$scope.entities = $scope.connections.concat $scope.histories
 
             $scope.selectedIndex = 0
 
@@ -44,6 +44,7 @@ alfredDirective.directive "alfred", () ->
             scope.$watch $input, () =>
                 do setFocus
 
+
             scope.$watch "isTable", () ->
                 if scope.isTable
                     scope.fromConnection = 0
@@ -54,6 +55,7 @@ alfredDirective.directive "alfred", () ->
             scope.isLeftActive = yes
             scope.isRightActive = no
 
+
             checkQuery = () ->
                 if scope.query
                     scope.isTable = no
@@ -61,6 +63,7 @@ alfredDirective.directive "alfred", () ->
                 else
                     scope.isTable = yes
                     do scope.$apply
+
 
             scope.keydown = (event) ->
                 setTimeout (->
@@ -73,24 +76,16 @@ alfredDirective.directive "alfred", () ->
                     if event.keyCode is 39
                         scope.isLeftActive  = no
                         scope.isRightActive = yes
-                    if event.keyCode is 40
-                        scope.$broadcast("arrow", "up");
                     if event.keyCode is 38
-                        scope.$broadcast("arrow", "down");
-
-            ###$input.bind 'keydown', (e) =>
-                if e.keyCode is 40
-                    e.preventDefault();
-                    do activateNextItem
-                if e.keyCode is 38
-                    e.preventDefault();
-                    do activatePreviousItem
-            ###
+                        scope.$broadcast "arrow", "up"
+                    if event.keyCode is 40
+                        scope.$broadcast "arrow", "down"
 
 
-alfredDirective.directive "connectionListNotActive",  () ->
+
+alfredDirective.directive "inactiveList",  () ->
         restrict: "AE"
-        templateUrl: "partials/connections-not-active.html"
+        templateUrl: "partials/inactive-connections.html"
         scope:
             connections:   "="
             amount:        "="
@@ -113,10 +108,10 @@ alfredDirective.directive "connectionListNotActive",  () ->
 
 
 
-alfredDirective.directive "connectionList",  () ->
+alfredDirective.directive "activeList",  () ->
         require: "^alfred"
         restrict: "AE"
-        templateUrl: "partials/connections.html"
+        templateUrl: "partials/active-connections.html"
         scope:
             connections:   "="
             amount:        "="
@@ -174,25 +169,15 @@ alfredDirective.directive "connectionList",  () ->
 
             scope.$on('arrow', (event, orientation) ->
                 if orientation is 'up'
-                    do activateNextItem
-                else
                     do activatePreviousItem
+                else
+                    do activateNextItem
             );
 
             scope.$watch "from", () ->
                 scope.offset = scope.from + scope.amount
                 console.log scope.from
                 console.log scope.offset
-
-            ###scope.$watch "from", () ->
-                if scope.from isnt 0
-                    if scope.$parent.$parent.isRightActive
-                        ++ scope.$parent.$parent.fromHistory
-                        scope.$apply()
-                    if scope.$parent.$parent.isLeftActive
-                        ++ scope.$parent.$parent.fromConnectoins
-                        scope.$apply()
-            ###
 
             activateNextItem = () ->
                 current = element.find(".active")
@@ -205,7 +190,6 @@ alfredDirective.directive "connectionList",  () ->
                         scope.setSelectedConnection(currentIndex)
                 else
                     scope.setSelectedConnection(++currentIndex)
-
 
             activatePreviousItem = () ->
                 current = element.find(".active")
@@ -224,7 +208,7 @@ alfredDirective.directive "connectionList",  () ->
 
 alfredDirective.directive "connectionItem",  () ->
         restrict: "A"
-        require: "^connectionList"
+        require: "^activeList"
 
         link: (scope, element, attrs, connectionListCtrl) ->
             element.bind "mouseenter", () ->
@@ -238,5 +222,6 @@ alfredDirective.filter "filterConnections", ["$filter", ($filter) ->
                 scope.prevquery = scope.query
             filterFilter = $filter("filter")
             scope.filteredConnections = filterFilter scope.connections, scope.query
+            console.log arg1, arg2, scope.connections
             return scope.filteredConnections.slice arg1, arg2
     ]

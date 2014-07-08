@@ -12,20 +12,20 @@
             </div>
 
             <div class="left-list" ng-if="isLeftActive">
-                <connection-list connections="connections"
-                                 amount="amount"
-                                 height-cell="heightCell"
-                                 scope-query="query"
-                                 from="fromConnection"
-                                 selected-index="selectedIndex">
-                </connection-list>
+                <active-list connections    = "connections"
+                             amount         = "amount"
+                             height-cell    = "heightCell"
+                             scope-query    = "query"
+                             from           = "fromConnection"
+                             selected-index = "selectedIndex">
+                </active-list>
             </div>
             <div class="left-list" ng-if="isRightActive">
-                <connection-list-not-active connections="connections"
-                                            amount="amount"
-                                            height-cell="heightCell"
-                                            from="fromConnection">
-                </connection-list-not-active>
+                <inactive-list connections  = "connections"
+                               amount       = "amount"
+                               height-cell  = "heightCell"
+                               from         = "fromConnection">
+                </inactive-list>
             </div>
         </div>
 
@@ -34,32 +34,32 @@
                 <span>History</span>
             </div>
             <div class="left-list" ng-if="isLeftActive">
-                <connection-list-not-active connections="histories"
-                                            amount="amount"
-                                            height-cell="heightCell"
-                                            from="fromHistory">
-                </connection-list-not-active>
+                <inactive-list connections  = "histories"
+                               amount       = "amount"
+                               height-cell  = "heightCell"
+                               from         = "fromHistory">
+                </inactive-list>
             </div>
             <div class="left-list" ng-if="isRightActive">
-                <connection-list connections="histories"
-                                 amount="amount"
-                                 height-cell="heightCell"
-                                 scope-query="query"
-                                 from="fromHistory"
-                                 selected-index="selectedIndex">
-                </connection-list>
+                <active-list connections    = "histories"
+                             amount         = "amount"
+                             height-cell    = "heightCell"
+                             scope-query    = "query"
+                             from           = "fromHistory"
+                             selected-index = "selectedIndex">
+                </active-list>
             </div>
         </div>
     </div>
 
     <div ng-show="!isTable">
-        <connection-list connections="entities"
-                         amount="amount"
-                         height-cell="heightCell"
-                         scope-query="query"
-                         from="fromConnection"
-                         selected-index="selectedIndex">
-        </connection-list>
+        <active-list connections    = "entities"
+                     amount         = "amount"
+                     height-cell    = "heightCell"
+                     scope-query    = "query"
+                     from           = "fromConnection"
+                     selected-index = "selectedIndex">
+        </active-list>
     </div>
 
 </div>
