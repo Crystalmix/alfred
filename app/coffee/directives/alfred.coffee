@@ -28,7 +28,7 @@ alfredDirective.directive "alfred", () ->
 
             @enterCallback = (connection) ->
                 #TODO not work correct
-                $scope.onEnterCallback(connection)
+                $scope.onEnterCallback({connection:connection})
 
             @changeFromProperty = (from) ->
                 if $scope.isTable
@@ -36,7 +36,7 @@ alfredDirective.directive "alfred", () ->
                         $scope.fromConnection = from
                     else
                         $scope.fromHistory = from
-                console.log $scope.fromConnection, $scope.fromHistory
+
             return @
 
 
@@ -44,7 +44,7 @@ alfredDirective.directive "alfred", () ->
             $input = element.find '#alfred-input'
 
             scope.$watch $input, () =>
-                $input.focus
+                do $input.focus
 
             scope.$watch "isTable", () ->
                 do initializeParameters

@@ -28,17 +28,18 @@
           return $scope.setSelectedConnection(key);
         };
         this.enterCallback = function(connection) {
-          return $scope.onEnterCallback(connection);
+          return $scope.onEnterCallback({
+            connection: connection
+          });
         };
         this.changeFromProperty = function(from) {
           if ($scope.isTable) {
             if ($scope.isLeftActive) {
-              $scope.fromConnection = from;
+              return $scope.fromConnection = from;
             } else {
-              $scope.fromHistory = from;
+              return $scope.fromHistory = from;
             }
           }
-          return console.log($scope.fromConnection, $scope.fromHistory);
         };
         return this;
       },
@@ -47,7 +48,7 @@
         $input = element.find('#alfred-input');
         scope.$watch($input, (function(_this) {
           return function() {
-            return $input.focus;
+            return $input.focus();
           };
         })(this));
         scope.$watch("isTable", function() {
