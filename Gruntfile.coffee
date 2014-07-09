@@ -17,7 +17,7 @@ module.exports = (grunt) ->
                     "app/js/controllers/alfredController.js": "#{coffeePath}/controllers/alfredController.coffee"
                     "app/js/services/httpService.js": "#{coffeePath}/services/httpService.coffee"
                     "app/js/directives/scroll.js": "#{coffeePath}/directives/scroll.coffee"
-                    "app/js/directives/connectionList.js": "#{coffeePath}/directives/connectionList.coffee"
+                    "app/js/directives/alfred.js": "#{coffeePath}/directives/alfred.coffee"
 
         karma:
             unit:

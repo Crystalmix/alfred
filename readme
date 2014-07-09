@@ -1,0 +1,17 @@
+
+Alfred directive
+
+
+Directives:
+    alfred
+    activeList
+    inactiveList
+    connectionItem
+
+Filters:
+    filterConnections
+
+
+
+
+    Alfred directive

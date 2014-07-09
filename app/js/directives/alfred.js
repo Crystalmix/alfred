@@ -25,67 +25,80 @@
           return $scope.selectedIndex = index;
         };
         this.setSelectedIndex = function(key) {
-          $scope.setSelectedConnection(key);
-          return $scope.$apply();
+          return $scope.setSelectedConnection(key);
         };
-        return this.enterCallback = function(connection) {
+        this.enterCallback = function(connection) {
           return $scope.onEnterCallback(connection);
         };
+        this.changeFromProperty = function(from) {
+          if ($scope.isTable) {
+            if ($scope.isLeftActive) {
+              $scope.fromConnection = from;
+            } else {
+              $scope.fromHistory = from;
+            }
+          }
+          return console.log($scope.fromConnection, $scope.fromHistory);
+        };
+        return this;
       },
       link: function(scope, element) {
-        var $input, checkQuery, initParameters, setFocus;
+        var $input, checkQuery, hotkeys, initializeParameters, initializeTableParameters;
         $input = element.find('#alfred-input');
-        setFocus = function() {
-          return $input.focus();
-        };
         scope.$watch($input, (function(_this) {
           return function() {
-            return setFocus();
+            return $input.focus;
           };
         })(this));
         scope.$watch("isTable", function() {
-          if (scope.isTable) {
-            return initParameters();
-          }
+          return initializeParameters();
         });
-        scope.isTable = true;
-        scope.isLeftActive = true;
-        scope.isRightActive = false;
         checkQuery = function() {
           if (scope.query) {
             scope.isTable = false;
           } else {
-            scope.isTable = true;
+            initializeTableParameters();
           }
           return scope.$apply();
         };
-        initParameters = function() {
+        initializeParameters = function() {
           scope.fromConnection = 0;
           scope.fromHistory = 0;
           return scope.selectedIndex = 0;
         };
+        initializeTableParameters = function() {
+          scope.isTable = true;
+          scope.isLeftActive = true;
+          return scope.isRightActive = false;
+        };
+        hotkeys = [37, 38, 39, 40];
         scope.keydown = function(event) {
-          setTimeout((function() {
-            return checkQuery();
-          }), 0);
-          if (scope.isTable) {
-            if (event.keyCode === 37) {
-              scope.isLeftActive = true;
-              scope.isRightActive = false;
+          if (hotkeys.indexOf(event.keyCode) !== -1) {
+            event.preventDefault();
+            if (scope.isTable) {
+              if (event.keyCode === 37) {
+                scope.isLeftActive = true;
+                scope.isRightActive = false;
+              }
+              if (event.keyCode === 39) {
+                scope.isLeftActive = false;
+                scope.isRightActive = true;
+              }
             }
-            if (event.keyCode === 39) {
-              scope.isLeftActive = false;
-              scope.isRightActive = true;
+            if (event.keyCode === 38) {
+              scope.$broadcast("arrow", "up");
             }
-          }
-          if (event.keyCode === 38) {
-            scope.$broadcast("arrow", "up");
-          }
-          if (event.keyCode === 40) {
-            return scope.$broadcast("arrow", "down");
+            if (event.keyCode === 40) {
+              return scope.$broadcast("arrow", "down");
+            }
+          } else {
+            return setTimeout((function() {
+              return checkQuery();
+            }), 0);
           }
         };
-        return initParameters();
+        initializeParameters();
+        return initializeTableParameters();
       }
     };
   });
@@ -111,12 +124,12 @@
             height: $scope.amount * $scope.heightCell
           };
         };
-        return $scope.initParameters = function() {
+        return $scope.changeOffset = function() {
           return $scope.offset = $scope.from + $scope.amount;
         };
       },
       link: function(scope) {
-        return scope.initParameters();
+        return scope.changeOffset();
       }
     };
   });
@@ -151,8 +164,16 @@
             height: $scope.amount * $scope.heightCell
           };
         };
-        $scope.initParameters = function() {
+        $scope.changeOffset = function() {
           return $scope.offset = $scope.from + $scope.amount;
+        };
+        $scope.initializeParameteres = function() {
+          $scope.from = 0;
+          return $scope.changeOffset();
+        };
+        $scope.select = function(connection, key) {
+          $scope.setSelectedConnection(key);
+          return $scope.alfredController.enterCallback(connection);
         };
         $scope.setSelectedConnection = function(index) {
           return $scope.selectedIndex = index;
@@ -176,18 +197,19 @@
           $scope.setSelectedConnection(key);
           return $scope.$apply();
         };
-        return $scope.initParameters();
+        $scope.changeOffset();
+        return this;
       },
       link: function(scope, element, attrs, alfredCtrl) {
         var activateNextItem, activatePreviousItem;
+        scope.alfredController = alfredCtrl;
         scope.prevquery = null;
-        scope.offset = scope.from + scope.amount;
-        scope.select = function(connection, key) {
-          scope.setSelectedConnection(key);
-          return scope.$parent.$parent.$parent.$parent.enterConnection(connection);
-        };
         scope.$watch("selectedIndex", function(key) {
-          return scope.$parent.$parent.selectedIndex = key;
+          return alfredCtrl.setSelectedIndex(key);
+        });
+        scope.$watch("from", function(from) {
+          scope.offset = scope.from + scope.amount;
+          return alfredCtrl.changeFromProperty(from);
         });
         scope.$on('arrow', function(event, orientation) {
           if (orientation === 'up') {
@@ -195,9 +217,6 @@
           } else {
             return activateNextItem();
           }
-        });
-        scope.$watch("from", function() {
-          return scope.offset = scope.from + scope.amount;
         });
         activateNextItem = function() {
           var current, currentIndex, next;
@@ -267,7 +286,7 @@
         var filterFilter, scope;
         scope = this;
         if (scope.prevquery !== scope.query) {
-          scope.initParameters();
+          scope.initializeParameteres();
           scope.prevquery = scope.query;
         }
         filterFilter = $filter("filter");
