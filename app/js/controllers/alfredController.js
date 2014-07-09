@@ -17,6 +17,9 @@
                               @scope.connections = response
                                *@modifiedConnection connection for connection in @scope.connections
        */
+      this.scope.enterConnection = function(connection) {
+        return console.log("--- outerController", connection);
+      };
       this.scope.query = null;
       this.scope.histories = [
         {

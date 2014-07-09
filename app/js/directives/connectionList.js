@@ -14,7 +14,8 @@
         connections: "=",
         histories: "=",
         amount: "=",
-        heightCell: "="
+        heightCell: "=",
+        onEnterCallback: "&"
       },
       controller: function($scope) {
         $scope.query = null;
@@ -23,9 +24,12 @@
         $scope.setSelectedConnection = function(index) {
           return $scope.selectedIndex = index;
         };
-        return this.setSelectedIndex = function(key) {
+        this.setSelectedIndex = function(key) {
           $scope.setSelectedConnection(key);
           return $scope.$apply();
+        };
+        return this.enterCallback = function(connection) {
+          return $scope.onEnterCallback(connection);
         };
       },
       link: function(scope, element) {
@@ -150,10 +154,6 @@
         $scope.initParameters = function() {
           return $scope.offset = $scope.from + $scope.amount;
         };
-        $scope.select = function(connection, key) {
-          $scope.setSelectedConnection(key);
-          return console.log(connection);
-        };
         $scope.setSelectedConnection = function(index) {
           return $scope.selectedIndex = index;
         };
@@ -182,6 +182,10 @@
         var activateNextItem, activatePreviousItem;
         scope.prevquery = null;
         scope.offset = scope.from + scope.amount;
+        scope.select = function(connection, key) {
+          scope.setSelectedConnection(key);
+          return scope.$parent.$parent.$parent.$parent.enterConnection(connection);
+        };
         scope.$watch("selectedIndex", function(key) {
           return scope.$parent.$parent.selectedIndex = key;
         });
@@ -268,8 +272,6 @@
         }
         filterFilter = $filter("filter");
         scope.filteredConnections = filterFilter(scope.connections, scope.query);
-        console.log("query " + scope.query);
-        console.log(arg1, arg2, scope.filteredConnections.length);
         return scope.filteredConnections.slice(arg1, arg2);
       };
     }

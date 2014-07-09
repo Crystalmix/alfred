@@ -9,10 +9,11 @@ alfredDirective.directive "alfred", () ->
         replace: yes
         transclude: yes
         scope:
-            connections:  "="
-            histories:    "="
-            amount:       "="
-            heightCell:   "="
+            connections:     "="
+            histories:       "="
+            amount:          "="
+            heightCell:      "="
+            onEnterCallback: "&"
 
         controller: ($scope) ->
             $scope.query = null
@@ -27,6 +28,9 @@ alfredDirective.directive "alfred", () ->
                 $scope.setSelectedConnection key
                 do $scope.$apply
 
+            @enterCallback = (connection) ->
+                $scope.onEnterCallback(connection)
+
             #@changeFrom = (index) ->
             #    $scope.fromConnection = index
 
@@ -40,13 +44,12 @@ alfredDirective.directive "alfred", () ->
             scope.$watch $input, () =>
                 do setFocus
 
-
             scope.$watch "isTable", () ->
                 if scope.isTable
                     do initParameters
 
-            scope.isTable = yes
-            scope.isLeftActive = yes
+            scope.isTable       = yes
+            scope.isLeftActive  = yes
             scope.isRightActive = no
 
             checkQuery = () ->
@@ -130,10 +133,6 @@ alfredDirective.directive "activeList",  () ->
             $scope.initParameters = () ->
                 $scope.offset = $scope.from + $scope.amount
 
-            $scope.select = (connection, key) ->
-                $scope.setSelectedConnection(key)
-                console.log connection
-
             $scope.setSelectedConnection = (index) ->
                 $scope.selectedIndex = index
 
@@ -161,6 +160,13 @@ alfredDirective.directive "activeList",  () ->
 
             scope.prevquery = null
             scope.offset    = scope.from + scope.amount
+
+            scope.select = (connection, key) ->
+                scope.setSelectedConnection(key)
+                #TODO call parent controller
+                scope.$parent.$parent.$parent.$parent.enterConnection(connection)
+                #console.log connection
+
 
             scope.$watch "selectedIndex", (key) ->
                 #TODO call parent controller
@@ -232,7 +238,5 @@ alfredDirective.filter "filterConnections", ["$filter", ($filter) ->
                 scope.prevquery = scope.query
             filterFilter = $filter("filter")
             scope.filteredConnections = filterFilter scope.connections, scope.query
-            console.log "query #{scope.query}"
-            console.log arg1, arg2, scope.filteredConnections.length
             return scope.filteredConnections.slice arg1, arg2
     ]

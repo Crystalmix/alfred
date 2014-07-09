@@ -13,6 +13,9 @@ class AlfredController
                                 #@modifiedConnection connection for connection in @scope.connections
 
         ###
+        @scope.enterConnection = (connection) ->
+            console.log "--- outerController", connection
+
         @scope.query = null
         @scope.histories = [
             {
