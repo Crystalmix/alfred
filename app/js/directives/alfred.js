@@ -120,11 +120,6 @@
             height: $scope.heightCell + 'px'
           };
         };
-        $scope.setHeightList = function() {
-          return {
-            height: $scope.amount * $scope.heightCell
-          };
-        };
         return $scope.changeOffset = function() {
           return $scope.offset = $scope.from + $scope.amount;
         };
@@ -158,11 +153,6 @@
         $scope.setHeight = function() {
           return {
             height: $scope.heightCell + 'px'
-          };
-        };
-        $scope.setHeightList = function() {
-          return {
-            height: $scope.amount * $scope.heightCell
           };
         };
         $scope.changeOffset = function() {

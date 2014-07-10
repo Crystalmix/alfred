@@ -27,7 +27,6 @@ alfredDirective.directive "alfred", () ->
                 $scope.setSelectedConnection key
 
             @enterCallback = (connection) ->
-                #TODO not work correct
                 $scope.onEnterCallback({connection:connection})
 
             @changeFromProperty = (from) ->
@@ -104,9 +103,6 @@ alfredDirective.directive "inactiveList",  () ->
             $scope.setHeight = () ->
                 height: $scope.heightCell + 'px'
 
-            $scope.setHeightList = () ->
-                height: $scope.amount * $scope.heightCell
-
             $scope.changeOffset = () ->
                 $scope.offset = $scope.from + $scope.amount
 
@@ -135,9 +131,6 @@ alfredDirective.directive "activeList",  () ->
         controller: ($scope) ->
             $scope.setHeight = () ->
                 height: $scope.heightCell + 'px'
-
-            $scope.setHeightList = () ->
-                height: $scope.amount * $scope.heightCell
 
             $scope.changeOffset = () ->
                 $scope.offset = $scope.from + $scope.amount
