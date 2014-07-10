@@ -3,7 +3,13 @@
            id="alfred-input"
            class="form-control input-lg input"
            ng-model="query"
-           ng-keydown="keydown($event)">
+           ng-keydown="keydown($event)"
+           hotkey bind="{'Enter' : enterEvent,
+                         'left'  : leftRightEvent,
+                         'right' : leftRightEvent,
+                         'up'    : upDownEvent,
+                         'down'  : upDownEvent}"
+           placeholder="{{placeholder}}">
 
     <div ng-if="isTable">
         <div id="left" ng-class="{ active: isLeftActive }">

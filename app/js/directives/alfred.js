@@ -2,9 +2,9 @@
   'use strict';
   var alfredDirective;
 
-  alfredDirective = angular.module("alfredDirective", []);
+  alfredDirective = angular.module("alfredDirective", ['drahak.hotkeys']);
 
-  alfredDirective.directive("alfred", function() {
+  alfredDirective.directive("alfred", function($hotkey) {
     return {
       restrict: "E",
       templateUrl: "partials/alfred.html",
@@ -15,12 +15,37 @@
         histories: "=",
         amount: "=",
         heightCell: "=",
-        onEnterCallback: "&"
+        onEnterCallback: "&",
+        placeholder: "="
       },
       controller: function($scope) {
         $scope.query = null;
         $scope.entities = $scope.connections.concat($scope.histories);
         $scope.selectedIndex = 0;
+        $scope.enterEvent = function($event) {
+          $event.preventDefault();
+          return $scope.$broadcast("enter");
+        };
+        $scope.leftRightEvent = function($event) {
+          $event.preventDefault();
+          if ($scope.isTable) {
+            if ($event.keyCode === 37) {
+              $scope.isLeftActive = true;
+              return $scope.isRightActive = false;
+            } else {
+              $scope.isLeftActive = false;
+              return $scope.isRightActive = true;
+            }
+          }
+        };
+        $scope.upDownEvent = function($event) {
+          $event.preventDefault();
+          if ($event.keyCode === 38) {
+            return $scope.$broadcast("arrow", "up");
+          } else {
+            return $scope.$broadcast("arrow", "down");
+          }
+        };
         $scope.setSelectedConnection = function(index) {
           return $scope.selectedIndex = index;
         };
@@ -41,10 +66,20 @@
             }
           }
         };
+        this.changeActiveList = function() {
+          if ($scope.isLeftActive) {
+            $scope.isLeftActive = false;
+            $scope.isRightActive = true;
+          } else {
+            $scope.isLeftActive = true;
+            $scope.isRightActive = false;
+          }
+          return $scope.$apply();
+        };
         return this;
       },
       link: function(scope, element) {
-        var $input, checkQuery, hotkeys, initializeParameters, initializeTableParameters;
+        var $input, checkQuery, initializeParameters, initializeTableParameters;
         $input = element.find('#alfred-input');
         scope.$watch($input, (function(_this) {
           return function() {
@@ -58,7 +93,7 @@
           if (scope.query) {
             scope.isTable = false;
           } else {
-            initializeTableParameters();
+            scope.isTable = true;
           }
           return scope.$apply();
         };
@@ -72,31 +107,10 @@
           scope.isLeftActive = true;
           return scope.isRightActive = false;
         };
-        hotkeys = [37, 38, 39, 40];
-        scope.keydown = function(event) {
-          if (hotkeys.indexOf(event.keyCode) !== -1) {
-            event.preventDefault();
-            if (scope.isTable) {
-              if (event.keyCode === 37) {
-                scope.isLeftActive = true;
-                scope.isRightActive = false;
-              }
-              if (event.keyCode === 39) {
-                scope.isLeftActive = false;
-                scope.isRightActive = true;
-              }
-            }
-            if (event.keyCode === 38) {
-              scope.$broadcast("arrow", "up");
-            }
-            if (event.keyCode === 40) {
-              return scope.$broadcast("arrow", "down");
-            }
-          } else {
-            return setTimeout((function() {
-              return checkQuery();
-            }), 0);
-          }
+        scope.keydown = function() {
+          return setTimeout((function() {
+            return checkQuery();
+          }), 0);
         };
         initializeParameters();
         return initializeTableParameters();
@@ -106,6 +120,7 @@
 
   alfredDirective.directive("inactiveList", function() {
     return {
+      require: "^alfred",
       restrict: "AE",
       templateUrl: "partials/inactive-connections.html",
       scope: {
@@ -124,8 +139,11 @@
           return $scope.offset = $scope.from + $scope.amount;
         };
       },
-      link: function(scope) {
-        return scope.changeOffset();
+      link: function(scope, element, attrs, alfredCtrl) {
+        scope.changeOffset();
+        return element.bind("mouseenter", function() {
+          return alfredCtrl.changeActiveList();
+        });
       }
     };
   });
@@ -160,7 +178,7 @@
         };
         $scope.initializeParameteres = function() {
           $scope.from = 0;
-          return $scope.changeOffset();
+          return $scope.setSelectedConnection(0);
         };
         $scope.select = function(connection, key) {
           $scope.setSelectedConnection(key);
@@ -208,6 +226,12 @@
           } else {
             return activateNextItem();
           }
+        });
+        scope.$on('enter', function() {
+          var connection, key;
+          key = scope.getSelectedConnection();
+          connection = scope.subConnections[key];
+          return scope.select(connection, key);
         });
         activateNextItem = function() {
           var current, currentIndex, next;
@@ -276,7 +300,7 @@
       return function(input, query, arg1, arg2) {
         var filterFilter, scope;
         scope = this;
-        if (scope.prevquery !== scope.query) {
+        if (scope.prevquery !== scope.query && scope.query !== "") {
           scope.initializeParameteres();
           scope.prevquery = scope.query;
         }

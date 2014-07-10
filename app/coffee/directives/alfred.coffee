@@ -1,9 +1,9 @@
 'use strict';
 
-alfredDirective = angular.module("alfredDirective", [])
+alfredDirective = angular.module("alfredDirective", ['drahak.hotkeys'])
 
 
-alfredDirective.directive "alfred", () ->
+alfredDirective.directive "alfred", ($hotkey) ->
         restrict: "E"
         templateUrl: "partials/alfred.html"
         replace: yes
@@ -14,11 +14,34 @@ alfredDirective.directive "alfred", () ->
             amount:          "="
             heightCell:      "="
             onEnterCallback: "&"
+            placeholder:     "="
 
         controller: ($scope) ->
             $scope.query = null
             $scope.entities = $scope.connections.concat $scope.histories
             $scope.selectedIndex = 0
+
+            # Event methods
+            $scope.enterEvent = ($event) ->
+                do $event.preventDefault
+                $scope.$broadcast "enter"
+
+            $scope.leftRightEvent = ($event) ->
+                do $event.preventDefault
+                if $scope.isTable
+                    if $event.keyCode is 37
+                        $scope.isLeftActive  = yes
+                        $scope.isRightActive = no
+                    else
+                        $scope.isLeftActive  = no
+                        $scope.isRightActive = yes
+
+            $scope.upDownEvent = ($event) ->
+                do $event.preventDefault
+                if $event.keyCode is 38
+                    $scope.$broadcast "arrow", "up"
+                else
+                    $scope.$broadcast "arrow", "down"
 
             $scope.setSelectedConnection = (index) ->
                 $scope.selectedIndex = index
@@ -36,6 +59,15 @@ alfredDirective.directive "alfred", () ->
                     else
                         $scope.fromHistory = from
 
+            @changeActiveList = () ->
+                if $scope.isLeftActive
+                    $scope.isLeftActive  = no
+                    $scope.isRightActive = yes
+                else
+                    $scope.isLeftActive  = yes
+                    $scope.isRightActive = no
+                do $scope.$apply
+
             return @
 
 
@@ -52,7 +84,7 @@ alfredDirective.directive "alfred", () ->
                 if scope.query
                     scope.isTable = no
                 else
-                    do initializeTableParameters
+                    scope.isTable = yes
                 do scope.$apply
 
             initializeParameters = () ->
@@ -65,32 +97,17 @@ alfredDirective.directive "alfred", () ->
                 scope.isLeftActive  = yes
                 scope.isRightActive = no
 
-            hotkeys = [37, 38, 39, 40]
-
-            scope.keydown = (event) ->
-                if hotkeys.indexOf(event.keyCode) isnt -1
-                    do event.preventDefault
-                    if scope.isTable
-                        if event.keyCode is 37
-                            scope.isLeftActive  = yes
-                            scope.isRightActive = no
-                        if event.keyCode is 39
-                            scope.isLeftActive  = no
-                            scope.isRightActive = yes
-                    if event.keyCode is 38
-                        scope.$broadcast "arrow", "up"
-                    if event.keyCode is 40
-                        scope.$broadcast "arrow", "down"
-                else
-                    setTimeout (->
-                        do checkQuery
-                    ), 0
+            scope.keydown = () ->
+                setTimeout (->
+                    do checkQuery
+                ), 0
 
             do initializeParameters
             do initializeTableParameters
 
 
 alfredDirective.directive "inactiveList",  () ->
+        require: "^alfred"
         restrict: "AE"
         templateUrl: "partials/inactive-connections.html"
         scope:
@@ -106,8 +123,11 @@ alfredDirective.directive "inactiveList",  () ->
             $scope.changeOffset = () ->
                 $scope.offset = $scope.from + $scope.amount
 
-        link: (scope) ->
+        link: (scope, element, attrs, alfredCtrl) ->
             do scope.changeOffset
+
+            element.bind "mouseenter", () ->
+                do alfredCtrl.changeActiveList
 
 
 alfredDirective.directive "activeList",  () ->
@@ -137,7 +157,7 @@ alfredDirective.directive "activeList",  () ->
 
             $scope.initializeParameteres = () ->
                 $scope.from = 0
-                do $scope.changeOffset
+                $scope.setSelectedConnection 0
 
             $scope.select = (connection, key) ->
                 $scope.setSelectedConnection key
@@ -184,7 +204,13 @@ alfredDirective.directive "activeList",  () ->
                     do activatePreviousItem
                 else
                     do activateNextItem
-            );
+            )
+
+            scope.$on('enter', () ->
+                key = scope.getSelectedConnection()
+                connection = scope.subConnections[key]
+                scope.select connection, key
+            )
 
             activateNextItem = () ->
                 current = element.find(".active")
@@ -237,7 +263,7 @@ alfredDirective.directive "connectionItem",  () ->
 alfredDirective.filter "filterConnections", ["$filter", ($filter) ->
         (input, query, arg1, arg2) ->
             scope = this
-            if scope.prevquery isnt scope.query
+            if scope.prevquery isnt scope.query and scope.query isnt ""
                 do scope.initializeParameteres
                 scope.prevquery = scope.query
             filterFilter = $filter("filter")
