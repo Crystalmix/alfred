@@ -71,7 +71,7 @@ alfredDirective.directive "alfred", ($hotkey) ->
             return @
 
 
-        link: (scope, element) ->
+        link: (scope, element, attrs) ->
             $input = element.find '#alfred-input'
 
             scope.$watch $input, () =>
@@ -79,6 +79,24 @@ alfredDirective.directive "alfred", ($hotkey) ->
 
             scope.$watch "isTable", () ->
                 do initializeParameters
+
+            bindHotkeysCmd = () ->
+                hotkey = do detectCtrlOrCmd
+                for i in [1..scope.amount]
+                    $hotkey.bind("#{hotkey} + #{i}", ($event) ->
+                        do $event.preventDefault
+                        console.log parseInt(String.fromCharCode($event.keyCode))
+                        scope.setSelectedConnection(parseInt(String.fromCharCode($event.keyCode)) - 1)
+                        do scope.$apply
+                        setTimeout (->
+                            scope.$broadcast "enter"
+                        ),100
+                    )
+
+            detectCtrlOrCmd = () ->
+                isMac = navigator.userAgent.toLowerCase().indexOf('mac') isnt -1
+                hotKey = if isMac then 'Cmd' else 'Ctrl'
+                hotKey
 
             checkQuery = () ->
                 if scope.query
@@ -97,13 +115,14 @@ alfredDirective.directive "alfred", ($hotkey) ->
                 scope.isLeftActive  = yes
                 scope.isRightActive = no
 
-            scope.keydown = () ->
+            scope.keydown = ($event) ->
                 setTimeout (->
                     do checkQuery
                 ), 0
 
             do initializeParameters
             do initializeTableParameters
+            do bindHotkeysCmd
 
 
 alfredDirective.directive "inactiveList",  () ->

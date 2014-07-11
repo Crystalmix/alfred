@@ -78,8 +78,8 @@
         };
         return this;
       },
-      link: function(scope, element) {
-        var $input, checkQuery, initializeParameters, initializeTableParameters;
+      link: function(scope, element, attrs) {
+        var $input, bindHotkeysCmd, checkQuery, detectCtrlOrCmd, initializeParameters, initializeTableParameters;
         $input = element.find('#alfred-input');
         scope.$watch($input, (function(_this) {
           return function() {
@@ -89,6 +89,29 @@
         scope.$watch("isTable", function() {
           return initializeParameters();
         });
+        bindHotkeysCmd = function() {
+          var hotkey, i, _i, _ref, _results;
+          hotkey = detectCtrlOrCmd();
+          _results = [];
+          for (i = _i = 1, _ref = scope.amount; 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
+            _results.push($hotkey.bind("" + hotkey + " + " + i, function($event) {
+              $event.preventDefault();
+              console.log(parseInt(String.fromCharCode($event.keyCode)));
+              scope.setSelectedConnection(parseInt(String.fromCharCode($event.keyCode)) - 1);
+              scope.$apply();
+              return setTimeout((function() {
+                return scope.$broadcast("enter");
+              }), 100);
+            }));
+          }
+          return _results;
+        };
+        detectCtrlOrCmd = function() {
+          var hotKey, isMac;
+          isMac = navigator.userAgent.toLowerCase().indexOf('mac') !== -1;
+          hotKey = isMac ? 'Cmd' : 'Ctrl';
+          return hotKey;
+        };
         checkQuery = function() {
           if (scope.query) {
             scope.isTable = false;
@@ -107,13 +130,14 @@
           scope.isLeftActive = true;
           return scope.isRightActive = false;
         };
-        scope.keydown = function() {
+        scope.keydown = function($event) {
           return setTimeout((function() {
             return checkQuery();
           }), 0);
         };
         initializeParameters();
-        return initializeTableParameters();
+        initializeTableParameters();
+        return bindHotkeysCmd();
       }
     };
   });
