@@ -23,6 +23,7 @@ alfredDirective.directive "alfred", (hotkeys) ->
 
             $scope.setSelectedConnection = (index) ->
                 $scope.selectedIndex = index
+                $scope.$broadcast "setSelectedIndex", index
 
             @setSelectedIndex = (key) ->
                 $scope.setSelectedConnection key
@@ -51,10 +52,6 @@ alfredDirective.directive "alfred", (hotkeys) ->
 
         link: (scope, element, attrs) ->
             $input = element.find '#alfred-input'
-
-            Mousetrap.bind('keydown', () ->
-                console.log yes
-            )
 
             scope.$watch $input, () =>
                 do $input.focus
@@ -107,25 +104,27 @@ alfredDirective.directive "alfred", (hotkeys) ->
                 })
 
 
-
-            ###bindHotkeysCmd = () ->
-                hotkey = do detectCtrlOrCmd
+            bindHotkeysCmd = () ->
+                cmd = do detectCtrlOrCmd
                 for i in [1..scope.amount]
-                    $hotkey.bind("#{hotkey} + #{i}", ($event) ->
-                        do $event.preventDefault
-                        console.log parseInt(String.fromCharCode($event.keyCode))
-                        scope.setSelectedConnection(parseInt(String.fromCharCode($event.keyCode)) - 1)
-                        do scope.$apply
-                        setTimeout (->
-                            scope.$broadcast "enter"
-                        ),100
-                    )
-            ###
+                    combo = "#{cmd}+#{i}"
+                    hotkeys.bindTo(scope)
+                        .add({
+                            combo: combo
+                            description: 'Cmd+i'
+                            allowIn: ['INPUT']
+                            callback: ($event) ->
+                                do $event.preventDefault
+                                scope.setSelectedConnection(parseInt(String.fromCharCode($event.keyCode)) - 1)
+                                scope.$broadcast "enter"
+                        })
+
 
             detectCtrlOrCmd = () ->
                 isMac = navigator.userAgent.toLowerCase().indexOf('mac') isnt -1
-                hotKey = if isMac then 'Cmd' else 'Ctrl'
+                hotKey = if isMac then 'command' else 'ctrl'
                 hotKey
+
 
             checkQuery = () ->
                 if scope.query
@@ -134,24 +133,28 @@ alfredDirective.directive "alfred", (hotkeys) ->
                     scope.isTable = yes
                 do scope.$apply
 
+
             initializeParameters = () ->
                 scope.fromConnection = 0
                 scope.fromHistory    = 0
                 scope.selectedIndex  = 0
+
 
             initializeTableParameters = () ->
                 scope.isTable       = yes
                 scope.isLeftActive  = yes
                 scope.isRightActive = no
 
+
             scope.keydown = ($event) ->
                 setTimeout (->
                     do checkQuery
                 ), 0
 
+
             do initializeParameters
             do initializeTableParameters
-            #do bindHotkeysCmd
+            do bindHotkeysCmd
 
 
 alfredDirective.directive "inactiveList",  () ->
@@ -254,8 +257,13 @@ alfredDirective.directive "activeList",  () ->
                     do activateNextItem
             )
 
+            scope.$on('setSelectedIndex', (event, key) ->
+                scope.selectedIndex = key
+            )
+
             scope.$on('enter', () ->
                 key = scope.getSelectedConnection()
+                console.log scope.selectedIndex
                 connection = scope.subConnections[key]
                 scope.select connection, key
             )

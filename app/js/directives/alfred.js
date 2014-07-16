@@ -23,7 +23,8 @@
         $scope.entities = $scope.connections.concat($scope.histories);
         $scope.selectedIndex = 0;
         $scope.setSelectedConnection = function(index) {
-          return $scope.selectedIndex = index;
+          $scope.selectedIndex = index;
+          return $scope.$broadcast("setSelectedIndex", index);
         };
         this.setSelectedIndex = function(key) {
           return $scope.setSelectedConnection(key);
@@ -55,11 +56,8 @@
         return this;
       },
       link: function(scope, element, attrs) {
-        var $input, checkQuery, detectCtrlOrCmd, initializeParameters, initializeTableParameters;
+        var $input, bindHotkeysCmd, checkQuery, detectCtrlOrCmd, initializeParameters, initializeTableParameters;
         $input = element.find('#alfred-input');
-        Mousetrap.bind('keydown', function() {
-          return console.log(true);
-        });
         scope.$watch($input, (function(_this) {
           return function() {
             return $input.focus();
@@ -111,24 +109,29 @@
             return scope.$broadcast("arrow", "down");
           }
         });
-
-        /*bindHotkeysCmd = () ->
-            hotkey = do detectCtrlOrCmd
-            for i in [1..scope.amount]
-                $hotkey.bind("#{hotkey} + #{i}", ($event) ->
-                    do $event.preventDefault
-                    console.log parseInt(String.fromCharCode($event.keyCode))
-                    scope.setSelectedConnection(parseInt(String.fromCharCode($event.keyCode)) - 1)
-                    do scope.$apply
-                    setTimeout (->
-                        scope.$broadcast "enter"
-                    ),100
-                )
-         */
+        bindHotkeysCmd = function() {
+          var cmd, combo, i, _i, _ref, _results;
+          cmd = detectCtrlOrCmd();
+          _results = [];
+          for (i = _i = 1, _ref = scope.amount; 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
+            combo = "" + cmd + "+" + i;
+            _results.push(hotkeys.bindTo(scope).add({
+              combo: combo,
+              description: 'Cmd+i',
+              allowIn: ['INPUT'],
+              callback: function($event) {
+                $event.preventDefault();
+                scope.setSelectedConnection(parseInt(String.fromCharCode($event.keyCode)) - 1);
+                return scope.$broadcast("enter");
+              }
+            }));
+          }
+          return _results;
+        };
         detectCtrlOrCmd = function() {
           var hotKey, isMac;
           isMac = navigator.userAgent.toLowerCase().indexOf('mac') !== -1;
-          hotKey = isMac ? 'Cmd' : 'Ctrl';
+          hotKey = isMac ? 'command' : 'ctrl';
           return hotKey;
         };
         checkQuery = function() {
@@ -155,7 +158,8 @@
           }), 0);
         };
         initializeParameters();
-        return initializeTableParameters();
+        initializeTableParameters();
+        return bindHotkeysCmd();
       }
     };
   });
@@ -269,9 +273,13 @@
             return activateNextItem();
           }
         });
+        scope.$on('setSelectedIndex', function(event, key) {
+          return scope.selectedIndex = key;
+        });
         scope.$on('enter', function() {
           var connection, key;
           key = scope.getSelectedConnection();
+          console.log(scope.selectedIndex);
           connection = scope.subConnections[key];
           return scope.select(connection, key);
         });
