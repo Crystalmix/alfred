@@ -2,9 +2,9 @@
   'use strict';
   var alfredDirective;
 
-  alfredDirective = angular.module("alfredDirective", ['drahak.hotkeys']);
+  alfredDirective = angular.module("alfredDirective", ['cfp.hotkeys']);
 
-  alfredDirective.directive("alfred", function($hotkey) {
+  alfredDirective.directive("alfred", function(hotkeys) {
     return {
       restrict: "E",
       templateUrl: "partials/alfred.html",
@@ -22,30 +22,6 @@
         $scope.query = null;
         $scope.entities = $scope.connections.concat($scope.histories);
         $scope.selectedIndex = 0;
-        $scope.enterEvent = function($event) {
-          $event.preventDefault();
-          return $scope.$broadcast("enter");
-        };
-        $scope.leftRightEvent = function($event) {
-          $event.preventDefault();
-          if ($scope.isTable) {
-            if ($event.keyCode === 37) {
-              $scope.isLeftActive = true;
-              return $scope.isRightActive = false;
-            } else {
-              $scope.isLeftActive = false;
-              return $scope.isRightActive = true;
-            }
-          }
-        };
-        $scope.upDownEvent = function($event) {
-          $event.preventDefault();
-          if ($event.keyCode === 38) {
-            return $scope.$broadcast("arrow", "up");
-          } else {
-            return $scope.$broadcast("arrow", "down");
-          }
-        };
         $scope.setSelectedConnection = function(index) {
           return $scope.selectedIndex = index;
         };
@@ -79,8 +55,11 @@
         return this;
       },
       link: function(scope, element, attrs) {
-        var $input, bindHotkeysCmd, checkQuery, detectCtrlOrCmd, initializeParameters, initializeTableParameters;
+        var $input, checkQuery, detectCtrlOrCmd, initializeParameters, initializeTableParameters;
         $input = element.find('#alfred-input');
+        Mousetrap.bind('keydown', function() {
+          return console.log(true);
+        });
         scope.$watch($input, (function(_this) {
           return function() {
             return $input.focus();
@@ -89,23 +68,63 @@
         scope.$watch("isTable", function() {
           return initializeParameters();
         });
-        bindHotkeysCmd = function() {
-          var hotkey, i, _i, _ref, _results;
-          hotkey = detectCtrlOrCmd();
-          _results = [];
-          for (i = _i = 1, _ref = scope.amount; 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
-            _results.push($hotkey.bind("" + hotkey + " + " + i, function($event) {
-              $event.preventDefault();
-              console.log(parseInt(String.fromCharCode($event.keyCode)));
-              scope.setSelectedConnection(parseInt(String.fromCharCode($event.keyCode)) - 1);
-              scope.$apply();
-              return setTimeout((function() {
-                return scope.$broadcast("enter");
-              }), 100);
-            }));
+        hotkeys.bindTo(scope).add({
+          combo: 'return',
+          description: 'Make active left list',
+          allowIn: ['INPUT'],
+          callback: function($event) {
+            $event.preventDefault();
+            return scope.$broadcast("enter");
           }
-          return _results;
-        };
+        }).add({
+          combo: 'left',
+          description: 'Make active left list',
+          allowIn: ['INPUT'],
+          callback: function($event) {
+            $event.preventDefault();
+            scope.isLeftActive = true;
+            return scope.isRightActive = false;
+          }
+        }).add({
+          combo: 'right',
+          description: 'Make active right list',
+          allowIn: ['INPUT'],
+          callback: function($event) {
+            $event.preventDefault();
+            scope.isLeftActive = false;
+            return scope.isRightActive = true;
+          }
+        }).add({
+          combo: 'up',
+          description: 'Make active element above',
+          allowIn: ['INPUT'],
+          callback: function($event) {
+            $event.preventDefault();
+            return scope.$broadcast("arrow", "up");
+          }
+        }).add({
+          combo: 'down',
+          description: 'Make active element above',
+          allowIn: ['INPUT'],
+          callback: function($event) {
+            $event.preventDefault();
+            return scope.$broadcast("arrow", "down");
+          }
+        });
+
+        /*bindHotkeysCmd = () ->
+            hotkey = do detectCtrlOrCmd
+            for i in [1..scope.amount]
+                $hotkey.bind("#{hotkey} + #{i}", ($event) ->
+                    do $event.preventDefault
+                    console.log parseInt(String.fromCharCode($event.keyCode))
+                    scope.setSelectedConnection(parseInt(String.fromCharCode($event.keyCode)) - 1)
+                    do scope.$apply
+                    setTimeout (->
+                        scope.$broadcast "enter"
+                    ),100
+                )
+         */
         detectCtrlOrCmd = function() {
           var hotKey, isMac;
           isMac = navigator.userAgent.toLowerCase().indexOf('mac') !== -1;
@@ -136,8 +155,7 @@
           }), 0);
         };
         initializeParameters();
-        initializeTableParameters();
-        return bindHotkeysCmd();
+        return initializeTableParameters();
       }
     };
   });

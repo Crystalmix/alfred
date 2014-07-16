@@ -1,9 +1,9 @@
 'use strict';
 
-alfredDirective = angular.module("alfredDirective", ['drahak.hotkeys'])
+alfredDirective = angular.module("alfredDirective", ['cfp.hotkeys'])
 
 
-alfredDirective.directive "alfred", ($hotkey) ->
+alfredDirective.directive "alfred", (hotkeys) ->
         restrict: "E"
         templateUrl: "partials/alfred.html"
         replace: yes
@@ -17,31 +17,9 @@ alfredDirective.directive "alfred", ($hotkey) ->
             placeholder:     "="
 
         controller: ($scope) ->
-            $scope.query = null
-            $scope.entities = $scope.connections.concat $scope.histories
+            $scope.query         = null
+            $scope.entities      = $scope.connections.concat $scope.histories
             $scope.selectedIndex = 0
-
-            # Event methods
-            $scope.enterEvent = ($event) ->
-                do $event.preventDefault
-                $scope.$broadcast "enter"
-
-            $scope.leftRightEvent = ($event) ->
-                do $event.preventDefault
-                if $scope.isTable
-                    if $event.keyCode is 37
-                        $scope.isLeftActive  = yes
-                        $scope.isRightActive = no
-                    else
-                        $scope.isLeftActive  = no
-                        $scope.isRightActive = yes
-
-            $scope.upDownEvent = ($event) ->
-                do $event.preventDefault
-                if $event.keyCode is 38
-                    $scope.$broadcast "arrow", "up"
-                else
-                    $scope.$broadcast "arrow", "down"
 
             $scope.setSelectedConnection = (index) ->
                 $scope.selectedIndex = index
@@ -74,13 +52,63 @@ alfredDirective.directive "alfred", ($hotkey) ->
         link: (scope, element, attrs) ->
             $input = element.find '#alfred-input'
 
+            Mousetrap.bind('keydown', () ->
+                console.log yes
+            )
+
             scope.$watch $input, () =>
                 do $input.focus
 
             scope.$watch "isTable", () ->
                 do initializeParameters
 
-            bindHotkeysCmd = () ->
+            hotkeys.bindTo(scope)
+                .add({
+                    combo: 'return'
+                    description: 'Make active left list'
+                    allowIn: ['INPUT']
+                    callback: ($event) ->
+                        do $event.preventDefault
+                        scope.$broadcast "enter"
+                })
+                .add({
+                    combo: 'left'
+                    description: 'Make active left list'
+                    allowIn: ['INPUT']
+                    callback: ($event) ->
+                        do $event.preventDefault
+                        scope.isLeftActive  = yes
+                        scope.isRightActive = no
+                })
+                .add({
+                    combo: 'right'
+                    description: 'Make active right list'
+                    allowIn: ['INPUT']
+                    callback: ($event) ->
+                        do $event.preventDefault
+                        scope.isLeftActive  = no
+                        scope.isRightActive = yes
+                })
+                .add({
+                    combo: 'up'
+                    description: 'Make active element above'
+                    allowIn: ['INPUT']
+                    callback: ($event) ->
+                        do $event.preventDefault
+                        scope.$broadcast "arrow", "up"
+                })
+                .add({
+                    combo: 'down'
+                    description: 'Make active element above'
+                    allowIn: ['INPUT']
+                    callback: ($event) ->
+                        do $event.preventDefault
+                        scope.$broadcast "arrow", "down"
+                })
+
+
+
+            ###bindHotkeysCmd = () ->
                 hotkey = do detectCtrlOrCmd
                 for i in [1..scope.amount]
                     $hotkey.bind("#{hotkey} + #{i}", ($event) ->
@@ -92,6 +120,7 @@ alfredDirective.directive "alfred", ($hotkey) ->
                             scope.$broadcast "enter"
                         ),100
                     )
+            ###
 
             detectCtrlOrCmd = () ->
                 isMac = navigator.userAgent.toLowerCase().indexOf('mac') isnt -1
@@ -122,7 +151,7 @@ alfredDirective.directive "alfred", ($hotkey) ->
 
             do initializeParameters
             do initializeTableParameters
-            do bindHotkeysCmd
+            #do bindHotkeysCmd
 
 
 alfredDirective.directive "inactiveList",  () ->

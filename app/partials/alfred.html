@@ -4,11 +4,7 @@
            class="form-control input-lg input"
            ng-model="query"
            ng-keydown="keydown($event)"
-           hotkey bind="{'Enter'    : enterEvent,
-                         'left'     : leftRightEvent,
-                         'right'    : leftRightEvent,
-                         'up'       : upDownEvent,
-                         'down'     : upDownEvent}"
+           shortcut="{'ctrl': leftRightEvent}"
            placeholder="{{placeholder}}">
 
     <div ng-if="isTable">
