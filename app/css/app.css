@@ -57,9 +57,17 @@
     transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
 }
 
-li.active {
-    background-color: #9FB6CD;
+i {
+    color: #428bca;
 }
+li.active i {
+    color: white;
+}
+li.active {
+    background-color: #428bca;
+    color: white;
+}
+
 li {
     position: relative;
     display: block;

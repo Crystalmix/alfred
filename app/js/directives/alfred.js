@@ -347,7 +347,7 @@
         scope.alfredController = alfredCtrl;
         scope.prevquery = null;
         scope.enterText = '↩';
-        scope.cmdSystemHotkey = scope.cmdSystemHotkey === "command" ? "Cmd" : "Ctrl";
+        scope.cmdSystemHotkey = scope.cmdSystemHotkey === "command" ? "⌘" : "Ctrl";
         scope.$watch("selectedIndex", function(key) {
           return alfredCtrl.setSelectedIndex(key);
         });
