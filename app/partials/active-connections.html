@@ -9,11 +9,13 @@
             ng-style="setHeight()">
             <span ng-if="connection.label">
                 {{connection.label}}
-                <i class="icon enter">{{key+1}}</i>
+                <i ng-if="(key === selectedIndex)">{{enterText}}</i>
+                <i ng-if="!(key === selectedIndex)">{{cmdSystemHotkey}} + {{key}}</i>
             </span>
             <span ng-if="!connection.label">
                 {{connection.ssh_username}}@{{connection.hostname}}
-                <i class="icon enter">{{key+1}}</i>
+                <i ng-if="(key === selectedIndex)">{{enterText}}</i>
+                <i ng-if="!(key === selectedIndex)">{{cmdSystemHotkey}} + {{key}}</i>
             </span>
         </li>
         <li ng-if="!subConnections.length">Nothing</li>

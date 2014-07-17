@@ -105,9 +105,8 @@ alfredDirective.directive "alfred", (hotkeys) ->
 
 
             bindHotkeysCmd = () ->
-                cmd = do detectCtrlOrCmd
                 for i in [1..scope.amount]
-                    combo = "#{cmd}+#{i}"
+                    combo = "#{scope.cmdSystemHotkey}+#{i}"
                     hotkeys.bindTo(scope)
                         .add({
                             combo: combo
@@ -151,6 +150,7 @@ alfredDirective.directive "alfred", (hotkeys) ->
                     do checkQuery
                 ), 0
 
+            scope.cmdSystemHotkey = do detectCtrlOrCmd
 
             do initializeParameters
             do initializeTableParameters
@@ -191,12 +191,13 @@ alfredDirective.directive "activeList",  () ->
         restrict: "AE"
         templateUrl: "partials/active-connections.html"
         scope:
-            connections:   "="
-            amount:        "="
-            heightCell:    "="
-            query:         "="
-            from:          "="
-            selectedIndex: "="
+            connections:     "="
+            amount:          "="
+            heightCell:      "="
+            query:           "="
+            from:            "="
+            selectedIndex:   "="
+            cmdSystemHotkey: "="
 
         # subConnetions is a visible array
         controller: ($scope) ->
@@ -243,6 +244,10 @@ alfredDirective.directive "activeList",  () ->
             scope.alfredController = alfredCtrl
             scope.prevquery = null
 
+            # Template icons
+            scope.enterText = '↩'
+            scope.cmdSystemHotkey = if scope.cmdSystemHotkey is "command" then "Cmd" else "Ctrl"
+
             scope.$watch "selectedIndex", (key) ->
                 alfredCtrl.setSelectedIndex(key)
 
@@ -263,7 +268,6 @@ alfredDirective.directive "activeList",  () ->
 
             scope.$on('enter', () ->
                 key = scope.getSelectedConnection()
-                console.log scope.selectedIndex
                 connection = scope.subConnections[key]
                 scope.select connection, key
             )

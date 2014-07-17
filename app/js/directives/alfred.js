@@ -110,11 +110,10 @@
           }
         });
         bindHotkeysCmd = function() {
-          var cmd, combo, i, _i, _ref, _results;
-          cmd = detectCtrlOrCmd();
+          var combo, i, _i, _ref, _results;
           _results = [];
           for (i = _i = 1, _ref = scope.amount; 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
-            combo = "" + cmd + "+" + i;
+            combo = "" + scope.cmdSystemHotkey + "+" + i;
             _results.push(hotkeys.bindTo(scope).add({
               combo: combo,
               description: 'Cmd+i',
@@ -157,6 +156,7 @@
             return checkQuery();
           }), 0);
         };
+        scope.cmdSystemHotkey = detectCtrlOrCmd();
         initializeParameters();
         initializeTableParameters();
         return bindHotkeysCmd();
@@ -211,7 +211,8 @@
         heightCell: "=",
         query: "=",
         from: "=",
-        selectedIndex: "="
+        selectedIndex: "=",
+        cmdSystemHotkey: "="
       },
       controller: function($scope) {
         $scope.setHeight = function() {
@@ -259,6 +260,8 @@
         var activateNextItem, activatePreviousItem;
         scope.alfredController = alfredCtrl;
         scope.prevquery = null;
+        scope.enterText = '↩';
+        scope.cmdSystemHotkey = scope.cmdSystemHotkey === "command" ? "Cmd" : "Ctrl";
         scope.$watch("selectedIndex", function(key) {
           return alfredCtrl.setSelectedIndex(key);
         });
@@ -279,7 +282,6 @@
         scope.$on('enter', function() {
           var connection, key;
           key = scope.getSelectedConnection();
-          console.log(scope.selectedIndex);
           connection = scope.subConnections[key];
           return scope.select(connection, key);
         });
