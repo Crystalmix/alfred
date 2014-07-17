@@ -2,8 +2,72 @@
 
 alfredDirective = angular.module("alfredDirective", ['cfp.hotkeys'])
 
+alfredDirective.factory 'quickConnectParse', () ->
 
-alfredDirective.directive "alfred", (hotkeys) ->
+    trimArray = (array) ->
+        for i in [0...array.length]
+            array[i] = $.trim(array[i])
+        return array;
+
+    parse : (input) ->
+        ###
+        Possible
+            ssh               user@host
+            ssh               user@host   -p port
+            ssh               user@host   -pport
+
+            ssh    -p port    user@host
+            ssh    -pport     user@host
+        ###
+        options = {}
+        if input.indexOf('ssh') isnt -1
+            inputArray = input.split('ssh')
+            if inputArray.length is 2 and inputArray[0] is ""
+                input = inputArray[1].trim()
+                if input and input.length > 2
+                    inputArray = _.compact(input.split("@"))
+                    if inputArray.length is 2
+                        leftInputArray  = inputArray[0].trim()
+                        rightInputArray = inputArray[1].trim()
+                        ###
+                        sleftInputArray  = trimArray(_.compact(leftInputArray.split("-p")))
+                        rightInputArray = trimArray(_.compact(rightInputArray.split("-p")))
+
+                        if leftInputArray.length > 2 or rightInputArray.length > 1
+                            return {}
+
+                        leftInputArray = trimArray(_.compact(leftInputArray.split(" ")))
+                        if leftInputArray.length is 3
+                            options.ssh_username = leftInputArray[2]
+
+                        if rightInputArray.length is 2
+                            options.port     = rightInputArray[1]
+                        options.hostname = rightInputArray[0]
+                        ###
+                        leftInputArray  = trimArray(_.compact(leftInputArray.split(" ")))
+                        rightInputArray = trimArray(_.compact(rightInputArray.split(" ")))
+
+                        if leftInputArray.length >= 2 and leftInputArray.indexOf('-p') isnt -1
+                            if leftInputArray.length is 3 and leftInputArray[0] is "-p"
+                                options.port = leftInputArray[1]
+                            if leftInputArray.length is 2 and leftInputArray[0].indexOf('-p') is 0
+                                options.port = leftInputArray[0].slice(2)
+                        options.ssh_username = leftInputArray[leftInputArray.length - 1]
+
+                        if rightInputArray.length >=2 and rightInputArray.indexOf("-p") isnt -1
+                            if rightInputArray.length is 2 and rightInputArray[1].indexOf("-p") is 0
+                                options.port = rightInputArray[1].slice(2)
+                            if rightInputArray.length is 3 and rightInputArray[1] is "-p"
+                                options.port = rightInputArray[2]
+                        options.hostname = rightInputArray[0]
+                        if not options.port
+                            options.port = 22
+
+                        return options
+        return {}
+
+
+alfredDirective.directive "alfred", ['hotkeys', 'quickConnectParse', (hotkeys, quickConnectParse) ->
         restrict: "E"
         templateUrl: "partials/alfred.html"
         replace: yes
@@ -29,7 +93,8 @@ alfredDirective.directive "alfred", (hotkeys) ->
                 $scope.setSelectedConnection key
 
             @enterCallback = (connection) ->
-                $scope.onEnterCallback({connection:connection})
+                if connection
+                    $scope.onEnterCallback({connection:connection})
 
             @changeFromProperty = (from) ->
                 if $scope.isTable
@@ -50,7 +115,7 @@ alfredDirective.directive "alfred", (hotkeys) ->
             return @
 
 
-        link: (scope, element, attrs) ->
+        link: (scope, element, attrs, alfredCtrl) ->
             $input = element.find '#alfred-input'
 
             scope.$watch $input, () =>
@@ -64,16 +129,18 @@ alfredDirective.directive "alfred", (hotkeys) ->
                     combo: 'return'
                     description: 'Make active left list'
                     allowIn: ['INPUT']
-                    callback: ($event) ->
-                        do $event.preventDefault
-                        scope.$broadcast "enter"
+                    callback: () ->
+                        if scope.query.indexOf("ssh") isnt -1
+                            connection = quickConnectParse.parse scope.query
+                            alfredCtrl.enterCallback connection
+                        else
+                            scope.$broadcast "enter"
                 })
                 .add({
                     combo: 'left'
                     description: 'Make active left list'
                     allowIn: ['INPUT']
-                    callback: ($event) ->
-                        do $event.preventDefault
+                    callback: () ->
                         scope.isLeftActive  = yes
                         scope.isRightActive = no
                 })
@@ -81,8 +148,7 @@ alfredDirective.directive "alfred", (hotkeys) ->
                     combo: 'right'
                     description: 'Make active right list'
                     allowIn: ['INPUT']
-                    callback: ($event) ->
-                        do $event.preventDefault
+                    callback: () ->
                         scope.isLeftActive  = no
                         scope.isRightActive = yes
                 })
@@ -90,19 +156,16 @@ alfredDirective.directive "alfred", (hotkeys) ->
                     combo: 'up'
                     description: 'Make active element above'
                     allowIn: ['INPUT']
-                    callback: ($event) ->
-                        do $event.preventDefault
+                    callback: () ->
                         scope.$broadcast "arrow", "up"
                 })
                 .add({
                     combo: 'down'
                     description: 'Make active element above'
                     allowIn: ['INPUT']
-                    callback: ($event) ->
-                        do $event.preventDefault
+                    callback: () ->
                         scope.$broadcast "arrow", "down"
                 })
-
 
             bindHotkeysCmd = () ->
                 for i in [1..scope.amount]
@@ -118,12 +181,10 @@ alfredDirective.directive "alfred", (hotkeys) ->
                                 scope.$broadcast "enter"
                         })
 
-
             detectCtrlOrCmd = () ->
                 isMac = navigator.userAgent.toLowerCase().indexOf('mac') isnt -1
                 hotKey = if isMac then 'command' else 'ctrl'
                 hotKey
-
 
             checkQuery = () ->
                 if scope.query
@@ -132,18 +193,15 @@ alfredDirective.directive "alfred", (hotkeys) ->
                     scope.isTable = yes
                 do scope.$apply
 
-
             initializeParameters = () ->
                 scope.fromConnection = 0
                 scope.fromHistory    = 0
                 scope.selectedIndex  = 0
 
-
             initializeTableParameters = () ->
                 scope.isTable       = yes
                 scope.isLeftActive  = yes
                 scope.isRightActive = no
-
 
             scope.keydown = ($event) ->
                 setTimeout (->
@@ -155,7 +213,7 @@ alfredDirective.directive "alfred", (hotkeys) ->
             do initializeParameters
             do initializeTableParameters
             do bindHotkeysCmd
-
+]
 
 alfredDirective.directive "inactiveList",  () ->
         require: "^alfred"

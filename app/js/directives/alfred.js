@@ -4,165 +4,251 @@
 
   alfredDirective = angular.module("alfredDirective", ['cfp.hotkeys']);
 
-  alfredDirective.directive("alfred", function(hotkeys) {
+  alfredDirective.factory('quickConnectParse', function() {
+    var trimArray;
+    trimArray = function(array) {
+      var i, _i, _ref;
+      for (i = _i = 0, _ref = array.length; 0 <= _ref ? _i < _ref : _i > _ref; i = 0 <= _ref ? ++_i : --_i) {
+        array[i] = $.trim(array[i]);
+      }
+      return array;
+    };
     return {
-      restrict: "E",
-      templateUrl: "partials/alfred.html",
-      replace: true,
-      transclude: true,
-      scope: {
-        connections: "=",
-        histories: "=",
-        amount: "=",
-        heightCell: "=",
-        onEnterCallback: "&",
-        placeholder: "="
-      },
-      controller: function($scope) {
-        $scope.query = null;
-        $scope.entities = $scope.connections.concat($scope.histories);
-        $scope.selectedIndex = 0;
-        $scope.setSelectedConnection = function(index) {
-          $scope.selectedIndex = index;
-          return $scope.$broadcast("setSelectedIndex", index);
-        };
-        this.setSelectedIndex = function(key) {
-          return $scope.setSelectedConnection(key);
-        };
-        this.enterCallback = function(connection) {
-          return $scope.onEnterCallback({
-            connection: connection
-          });
-        };
-        this.changeFromProperty = function(from) {
-          if ($scope.isTable) {
-            if ($scope.isLeftActive) {
-              return $scope.fromConnection = from;
-            } else {
-              return $scope.fromHistory = from;
+      parse: function(input) {
+
+        /*
+        Possible
+            ssh               user@host
+            ssh               user@host   -p port
+            ssh               user@host   -pport
+        
+            ssh    -p port    user@host
+            ssh    -pport     user@host
+         */
+        var inputArray, leftInputArray, options, rightInputArray;
+        options = {};
+        if (input.indexOf('ssh') !== -1) {
+          inputArray = input.split('ssh');
+          if (inputArray.length === 2 && inputArray[0] === "") {
+            input = inputArray[1].trim();
+            if (input && input.length > 2) {
+              inputArray = _.compact(input.split("@"));
+              if (inputArray.length === 2) {
+                leftInputArray = inputArray[0].trim();
+                rightInputArray = inputArray[1].trim();
+
+                /*
+                sleftInputArray  = trimArray(_.compact(leftInputArray.split("-p")))
+                rightInputArray = trimArray(_.compact(rightInputArray.split("-p")))
+                
+                if leftInputArray.length > 2 or rightInputArray.length > 1
+                    return {}
+                
+                leftInputArray = trimArray(_.compact(leftInputArray.split(" ")))
+                if leftInputArray.length is 3
+                    options.ssh_username = leftInputArray[2]
+                
+                if rightInputArray.length is 2
+                    options.port     = rightInputArray[1]
+                options.hostname = rightInputArray[0]
+                 */
+                leftInputArray = trimArray(_.compact(leftInputArray.split(" ")));
+                rightInputArray = trimArray(_.compact(rightInputArray.split(" ")));
+                if (leftInputArray.length >= 2 && leftInputArray.indexOf('-p') !== -1) {
+                  if (leftInputArray.length === 3 && leftInputArray[0] === "-p") {
+                    options.port = leftInputArray[1];
+                  }
+                  if (leftInputArray.length === 2 && leftInputArray[0].indexOf('-p') === 0) {
+                    options.port = leftInputArray[0].slice(2);
+                  }
+                }
+                options.ssh_username = leftInputArray[leftInputArray.length - 1];
+                if (rightInputArray.length >= 2 && rightInputArray.indexOf("-p") !== -1) {
+                  if (rightInputArray.length === 2 && rightInputArray[1].indexOf("-p") === 0) {
+                    options.port = rightInputArray[1].slice(2);
+                  }
+                  if (rightInputArray.length === 3 && rightInputArray[1] === "-p") {
+                    options.port = rightInputArray[2];
+                  }
+                }
+                options.hostname = rightInputArray[0];
+                if (!options.port) {
+                  options.port = 22;
+                }
+                return options;
+              }
             }
           }
-        };
-        this.changeActiveList = function() {
-          if ($scope.isLeftActive) {
-            $scope.isLeftActive = false;
-            $scope.isRightActive = true;
-          } else {
-            $scope.isLeftActive = true;
-            $scope.isRightActive = false;
-          }
-          return $scope.$apply();
-        };
-        return this;
-      },
-      link: function(scope, element, attrs) {
-        var $input, bindHotkeysCmd, checkQuery, detectCtrlOrCmd, initializeParameters, initializeTableParameters;
-        $input = element.find('#alfred-input');
-        scope.$watch($input, (function(_this) {
-          return function() {
-            return $input.focus();
-          };
-        })(this));
-        scope.$watch("isTable", function() {
-          return initializeParameters();
-        });
-        hotkeys.bindTo(scope).add({
-          combo: 'return',
-          description: 'Make active left list',
-          allowIn: ['INPUT'],
-          callback: function($event) {
-            $event.preventDefault();
-            return scope.$broadcast("enter");
-          }
-        }).add({
-          combo: 'left',
-          description: 'Make active left list',
-          allowIn: ['INPUT'],
-          callback: function($event) {
-            $event.preventDefault();
-            scope.isLeftActive = true;
-            return scope.isRightActive = false;
-          }
-        }).add({
-          combo: 'right',
-          description: 'Make active right list',
-          allowIn: ['INPUT'],
-          callback: function($event) {
-            $event.preventDefault();
-            scope.isLeftActive = false;
-            return scope.isRightActive = true;
-          }
-        }).add({
-          combo: 'up',
-          description: 'Make active element above',
-          allowIn: ['INPUT'],
-          callback: function($event) {
-            $event.preventDefault();
-            return scope.$broadcast("arrow", "up");
-          }
-        }).add({
-          combo: 'down',
-          description: 'Make active element above',
-          allowIn: ['INPUT'],
-          callback: function($event) {
-            $event.preventDefault();
-            return scope.$broadcast("arrow", "down");
-          }
-        });
-        bindHotkeysCmd = function() {
-          var combo, i, _i, _ref, _results;
-          _results = [];
-          for (i = _i = 1, _ref = scope.amount; 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
-            combo = "" + scope.cmdSystemHotkey + "+" + i;
-            _results.push(hotkeys.bindTo(scope).add({
-              combo: combo,
-              description: 'Cmd+i',
-              allowIn: ['INPUT'],
-              callback: function($event) {
-                $event.preventDefault();
-                scope.setSelectedConnection(parseInt(String.fromCharCode($event.keyCode)) - 1);
-                return scope.$broadcast("enter");
-              }
-            }));
-          }
-          return _results;
-        };
-        detectCtrlOrCmd = function() {
-          var hotKey, isMac;
-          isMac = navigator.userAgent.toLowerCase().indexOf('mac') !== -1;
-          hotKey = isMac ? 'command' : 'ctrl';
-          return hotKey;
-        };
-        checkQuery = function() {
-          if (scope.query) {
-            scope.isTable = false;
-          } else {
-            scope.isTable = true;
-          }
-          return scope.$apply();
-        };
-        initializeParameters = function() {
-          scope.fromConnection = 0;
-          scope.fromHistory = 0;
-          return scope.selectedIndex = 0;
-        };
-        initializeTableParameters = function() {
-          scope.isTable = true;
-          scope.isLeftActive = true;
-          return scope.isRightActive = false;
-        };
-        scope.keydown = function($event) {
-          return setTimeout((function() {
-            return checkQuery();
-          }), 0);
-        };
-        scope.cmdSystemHotkey = detectCtrlOrCmd();
-        initializeParameters();
-        initializeTableParameters();
-        return bindHotkeysCmd();
+        }
+        return {};
       }
     };
   });
+
+  alfredDirective.directive("alfred", [
+    'hotkeys', 'quickConnectParse', function(hotkeys, quickConnectParse) {
+      return {
+        restrict: "E",
+        templateUrl: "partials/alfred.html",
+        replace: true,
+        transclude: true,
+        scope: {
+          connections: "=",
+          histories: "=",
+          amount: "=",
+          heightCell: "=",
+          onEnterCallback: "&",
+          placeholder: "="
+        },
+        controller: function($scope) {
+          $scope.query = null;
+          $scope.entities = $scope.connections.concat($scope.histories);
+          $scope.selectedIndex = 0;
+          $scope.setSelectedConnection = function(index) {
+            $scope.selectedIndex = index;
+            return $scope.$broadcast("setSelectedIndex", index);
+          };
+          this.setSelectedIndex = function(key) {
+            return $scope.setSelectedConnection(key);
+          };
+          this.enterCallback = function(connection) {
+            if (connection) {
+              return $scope.onEnterCallback({
+                connection: connection
+              });
+            }
+          };
+          this.changeFromProperty = function(from) {
+            if ($scope.isTable) {
+              if ($scope.isLeftActive) {
+                return $scope.fromConnection = from;
+              } else {
+                return $scope.fromHistory = from;
+              }
+            }
+          };
+          this.changeActiveList = function() {
+            if ($scope.isLeftActive) {
+              $scope.isLeftActive = false;
+              $scope.isRightActive = true;
+            } else {
+              $scope.isLeftActive = true;
+              $scope.isRightActive = false;
+            }
+            return $scope.$apply();
+          };
+          return this;
+        },
+        link: function(scope, element, attrs, alfredCtrl) {
+          var $input, bindHotkeysCmd, checkQuery, detectCtrlOrCmd, initializeParameters, initializeTableParameters;
+          $input = element.find('#alfred-input');
+          scope.$watch($input, (function(_this) {
+            return function() {
+              return $input.focus();
+            };
+          })(this));
+          scope.$watch("isTable", function() {
+            return initializeParameters();
+          });
+          hotkeys.bindTo(scope).add({
+            combo: 'return',
+            description: 'Make active left list',
+            allowIn: ['INPUT'],
+            callback: function() {
+              var connection;
+              if (scope.query.indexOf("ssh") !== -1) {
+                connection = quickConnectParse.parse(scope.query);
+                return alfredCtrl.enterCallback(connection);
+              } else {
+                return scope.$broadcast("enter");
+              }
+            }
+          }).add({
+            combo: 'left',
+            description: 'Make active left list',
+            allowIn: ['INPUT'],
+            callback: function() {
+              scope.isLeftActive = true;
+              return scope.isRightActive = false;
+            }
+          }).add({
+            combo: 'right',
+            description: 'Make active right list',
+            allowIn: ['INPUT'],
+            callback: function() {
+              scope.isLeftActive = false;
+              return scope.isRightActive = true;
+            }
+          }).add({
+            combo: 'up',
+            description: 'Make active element above',
+            allowIn: ['INPUT'],
+            callback: function() {
+              return scope.$broadcast("arrow", "up");
+            }
+          }).add({
+            combo: 'down',
+            description: 'Make active element above',
+            allowIn: ['INPUT'],
+            callback: function() {
+              return scope.$broadcast("arrow", "down");
+            }
+          });
+          bindHotkeysCmd = function() {
+            var combo, i, _i, _ref, _results;
+            _results = [];
+            for (i = _i = 1, _ref = scope.amount; 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
+              combo = "" + scope.cmdSystemHotkey + "+" + i;
+              _results.push(hotkeys.bindTo(scope).add({
+                combo: combo,
+                description: 'Cmd+i',
+                allowIn: ['INPUT'],
+                callback: function($event) {
+                  $event.preventDefault();
+                  scope.setSelectedConnection(parseInt(String.fromCharCode($event.keyCode)) - 1);
+                  return scope.$broadcast("enter");
+                }
+              }));
+            }
+            return _results;
+          };
+          detectCtrlOrCmd = function() {
+            var hotKey, isMac;
+            isMac = navigator.userAgent.toLowerCase().indexOf('mac') !== -1;
+            hotKey = isMac ? 'command' : 'ctrl';
+            return hotKey;
+          };
+          checkQuery = function() {
+            if (scope.query) {
+              scope.isTable = false;
+            } else {
+              scope.isTable = true;
+            }
+            return scope.$apply();
+          };
+          initializeParameters = function() {
+            scope.fromConnection = 0;
+            scope.fromHistory = 0;
+            return scope.selectedIndex = 0;
+          };
+          initializeTableParameters = function() {
+            scope.isTable = true;
+            scope.isLeftActive = true;
+            return scope.isRightActive = false;
+          };
+          scope.keydown = function($event) {
+            return setTimeout((function() {
+              return checkQuery();
+            }), 0);
+          };
+          scope.cmdSystemHotkey = detectCtrlOrCmd();
+          initializeParameters();
+          initializeTableParameters();
+          return bindHotkeysCmd();
+        }
+      };
+    }
+  ]);
 
   alfredDirective.directive("inactiveList", function() {
     return {
