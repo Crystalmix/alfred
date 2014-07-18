@@ -29,21 +29,6 @@ alfredDirective.factory 'quickConnectParse', () ->
                     if inputArray.length is 2
                         leftInputArray  = inputArray[0].trim()
                         rightInputArray = inputArray[1].trim()
-                        ###
-                        sleftInputArray  = trimArray(_.compact(leftInputArray.split("-p")))
-                        rightInputArray = trimArray(_.compact(rightInputArray.split("-p")))
-
-                        if leftInputArray.length > 2 or rightInputArray.length > 1
-                            return {}
-
-                        leftInputArray = trimArray(_.compact(leftInputArray.split(" ")))
-                        if leftInputArray.length is 3
-                            options.ssh_username = leftInputArray[2]
-
-                        if rightInputArray.length is 2
-                            options.port     = rightInputArray[1]
-                        options.hostname = rightInputArray[0]
-                        ###
                         leftInputArray  = trimArray(_.compact(leftInputArray.split(" ")))
                         rightInputArray = trimArray(_.compact(rightInputArray.split(" ")))
 
@@ -251,10 +236,17 @@ alfredDirective.directive "inactiveList",  () ->
                     sliderHeight = 100
                 sliderHeight *= 100;
                 sizerHeight *= 100;
-                sizerHeight = Math.floor(sizerHeight) / 100;
-                sliderHeight = Math.ceil(sliderHeight) / 100;
+                sizerHeight = Math.floor(sizerHeight) / 100
+                sliderHeight = Math.ceil(sliderHeight) / 100
 
-                return {sliderHeight: sliderHeight, sizerHeight: sizerHeight};
+                return {sliderHeight: sliderHeight, sizerHeight: sizerHeight}
+
+            scope.changeSlider = () ->
+                slider = (scope.amount * 100) / scope.filteredConnections.length
+                sizer = (scope.from * 100) / scope.filteredConnections.length
+                sizes = scope._normalizeSliderHeight(slider, sizer)
+                scope.slider = sizes.sliderHeight
+                scope.sizer = sizes.sizerHeight
 
 
 alfredDirective.directive "activeList",  () ->
@@ -354,6 +346,13 @@ alfredDirective.directive "activeList",  () ->
                 scope.select connection, key
             )
 
+            scope.changeSlider = () ->
+                slider = (scope.amount * 100) / scope.filteredConnections.length
+                sizer = (scope.from * 100) / scope.filteredConnections.length
+                sizes = scope._normalizeSliderHeight(slider, sizer)
+                scope.slider = sizes.sliderHeight
+                scope.sizer = sizes.sizerHeight
+
             scope._normalizeSliderHeight = (sliderHeight, sizerHeight) ->
                 if sizerHeight > 100 - sliderHeight
                     sizerHeight = 100 - sliderHeight
@@ -423,11 +422,7 @@ alfredDirective.filter "filterConnections", ["$filter", ($filter) ->
             filterFilter = $filter("filter")
             scope.filteredConnections = filterFilter scope.connections, scope.query
 
-            slider = (scope.amount * 100) / scope.filteredConnections.length
-            sizer = (arg1 * 100) / scope.filteredConnections.length
-            sizes = scope._normalizeSliderHeight(slider, sizer)
-            scope.slider = sizes.sliderHeight
-            scope.sizer = sizes.sizerHeight
+            do scope.changeSlider
 
             return scope.filteredConnections.slice arg1, arg2
     ]
