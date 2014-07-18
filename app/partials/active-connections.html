@@ -10,12 +10,12 @@
             <span ng-if="connection.label">
                 {{connection.label}}
                 <i ng-if="(key === selectedIndex)">{{enterText}}</i>
-                <i ng-if="!(key === selectedIndex)">{{cmdSystemHotkey}} + {{key1}}</i>
+                <i ng-if="!(key === selectedIndex)">{{cmdSystemHotkey}}{{key+1}}</i>
             </span>
             <span ng-if="!connection.label">
                 {{connection.ssh_username}}@{{connection.hostname}}
                 <i ng-if="(key === selectedIndex)">{{enterText}}</i>
-                <i ng-if="!(key === selectedIndex)">{{cmdSystemHotkey}}{{key1}}</i>
+                <i ng-if="!(key === selectedIndex)">{{cmdSystemHotkey}}{{key+1}}</i>
             </span>
         </li>
         <li ng-if="!subConnections.length">Nothing</li>
