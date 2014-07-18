@@ -56,14 +56,16 @@
     </div>
 
     <div ng-if="!isTable">
-        <active-list connections    = "entities"
-                     amount         = "amount"
-                     height-cell        = "heightCell"
-                     query              = "query"
-                     from               = "fromConnection"
-                     selected-index     = "selectedIndex"
-                     cmd-system-hotkey  = "cmdSystemHotkey">
-        </active-list>
+        <div class="main-list">
+            <active-list connections    = "entities"
+                         amount         = "amount"
+                         height-cell        = "heightCell"
+                         query              = "query"
+                         from               = "fromConnection"
+                         selected-index     = "selectedIndex"
+                         cmd-system-hotkey  = "cmdSystemHotkey">
+            </active-list>
+        </div>
     </div>
 
 </div>

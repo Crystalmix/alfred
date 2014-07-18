@@ -229,6 +229,12 @@ alfredDirective.directive "inactiveList",  () ->
             $scope.setHeight = () ->
                 height: $scope.heightCell + 'px'
 
+            $scope.setSizerHeight = () ->
+                height: ($scope.from * 100) / $scope.connections.length + '%'
+
+            $scope.setSliderHeight = () ->
+                height: ($scope.amount * 100) / $scope.connections.length + '%'
+
             $scope.changeOffset = () ->
                 $scope.offset = $scope.from + $scope.amount
 
@@ -237,6 +243,18 @@ alfredDirective.directive "inactiveList",  () ->
 
             element.bind "mouseenter", () ->
                 do alfredCtrl.changeActiveList
+
+            scope._normalizeSliderHeight = (sliderHeight, sizerHeight) ->
+                if sizerHeight > 100 - sliderHeight
+                    sizerHeight = 100 - sliderHeight
+                if  sliderHeight > 100
+                    sliderHeight = 100
+                sliderHeight *= 100;
+                sizerHeight *= 100;
+                sizerHeight = Math.floor(sizerHeight) / 100;
+                sliderHeight = Math.ceil(sliderHeight) / 100;
+
+                return {sliderHeight: sliderHeight, sizerHeight: sizerHeight};
 
 
 alfredDirective.directive "activeList",  () ->
@@ -261,6 +279,12 @@ alfredDirective.directive "activeList",  () ->
         controller: ($scope) ->
             $scope.setHeight = () ->
                 height: $scope.heightCell + 'px'
+
+            $scope.setSizerHeight = () ->
+                height: $scope.sizer + '%'
+
+            $scope.setSliderHeight = () ->
+                height: $scope.slider + '%'
 
             $scope.changeOffset = () ->
                 $scope.offset = $scope.from + $scope.amount
@@ -330,6 +354,18 @@ alfredDirective.directive "activeList",  () ->
                 scope.select connection, key
             )
 
+            scope._normalizeSliderHeight = (sliderHeight, sizerHeight) ->
+                if sizerHeight > 100 - sliderHeight
+                    sizerHeight = 100 - sliderHeight
+                if  sliderHeight > 100
+                    sliderHeight = 100
+                sliderHeight *= 100;
+                sizerHeight *= 100;
+                sizerHeight = Math.floor(sizerHeight) / 100;
+                sliderHeight = Math.ceil(sliderHeight) / 100;
+
+                return {sliderHeight: sliderHeight, sizerHeight: sizerHeight};
+
             activateNextItem = () ->
                 current = element.find(".active")
                 next = current.next()
@@ -386,5 +422,12 @@ alfredDirective.filter "filterConnections", ["$filter", ($filter) ->
                 scope.prevquery = scope.query
             filterFilter = $filter("filter")
             scope.filteredConnections = filterFilter scope.connections, scope.query
+
+            slider = (scope.amount * 100) / scope.filteredConnections.length
+            sizer = (arg1 * 100) / scope.filteredConnections.length
+            sizes = scope._normalizeSliderHeight(slider, sizer)
+            scope.slider = sizes.sliderHeight
+            scope.sizer = sizes.sizerHeight
+
             return scope.filteredConnections.slice arg1, arg2
     ]

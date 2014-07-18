@@ -98,3 +98,30 @@ i {
     border-right: 1px solid #ddd;
     padding: 10px;
 }
+
+.scroller {
+    position: absolute;
+    right: 0;
+    height: 100%;
+    width: 4px;
+    background-color: #fff;
+    border: 1px solid #42b6ca;
+    border-radius: 3px;
+    box-shadow: 0 0 10px rgba(0,0,0,.175);
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    top: 0;
+}
+
+.left-list, .right-list, .main-list{
+    position: relative;
+}
+
+.scroller .slider {
+    background-color: #428bca;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    border-radius: 3px;
+}

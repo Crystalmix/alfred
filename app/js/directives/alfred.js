@@ -267,15 +267,41 @@
             height: $scope.heightCell + 'px'
           };
         };
+        $scope.setSizerHeight = function() {
+          return {
+            height: ($scope.from * 100) / $scope.connections.length + '%'
+          };
+        };
+        $scope.setSliderHeight = function() {
+          return {
+            height: ($scope.amount * 100) / $scope.connections.length + '%'
+          };
+        };
         return $scope.changeOffset = function() {
           return $scope.offset = $scope.from + $scope.amount;
         };
       },
       link: function(scope, element, attrs, alfredCtrl) {
         scope.changeOffset();
-        return element.bind("mouseenter", function() {
+        element.bind("mouseenter", function() {
           return alfredCtrl.changeActiveList();
         });
+        return scope._normalizeSliderHeight = function(sliderHeight, sizerHeight) {
+          if (sizerHeight > 100 - sliderHeight) {
+            sizerHeight = 100 - sliderHeight;
+          }
+          if (sliderHeight > 100) {
+            sliderHeight = 100;
+          }
+          sliderHeight *= 100;
+          sizerHeight *= 100;
+          sizerHeight = Math.floor(sizerHeight) / 100;
+          sliderHeight = Math.ceil(sliderHeight) / 100;
+          return {
+            sliderHeight: sliderHeight,
+            sizerHeight: sizerHeight
+          };
+        };
       }
     };
   });
@@ -304,6 +330,16 @@
         $scope.setHeight = function() {
           return {
             height: $scope.heightCell + 'px'
+          };
+        };
+        $scope.setSizerHeight = function() {
+          return {
+            height: $scope.sizer + '%'
+          };
+        };
+        $scope.setSliderHeight = function() {
+          return {
+            height: $scope.slider + '%'
           };
         };
         $scope.changeOffset = function() {
@@ -371,6 +407,22 @@
           connection = scope.subConnections[key];
           return scope.select(connection, key);
         });
+        scope._normalizeSliderHeight = function(sliderHeight, sizerHeight) {
+          if (sizerHeight > 100 - sliderHeight) {
+            sizerHeight = 100 - sliderHeight;
+          }
+          if (sliderHeight > 100) {
+            sliderHeight = 100;
+          }
+          sliderHeight *= 100;
+          sizerHeight *= 100;
+          sizerHeight = Math.floor(sizerHeight) / 100;
+          sliderHeight = Math.ceil(sliderHeight) / 100;
+          return {
+            sliderHeight: sliderHeight,
+            sizerHeight: sizerHeight
+          };
+        };
         activateNextItem = function() {
           var current, currentIndex, next;
           current = element.find(".active");
@@ -436,7 +488,7 @@
   alfredDirective.filter("filterConnections", [
     "$filter", function($filter) {
       return function(input, query, arg1, arg2) {
-        var filterFilter, scope;
+        var filterFilter, scope, sizer, sizes, slider;
         scope = this;
         if (scope.prevquery !== scope.query && scope.query !== "") {
           scope.initializeParameteres();
@@ -444,6 +496,11 @@
         }
         filterFilter = $filter("filter");
         scope.filteredConnections = filterFilter(scope.connections, scope.query);
+        slider = (scope.amount * 100) / scope.filteredConnections.length;
+        sizer = (arg1 * 100) / scope.filteredConnections.length;
+        sizes = scope._normalizeSliderHeight(slider, sizer);
+        scope.slider = sizes.sliderHeight;
+        scope.sizer = sizes.sizerHeight;
         return scope.filteredConnections.slice(arg1, arg2);
       };
     }
