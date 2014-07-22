@@ -5,153 +5,7 @@ describe('Unit test alfredDirectives: alfred', function() {
     var $rootScope,
         $compile,
         scope,
-        element,
-        connectionsArray = [
-                {
-                  "color_scheme": null,
-                  "hostname": "dev.crystalnix.com",
-                  "id": 3444,
-                  "label": "0. digital",
-                  "port": 22,
-                  "resource_uri": "/api/v1/terminal/connection/3444/",
-                  "ssh_key": null,
-                  "ssh_password": "",
-                  "ssh_username": "serverauditor",
-                  "updated_at": "2014-06-20T05:24:31"
-                },
-                {
-                  "color_scheme": null,
-                  "hostname": "54.193.87.205",
-                  "id": 3445,
-                  "label": "",
-                  "port": 22,
-                  "resource_uri": "/api/v1/terminal/connection/3445/",
-                  "ssh_key": null,
-                  "ssh_password": "",
-                  "ssh_username": "1. ubuntu",
-                  "updated_at": "2014-06-06T07:18:41"
-                },
-                {
-                  "color_scheme": null,
-                  "hostname": "54.193.87.205",
-                  "id": 3447,
-                  "label": "2. dev.crystalnix.com",
-                  "port": 22,
-                  "resource_uri": "/api/v1/terminal/connection/3447/",
-                  "ssh_key": null,
-                  "ssh_password": "",
-                  "ssh_username": "ubuntu",
-                  "updated_at": "2014-06-11T09:58:03"
-                },
-                {
-                  "color_scheme": null,
-                  "hostname": "dev.crystalnix.com",
-                  "id": 3448,
-                  "label": "3. test",
-                  "port": 22,
-                  "resource_uri": "/api/v1/terminal/connection/3448/",
-                  "ssh_key": null,
-                  "ssh_password": "",
-                  "ssh_username": "admin",
-                  "updated_at": "2014-06-16T03:43:22"
-                },
-                {
-                  "color_scheme": null,
-                  "hostname": "dev.crystalnix.com",
-                  "id": 3559,
-                  "label": "4. dev.sa",
-                  "port": 22,
-                  "resource_uri": "/api/v1/terminal/connection/3559/",
-                  "ssh_key": null,
-                  "ssh_password": "3OVhaEwh6C5bGFb7",
-                  "ssh_username": "serverauditor",
-                  "updated_at": "2014-06-11T11:54:24"
-                },
-                {
-                  "color_scheme": null,
-                  "hostname": "localhost",
-                  "id": 3560,
-                  "label": "",
-                  "port": 22,
-                  "resource_uri": "/api/v1/terminal/connection/3560/",
-                  "ssh_key": null,
-                  "ssh_password": "",
-                  "ssh_username": "5. zhulduz",
-                  "updated_at": "2014-06-20T05:24:50"
-                },
-                {
-                  "color_scheme": null,
-                  "hostname": "dev.4crystalnix.com",
-                  "id": 4444,
-                  "label": "6. digital",
-                  "port": 22,
-                  "resource_uri": "/api/v1/terminal/connection/3444/",
-                  "ssh_key": null,
-                  "ssh_password": "",
-                  "ssh_username": "4serverauditor",
-                  "updated_at": "2014-06-20T05:24:31"
-                },
-                {
-                  "color_scheme": null,
-                  "hostname": "454.193.87.205",
-                  "id": 4445,
-                  "label": "",
-                  "port": 22,
-                  "resource_uri": "/api/v1/terminal/connection/3445/",
-                  "ssh_key": null,
-                  "ssh_password": "",
-                  "ssh_username": "7. 4ubuntu",
-                  "updated_at": "2014-06-06T07:18:41"
-                },
-                {
-                  "color_scheme": null,
-                  "hostname": "454.193.87.205",
-                  "id": 4447,
-                  "label": "8. dev.crystalnix.com",
-                  "port": 22,
-                  "resource_uri": "/api/v1/terminal/connection/3447/",
-                  "ssh_key": null,
-                  "ssh_password": "",
-                  "ssh_username": "ubuntu",
-                  "updated_at": "2014-06-11T09:58:03"
-                },
-                {
-                  "color_scheme": null,
-                  "hostname": "dev.8crystalnix.com",
-                  "id": 4448,
-                  "label": "9. test",
-                  "port": 22,
-                  "resource_uri": "/api/v1/terminal/connection/3448/",
-                  "ssh_key": null,
-                  "ssh_password": "",
-                  "ssh_username": "admin",
-                  "updated_at": "2014-06-16T03:43:22"
-                },
-                {
-                  "color_scheme": null,
-                  "hostname": "dev.crystalnix.com",
-                  "id": 4559,
-                  "label": "10. dev.sa",
-                  "port": 22,
-                  "resource_uri": "/api/v1/terminal/connection/3559/",
-                  "ssh_key": null,
-                  "ssh_password": "3OVhaEwh6C5bGFb7",
-                  "ssh_username": "serverauditor",
-                  "updated_at": "2014-06-11T11:54:24"
-                },
-                {
-                  "color_scheme": null,
-                  "hostname": "localhost",
-                  "id": 5560,
-                  "label": "",
-                  "port": 22,
-                  "resource_uri": "/api/v1/terminal/connection/3560/",
-                  "ssh_key": null,
-                  "ssh_password": "",
-                  "ssh_username": "11. zhulduz",
-                  "updated_at": "2014-06-20T05:24:50"
-                }
-            ];
+        element;
 
     beforeEach(module('cfp.hotkeys', 'alfredDirective', 'scroll'));
     beforeEach(module('partials/alfred.html', 'partials/inactive-connections.html', 'partials/active-connections.html'));
@@ -161,83 +15,207 @@ describe('Unit test alfredDirectives: alfred', function() {
             $compile          = _$compile_;
             $rootScope        = _$rootScope_;
             scope             = $rootScope;
-            scope.connections = connectionsArray
-            scope.histories   = connectionsArray
-            scope.placeholder = "ssh user@hostname -p port"
+            scope.connections = generateConnectionArray(16);
+            scope.histories   = generateHistoryArray(10);
+            scope.placeholder = "ssh user@hostname -p port";
             element           = $compile(angular.element('<alfred connections="connections" histories="histories" amount="6" height-cell="42" placeholder="placeholder"></alfred>'))($rootScope);
             scope.$digest();
         })
     );
 
-    it("should render another template",
-        function() {
+    var generateConnectionArray = function(length) {
+        var arr = [];
+            for(var i = 1; i <= length; ++i) {
+                arr.push({
+                    id : i,
+                    label: i.toString(),
+                    hostname: "hostname" + i.toString(),
+                    ssh_username: "ssh_username" + i.toString(),
+                    ssh_password: "ssh_password" + i.toString()
+                });
+            }
+        return arr;
+    };
+
+    var generateHistoryArray = function(length) {
+        var arr = [];
+            for(var i = 1; i <= length; ++i) {
+                arr.push({
+                    id : i,
+                    hostname: "history - hostname" + i.toString(),
+                    ssh_username: "history - ssh_username" + i.toString()
+                });
+            }
+        return arr;
+    };
+
+    describe('initial state', function() {
+        it("should render another template",
+            function() {
+                var input,
+                    ul,
+                    li,
+                    leftList, rightList,
+                    activeElement,
+                    notActiveElement;
+
+                input = element.find("input");
+                ul = element.find("ul");
+                li = element.find("li");
+                leftList = element.find("#left");
+                rightList = element.find("#right");
+                activeElement = element.find("#left").find("#0");
+                notActiveElement = element.find("#left").find("#3");
+
+                expect(input.length).toEqual(1);
+                expect(ul.length).toEqual(2);
+                expect(li.length).toEqual(12);
+                expect(leftList.hasClass("active")).toEqual(true);
+                expect(rightList.hasClass("active")).toEqual(false);
+                expect(activeElement.hasClass("active")).toEqual(true);
+                expect(notActiveElement.hasClass("active")).toEqual(false);
+            }
+        );
+
+        it("isolate scope should get parameters", function() {
             var input,
-                ul,
-                li,
-                leftList, rightList,
-                activeElement,
-                notActiveElement;
+                scopeDirective = element.isolateScope();
 
             input = element.find("input");
-            ul = element.find("ul");
-            li = element.find("li");
-            leftList = element.find("#left");
-            rightList = element.find("#right");
-            activeElement = element.find("#left").find("#0");
-            notActiveElement = element.find("#left").find("#3");
+            expect(input.attr("placeholder")).toEqual("ssh user@hostname -p port");
+            expect(scopeDirective.heightCell).toEqual(42);
+            expect(scopeDirective.amount).toEqual(6);
+            expect(scopeDirective.histories.length).toEqual(10);
+            expect(scopeDirective.connections.length).toEqual(16);
+        });
+    });
 
-            expect(input.length).toEqual(1);
-            expect(ul.length).toEqual(2);
-            expect(li.length).toEqual(12);
-            expect(leftList.hasClass("active")).toEqual(true);
-            expect(rightList.hasClass("active")).toEqual(false);
-            expect(activeElement.hasClass("active")).toEqual(true);
-            expect(notActiveElement.hasClass("active")).toEqual(false);
-        }
-    );
 
-    it("should set next element is active",
-        function() {
-            var e, activeElement, notActiveElement;
+    describe('scroll directive', function() {
+        it("should change from, offset parameters",
+            function() {
+                var scopeDirective = element.isolateScope(),
+                    fixedElem = element.find('#fixed'),
+                    scopeActiveList = fixedElem.scope(),
+                    e = jQuery.Event("mousewheel");
 
-            activeElement = element.find("#left").find("#0");
-            notActiveElement = element.find("#left").find("#1");
+                e.originalEvent = { wheelDelta : -120 };
+                fixedElem.trigger(e);
 
-            expect(element.isolateScope().selectedIndex).toEqual(0);
-            expect(activeElement.hasClass("active")).toEqual(true);
-            expect(notActiveElement.hasClass("active")).toEqual(false);
+                expect(scopeDirective.fromConnection).toBe(1);
+                expect(scopeDirective.fromHistory).toBe(0);
+                expect(scopeActiveList.from).toBe(1);
+                expect(scopeActiveList.offset).toBe(7);
+                expect(scopeActiveList.subConnections[0].hostname).toEqual("hostname2");
 
-            e = jQuery.Event("mouseenter");
-            e.keyCode = 40;
-            notActiveElement.trigger(e);
+                e.originalEvent = {
+                    wheelDelta : 120
+                };
+                fixedElem.trigger(e);
 
-            expect(element.isolateScope().selectedIndex).toEqual(1);
-            expect(activeElement.hasClass("active")).toEqual(false);
-            expect(notActiveElement.hasClass("active")).toEqual(true);
-        }
-    );
+                expect(scopeDirective.fromConnection).toBe(0);
+                expect(scopeDirective.fromHistory).toBe(0);
+                expect(scopeActiveList.from).toBe(0);
+                expect(scopeActiveList.offset).toBe(6);
+                expect(scopeActiveList.subConnections[0].hostname).toEqual("hostname1");
 
-    it("should select item on click event",
-        function() {
-            var scopeDirective = element.isolateScope();
-            var liElems = element.find('li');
+                e.originalEvent = {
+                    wheelDelta : 120
+                };
+                fixedElem.trigger(e);
 
-            expect(liElems.eq(0).hasClass('active')).toBe(true);
-            expect(liElems.eq(1).hasClass('active')).toBe(false);
-            expect(scopeDirective.amount).toBe(6);
-            expect(scopeDirective.selectedIndex).toBe(0);
+                expect(scopeDirective.fromConnection).toBe(0);
+                expect(scopeDirective.fromHistory).toBe(0);
+                expect(scopeActiveList.from).toBe(0);
+                expect(scopeActiveList.offset).toBe(6);
+                expect(scopeActiveList.subConnections[0].hostname).toEqual("hostname1");
+        });
+    });
 
-            scope.$apply(scopeDirective.setSelectedConnection(1));
-            expect(scopeDirective.selectedIndex).toBe(1);
-            expect(liElems.eq(0).hasClass('active')).toBe(false);
-            expect(liElems.eq(1).hasClass('active')).toBe(true);
+    describe("set active element on event mouseenter on connectionItem", function() {
+        it("should change selectedItem on event mouseenter",
+            function() {
+                var scopeDirective = element.isolateScope();
+                var liElems = element.find('li');
 
-            liElems.eq(0).trigger("click");
-            expect(liElems.eq(0).hasClass('active')).toBe(true);
-            expect(liElems.eq(1).hasClass('active')).toBe(false);
+                expect(scopeDirective.selectedIndex).toBe(0);
+                expect(liElems.eq(0).hasClass('active')).toBe(true);
+                expect(liElems.eq(2).hasClass('active')).toBe(false);
+
+                liElems.eq(2).trigger('mouseenter');
+
+                expect(scopeDirective.selectedIndex).toBe(2);
+                expect(liElems.eq(0).hasClass('active')).toBe(false);
+                expect(liElems.eq(2).hasClass('active')).toBe(true);
+
+                liElems.eq(5).trigger('mouseenter');
+                expect(scopeDirective.selectedIndex).toBe(5);
+                expect(liElems.eq(0).hasClass('active')).toBe(false);
+                expect(liElems.eq(2).hasClass('active')).toBe(false);
+                expect(liElems.eq(5).hasClass('active')).toBe(true);
+        });
+    });
+
+    describe("set active list on event mouseenter on inactive list", function() {
+        it("should change selectedItem on event mouseenter",
+            function() {
+                var scopeDirective = element.isolateScope(),
+                    inActiveList = element.find('#inactive-list');
+
+                inActiveList.trigger('mouseenter');
+                expect(scopeDirective.isLeftActive).toBe(false);
+                expect(scopeDirective.isRightActive).toBe(true);
+
+                inActiveList = element.find('#inactive-list');
+                inActiveList.trigger('mouseenter');
+                expect(scopeDirective.isLeftActive).toBe(true);
+                expect(scopeDirective.isRightActive).toBe(false);
+            }
+        );
     });
 
     describe('Unit test hotkeys', function() {
+        /*it("should set next element is active",
+            function() {
+                var e, activeElement, notActiveElement;
+
+                activeElement = element.find("#left").find("#0");
+                notActiveElement = element.find("#left").find("#1");
+
+                expect(element.isolateScope().selectedIndex).toEqual(0);
+                expect(activeElement.hasClass("active")).toEqual(true);
+                expect(notActiveElement.hasClass("active")).toEqual(false);
+
+                e = jQuery.Event("mouseenter");
+                e.keyCode = 40;
+                notActiveElement.trigger(e);
+
+                expect(element.isolateScope().selectedIndex).toEqual(1);
+                expect(activeElement.hasClass("active")).toEqual(false);
+                expect(notActiveElement.hasClass("active")).toEqual(true);
+            }
+        );
+
+        it("should select item on click event",
+            function() {
+                var scopeDirective = element.isolateScope();
+                var liElems = element.find('li');
+
+                expect(liElems.eq(0).hasClass('active')).toBe(true);
+                expect(liElems.eq(1).hasClass('active')).toBe(false);
+                expect(scopeDirective.amount).toBe(6);
+                expect(scopeDirective.selectedIndex).toBe(0);
+
+                scope.$apply(scopeDirective.setSelectedConnection(1));
+                expect(scopeDirective.selectedIndex).toBe(1);
+                expect(liElems.eq(0).hasClass('active')).toBe(false);
+                expect(liElems.eq(1).hasClass('active')).toBe(true);
+
+                liElems.eq(0).trigger("click");
+                expect(liElems.eq(0).hasClass('active')).toBe(true);
+                expect(liElems.eq(1).hasClass('active')).toBe(false);
+        });*/
+
         /*it("should select item on event arrow",
             function() {
                 var liElems = element.find('li');
@@ -257,49 +235,7 @@ describe('Unit test alfredDirectives: alfred', function() {
         })*/
     });
 
-    describe('Unit test scroll', function() {
-        it("should change fromConnections at alfred scope on event scroll",
-            function() {
-                var scopeDirective = element.isolateScope();
-                var fixedElem = element.find('#fixed');
 
-                var e = jQuery.Event("mousewheel");
-                e.originalEvent = {
-                    wheelDelta : -120
-                }
-                fixedElem.trigger(e);
-
-                expect(scopeDirective.fromConnection).toBe(1);
-                expect(scopeDirective.fromHistory).toBe(0);
-
-                e.originalEvent = {
-                    wheelDelta : 120
-                }
-                fixedElem.trigger(e);
-
-                expect(scopeDirective.fromConnection).toBe(0);
-                expect(scopeDirective.fromHistory).toBe(0);
-        });
-
-    });
-
-    describe('Unit test alfredDirective: connectionItem', function() {
-        it("should change selectedItem on event mouseenter",
-            function() {
-                var scopeDirective = element.isolateScope();
-                var liElems = element.find('li');
-
-                expect(scopeDirective.selectedIndex).toBe(0);
-                expect(liElems.eq(0).hasClass('active')).toBe(true);
-                expect(liElems.eq(2).hasClass('active')).toBe(false);
-
-                liElems.eq(2).trigger('mouseenter');
-
-                expect(scopeDirective.selectedIndex).toBe(2);
-                expect(liElems.eq(0).hasClass('active')).toBe(false);
-                expect(liElems.eq(2).hasClass('active')).toBe(true);
-        });
-    });
 
 });
 
