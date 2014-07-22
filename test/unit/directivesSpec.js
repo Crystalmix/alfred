@@ -79,7 +79,9 @@ describe('Unit test alfredDirectives: alfred', function() {
 
         it("isolate scope should get parameters", function() {
             var input,
-                scopeDirective = element.isolateScope();
+                scopeDirective = element.isolateScope(),
+                fixedElem = element.find('#fixed'),
+                scopeActiveList = fixedElem.scope();
 
             input = element.find("input");
             expect(input.attr("placeholder")).toEqual("ssh user@hostname -p port");
@@ -87,6 +89,9 @@ describe('Unit test alfredDirectives: alfred', function() {
             expect(scopeDirective.amount).toEqual(6);
             expect(scopeDirective.histories.length).toEqual(10);
             expect(scopeDirective.connections.length).toEqual(16);
+            expect(scopeActiveList.connections.length).toEqual(16);
+            expect(scopeActiveList.filteredConnections.length).toEqual(16);
+            expect(scopeActiveList.subConnections.length).toEqual(scopeActiveList.amount);
         });
     });
 
@@ -174,28 +179,7 @@ describe('Unit test alfredDirectives: alfred', function() {
         );
     });
 
-    describe('Unit test hotkeys', function() {
-        /*it("should set next element is active",
-            function() {
-                var e, activeElement, notActiveElement;
-
-                activeElement = element.find("#left").find("#0");
-                notActiveElement = element.find("#left").find("#1");
-
-                expect(element.isolateScope().selectedIndex).toEqual(0);
-                expect(activeElement.hasClass("active")).toEqual(true);
-                expect(notActiveElement.hasClass("active")).toEqual(false);
-
-                e = jQuery.Event("mouseenter");
-                e.keyCode = 40;
-                notActiveElement.trigger(e);
-
-                expect(element.isolateScope().selectedIndex).toEqual(1);
-                expect(activeElement.hasClass("active")).toEqual(false);
-                expect(notActiveElement.hasClass("active")).toEqual(true);
-            }
-        );
-
+    describe('hotkeys test', function() {
         it("should select item on click event",
             function() {
                 var scopeDirective = element.isolateScope();
@@ -214,7 +198,8 @@ describe('Unit test alfredDirectives: alfred', function() {
                 liElems.eq(0).trigger("click");
                 expect(liElems.eq(0).hasClass('active')).toBe(true);
                 expect(liElems.eq(1).hasClass('active')).toBe(false);
-        });*/
+            }
+        );
 
         /*it("should select item on event arrow",
             function() {
