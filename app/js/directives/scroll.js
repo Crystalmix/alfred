@@ -2,11 +2,7 @@
   angular.module('scroll', []).directive('whenScrolled', function() {
     return {
       restrict: 'A',
-      link: function(scope, element, attrs) {
-
-        /*
-            Set element height
-         */
+      link: function(scope, element) {
         return element.bind('mousewheel', function(event) {
           if (event.originalEvent.wheelDelta < 0) {
             scope.$apply(scope.loadDown);

@@ -125,3 +125,7 @@ i {
     box-sizing: border-box;
     border-radius: 3px;
 }
+
+.glyphicon.glyphicon-plus {
+    margin-left: 10px;
+}

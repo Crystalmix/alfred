@@ -1,89 +1,66 @@
-'use strict';
+describe('Unit test filters: alfred', function() {
+    var scope = {},
+        filter;
 
-describe('FilterConnections Test', function() {
-    var $rootScope,
-        scope,
-        filterConnections,
-        connectionsArray = [
-                            {
-                                  "color_scheme": null,
-                                  "hostname": "dev.crystalnix.com",
-                                  "id": 3444,
-                                  "label": "0. digital",
-                                  "port": 22,
-                                  "resource_uri": "/api/v1/terminal/connection/3444/",
-                                  "ssh_key": null,
-                                  "ssh_password": "",
-                                  "ssh_username": "serverauditor",
-                                  "updated_at": "2014-06-20T05:24:31"
-                            },
-                            {
-                                  "color_scheme": null,
-                                  "hostname": "54.193.87.205",
-                                  "id": 3445,
-                                  "label": "",
-                                  "port": 22,
-                                  "resource_uri": "/api/v1/terminal/connection/3445/",
-                                  "ssh_key": null,
-                                  "ssh_password": "",
-                                  "ssh_username": "1. ubuntu",
-                                  "updated_at": "2014-06-06T07:18:41"
-                            },
-                            {
-                                  "color_scheme": null,
-                                  "hostname": "54.193.87.205",
-                                  "id": 3447,
-                                  "label": "2. dev.crystalnix.com",
-                                  "port": 22,
-                                  "resource_uri": "/api/v1/terminal/connection/3447/",
-                                  "ssh_key": null,
-                                  "ssh_password": "",
-                                  "ssh_username": "ubuntu",
-                                  "updated_at": "2014-06-11T09:58:03"
-                            },
-                            {
-                                  "color_scheme": null,
-                                  "hostname": "dev.crystalnix.com",
-                                  "id": 3448,
-                                  "label": "3. test",
-                                  "port": 22,
-                                  "resource_uri": "/api/v1/terminal/connection/3448/",
-                                  "ssh_key": null,
-                                  "ssh_password": "",
-                                  "ssh_username": "admin",
-                                  "updated_at": "2014-06-16T03:43:22"
-                            }
-                        ];
+    beforeEach(module('cfp.hotkeys', 'alfredDirective'));
 
-    beforeEach(module('alfredDirective'));
     beforeEach(inject(
-        function(_$rootScope_, filterConnectionsFilter){
-            $rootScope = _$rootScope_;
-            scope = $rootScope.$new();
-            filterConnections = filterConnectionsFilter;
+        function($injector) {
+            scope.connections = generateArray(8);
+            scope.prevquery = scope.query = null;
+            scope.setSelectedConnection = function(index) {
+                scope.selectedIndex = index;
+            }
+            scope.initializeParameteres = function() {
+                scope.from = 0;
+                scope.setSelectedConnection(0);
+            }
+            scope.changeSlider = function() {}
+            filter = $injector.get("$filter")("filterConnections");
         })
     );
 
-    it('should replace VERSION',
+    var generateArray = function(length) {
+        var arr = [];
+            for(var i = 1; i <= length; ++i) {
+                arr.push({
+                    id : i,
+                    label: i.toString()
+                });
+            }
+        return arr;
+    }
+
+    it("should get initial list",
         function() {
-            var result = [
-                {
-                    "color_scheme": null,
-                    "hostname": "dev.crystalnix.com",
-                    "id": 3444,
-                    "label": "0. digital",
-                    "port": 22,
-                    "resource_uri": "/api/v1/terminal/connection/3444/",
-                    "ssh_key": null,
-                    "ssh_password": "",
-                    "ssh_username": "serverauditor",
-                    "updated_at": "2014-06-20T05:24:31"
-                }
-            ]
-            scope.prevquery = scope.query = null;
-            scope.connections = connectionsArray;
-            expect(filterConnections([], scope, 0, 1)).toEqual(result);
+            var filteredConnections = filter.call(scope, scope.connections, null, 0, 6);
+            expect(filteredConnections.length).toEqual(6);
+            expect(filteredConnections[0].label).toEqual("1");
+            expect(scope.from).not.toBeDefined();
+            expect(scope.selectedIndex).not.toBeDefined();
+        }
+    );
+
+    it("should get empty list",
+        function() {
+            var filteredConnections;
+            scope.connections = scope.connections.slice(0, 1)
+
+            filteredConnections = filter.call(scope, scope.connections, null, 1, 7);
+            expect(filteredConnections.length).toEqual(0);
+
+            filteredConnections = filter.call(scope, scope.connections, null, 0, 6);
+            expect(filteredConnections.length).toEqual(1);
+        }
+    );
+
+    it("should initialize parameters if previous query doesn`t match to current",
+        function() {
+            scope.query = "2"
+            filter.call(scope, scope.connections, null, 0, 6);
+            expect(scope.from).toEqual(0);
+            expect(scope.selectedIndex).toEqual(0);
+            expect(scope.prevquery).toEqual("2");
         }
     );
 });
-

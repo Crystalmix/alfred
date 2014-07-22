@@ -20,6 +20,9 @@
       this.scope.enterConnection = function(connection) {
         return console.log("--- outerController", connection);
       };
+      this.scope.addConnection = function() {
+        return console.log("--- outerController add connection");
+      };
       this.scope.placeholder = "ssh user@hostname -p port";
       this.scope.query = null;
       this.scope.histories = [

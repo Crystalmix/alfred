@@ -7,11 +7,15 @@ module.exports = function(config){
             'app/partials/*.html': ['ng-html2js']
         },
 
-        files : [
+        frameworks: ['jasmine'],
+
+        files: [
             'bower_components/jquery/dist/jquery.min.js',
             'bower_components/angular/angular.js',
-            'bower_components/angular-ui-route/release/angular-ui-route.js',
+            'bower_components/angular-resource/angular-resource.js',
             'bower_components/angular-mocks/angular-mocks.js',
+            'bower_components/mousetrap/mousetrap.js',
+            'bower_components/angular-hotkeys/src/hotkeys.js',
             'app/js/**/*.js',
             'test/unit/*.js',
             'app/partials/*.html'
@@ -22,8 +26,6 @@ module.exports = function(config){
         },
 
         autoWatch : true,
-
-        frameworks: ['jasmine'],
 
         browsers : ['Chrome'],
 

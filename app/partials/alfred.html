@@ -3,13 +3,17 @@
            id="alfred-input"
            class="form-control input-lg input"
            ng-model="query"
-           ng-keydown="keydown($event)"s
+           ng-keydown="keydown($event)"
            placeholder="{{placeholder}}">
 
     <div ng-if="isTable">
         <div id="left" ng-class="{ active: isLeftActive }">
             <div class="header">
                 <span>Hosts</span>
+                <a type="button" ng-click="addConnection()"><span class="add glyphicon glyphicon-plus"></span></a>
+                <i class="pull-right" ng-show="isLeftActive">
+                    <a type="button"><span class="glyphicon glyphicon-arrow-left"></span></a>
+                </i>
             </div>
 
             <div class="left-list" ng-if="isLeftActive">
@@ -34,6 +38,9 @@
         <div id="right" ng-class="{ active: isRightActive }">
             <div class="header">
                 <span>History</span>
+                <i class="pull-right" ng-show="isRightActive">
+                    <a type="button"><span class="glyphicon glyphicon-arrow-right"></span></a>
+                </i>
             </div>
             <div class="left-list" ng-if="isLeftActive">
                 <inactive-list connections  = "histories"

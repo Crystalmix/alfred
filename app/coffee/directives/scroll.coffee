@@ -3,17 +3,7 @@ angular.module('scroll', [])
 .directive('whenScrolled', () ->
         restrict: 'A'
 
-        link: (scope, element, attrs) ->
-
-            ###
-                Set element height
-            ###
-            #amountOfCell = scope.amount
-           # widthCell = scope.$eval(attrs.widthCell)
-            #element.height amountOfCell * widthCell + 1
-
-            #scope.setHeight = () ->
-            #    height: widthCell + 'px'
+        link: (scope, element) ->
 
             element.bind('mousewheel', (event) ->
                 if(event.originalEvent.wheelDelta < 0)

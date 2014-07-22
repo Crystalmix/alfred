@@ -16,6 +16,9 @@ class AlfredController
         @scope.enterConnection = (connection) ->
             console.log "--- outerController", connection
 
+        @scope.addConnection = () ->
+            console.log "--- outerController add connection"
+
         @scope.placeholder = "ssh user@hostname -p port"
 
         @scope.query = null

@@ -82,6 +82,7 @@
           amount: "=",
           heightCell: "=",
           onEnterCallback: "&",
+          onAddCallback: "&",
           placeholder: "="
         },
         controller: function($scope) {
@@ -224,6 +225,9 @@
             return setTimeout((function() {
               return checkQuery();
             }), 0);
+          };
+          scope.addConnection = function() {
+            return scope.onAddCallback();
           };
           scope.cmdSystemHotkey = detectCtrlOrCmd();
           initializeParameters();

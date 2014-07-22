@@ -63,6 +63,7 @@ alfredDirective.directive "alfred", ['hotkeys', 'quickConnectParse', (hotkeys, q
             amount:          "="
             heightCell:      "="
             onEnterCallback: "&"
+            onAddCallback:   "&"
             placeholder:     "="
 
         controller: ($scope) ->
@@ -192,6 +193,9 @@ alfredDirective.directive "alfred", ['hotkeys', 'quickConnectParse', (hotkeys, q
                 setTimeout (->
                     do checkQuery
                 ), 0
+
+            scope.addConnection = () ->
+                do scope.onAddCallback
 
             scope.cmdSystemHotkey = do detectCtrlOrCmd
 
