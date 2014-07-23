@@ -269,17 +269,19 @@ describe('Unit test alfredDirectives: alfred', function() {
 
         it("should make active element on event 'command+i'",
             function() {
-                var scopeDirective = element.isolateScope();
+                var scopeDirective = element.isolateScope(),
+                    isMac = navigator.userAgent.toLowerCase().indexOf('mac') !== -1,
+                    hotKey = isMac ? 'meta' : 'ctrl';
                 expect(scopeDirective.selectedIndex).toBe(0);
-                KeyEvent.simulate('2'.charCodeAt(0), 50, ['meta']);
+                KeyEvent.simulate('2'.charCodeAt(0), 50, [hotKey]);
                 expect(scopeDirective.selectedIndex).toBe(1);
-                KeyEvent.simulate('3'.charCodeAt(0), 51, ['meta']);
+                KeyEvent.simulate('3'.charCodeAt(0), 51, [hotKey]);
                 expect(scopeDirective.selectedIndex).toBe(2);
-                KeyEvent.simulate('4'.charCodeAt(0), 52, ['meta']);
+                KeyEvent.simulate('4'.charCodeAt(0), 52, [hotKey]);
                 expect(scopeDirective.selectedIndex).toBe(3);
-                KeyEvent.simulate('5'.charCodeAt(0), 53, ['meta']);
+                KeyEvent.simulate('5'.charCodeAt(0), 53, [hotKey]);
                 expect(scopeDirective.selectedIndex).toBe(4);
-                KeyEvent.simulate('6'.charCodeAt(0), 54, ['meta']);
+                KeyEvent.simulate('6'.charCodeAt(0), 54, [hotKey]);
                 expect(scopeDirective.selectedIndex).toBe(5);
             }
         );
