@@ -2,6 +2,11 @@
 
 alfredDirective = angular.module("alfredDirective", ['cfp.hotkeys'])
 
+
+alfredDirective.config (hotkeysProvider) ->
+    hotkeysProvider.includeCheatSheet = yes
+
+
 alfredDirective.factory 'quickConnectParse', () ->
 
     trimArray = (array) ->
@@ -34,16 +39,24 @@ alfredDirective.factory 'quickConnectParse', () ->
 
                         if leftInputArray.length >= 2 and leftInputArray.indexOf('-p') isnt -1
                             if leftInputArray.length is 3 and leftInputArray[0] is "-p"
-                                options.port = leftInputArray[1]
-                            if leftInputArray.length is 2 and leftInputArray[0].indexOf('-p') is 0
-                                options.port = leftInputArray[0].slice(2)
+                                options.port = parseInt(leftInputArray[1])
+                            else if leftInputArray.length is 2 and leftInputArray[0].indexOf('-p') is 0
+                                options.port = parseInt(leftInputArray[0].slice(2))
+                            else
+                                return {}
+                        else if leftInputArray.length >= 2 and leftInputArray.indexOf('-p') is -1
+                            return {}
                         options.ssh_username = leftInputArray[leftInputArray.length - 1]
 
                         if rightInputArray.length >=2 and rightInputArray.indexOf("-p") isnt -1
                             if rightInputArray.length is 2 and rightInputArray[1].indexOf("-p") is 0
-                                options.port = rightInputArray[1].slice(2)
-                            if rightInputArray.length is 3 and rightInputArray[1] is "-p"
-                                options.port = rightInputArray[2]
+                                options.port = parseInt(rightInputArray[1].slice(2))
+                            else if rightInputArray.length is 3 and rightInputArray[1] is "-p"
+                                options.port = parseInt(rightInputArray[2])
+                            else
+                                return {}
+                        else if rightInputArray.length >=2 and rightInputArray.indexOf("-p") is -1
+                            return {}
                         options.hostname = rightInputArray[0]
                         if not options.port
                             options.port = 22
@@ -75,6 +88,70 @@ alfredDirective.directive "alfred", ['hotkeys', 'quickConnectParse', (hotkeys, q
                 $scope.selectedIndex = index
                 $scope.$broadcast "setSelectedIndex", index
 
+            hotkeys.bindTo($scope)
+                .add({
+                    combo: 'return'
+                    description: 'Make active left list'
+                    allowIn: ['INPUT']
+                    callback: () =>
+                        if $scope.query and $scope.query.indexOf("ssh") isnt -1
+                            connection = quickConnectParse.parse $scope.query
+                            @enterCallback connection
+                        else
+                            $scope.$broadcast "enter"
+                })
+                .add({
+                    combo: 'left'
+                    description: 'Make active left list'
+                    allowIn: ['INPUT']
+                    callback: () ->
+                        $scope.isLeftActive  = yes
+                        $scope.isRightActive = no
+                })
+                .add({
+                    combo: 'right'
+                    description: 'Make active right list'
+                    allowIn: ['INPUT']
+                    callback: () ->
+                        $scope.isLeftActive  = no
+                        $scope.isRightActive = yes
+                })
+                .add({
+                    combo: 'up'
+                    description: 'Make active element above'
+                    allowIn: ['INPUT']
+                    callback: ($event) ->
+                        do $event.preventDefault
+                        $scope.$broadcast "arrow", "up"
+                })
+                .add({
+                    combo: 'down'
+                    description: 'Make active element above'
+                    allowIn: ['INPUT']
+                    callback: ($event) ->
+                        do $event.preventDefault
+                        $scope.$broadcast "arrow", "down"
+                })
+
+            bindHotkeysCmd = () ->
+                for i in [1..$scope.amount]
+                    combo = "#{$scope.cmdSystemHotkey}+#{i}"
+                    hotkeys.bindTo($scope)
+                        .add({
+                            combo: combo
+                            description: 'Make active element ' + (i+1)
+                            allowIn: ['INPUT']
+                            callback: ($event) ->
+                                do $event.preventDefault
+                                $scope.setSelectedConnection(parseInt(String.fromCharCode($event.keyCode)) - 1)
+                                $scope.$broadcast "enter"
+                        })
+
+            detectCtrlOrCmd = () ->
+                isMac = navigator.userAgent.toLowerCase().indexOf('mac') isnt -1
+                hotKey = if isMac then 'command' else 'ctrl'
+                hotKey
+
             @setSelectedIndex = (key) ->
                 $scope.setSelectedConnection key
 
@@ -98,6 +175,9 @@ alfredDirective.directive "alfred", ['hotkeys', 'quickConnectParse', (hotkeys, q
                     $scope.isRightActive = no
                 do $scope.$apply
 
+            $scope.cmdSystemHotkey = do detectCtrlOrCmd
+            do bindHotkeysCmd
+
             return @
 
 
@@ -109,68 +189,6 @@ alfredDirective.directive "alfred", ['hotkeys', 'quickConnectParse', (hotkeys, q
 
             scope.$watch "isTable", () ->
                 do initializeParameters
-
-            hotkeys.bindTo(scope)
-                .add({
-                    combo: 'return'
-                    description: 'Make active left list'
-                    allowIn: ['INPUT']
-                    callback: () ->
-                        if scope.query.indexOf("ssh") isnt -1
-                            connection = quickConnectParse.parse scope.query
-                            alfredCtrl.enterCallback connection
-                        else
-                            scope.$broadcast "enter"
-                })
-                .add({
-                    combo: 'left'
-                    description: 'Make active left list'
-                    allowIn: ['INPUT']
-                    callback: () ->
-                        scope.isLeftActive  = yes
-                        scope.isRightActive = no
-                })
-                .add({
-                    combo: 'right'
-                    description: 'Make active right list'
-                    allowIn: ['INPUT']
-                    callback: () ->
-                        scope.isLeftActive  = no
-                        scope.isRightActive = yes
-                })
-                .add({
-                    combo: 'up'
-                    description: 'Make active element above'
-                    allowIn: ['INPUT']
-                    callback: () ->
-                        scope.$broadcast "arrow", "up"
-                })
-                .add({
-                    combo: 'down'
-                    description: 'Make active element above'
-                    allowIn: ['INPUT']
-                    callback: () ->
-                        scope.$broadcast "arrow", "down"
-                })
-
-            bindHotkeysCmd = () ->
-                for i in [1..scope.amount]
-                    combo = "#{scope.cmdSystemHotkey}+#{i}"
-                    hotkeys.bindTo(scope)
-                        .add({
-                            combo: combo
-                            description: 'Cmd+i'
-                            allowIn: ['INPUT']
-                            callback: ($event) ->
-                                do $event.preventDefault
-                                scope.setSelectedConnection(parseInt(String.fromCharCode($event.keyCode)) - 1)
-                                scope.$broadcast "enter"
-                        })
-
-            detectCtrlOrCmd = () ->
-                isMac = navigator.userAgent.toLowerCase().indexOf('mac') isnt -1
-                hotKey = if isMac then 'command' else 'ctrl'
-                hotKey
 
             checkQuery = () ->
                 if scope.query
@@ -197,11 +215,11 @@ alfredDirective.directive "alfred", ['hotkeys', 'quickConnectParse', (hotkeys, q
             scope.addConnection = () ->
                 do scope.onAddCallback
 
-            scope.cmdSystemHotkey = do detectCtrlOrCmd
+            #scope.cmdSystemHotkey = do detectCtrlOrCmd
 
             do initializeParameters
             do initializeTableParameters
-            do bindHotkeysCmd
+            #do bindHotkeysCmd
 ]
 
 alfredDirective.directive "inactiveList",  () ->

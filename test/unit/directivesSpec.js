@@ -11,7 +11,7 @@ describe('Unit test alfredDirectives: alfred', function() {
     beforeEach(module('partials/alfred.html', 'partials/inactive-connections.html', 'partials/active-connections.html'));
 
     beforeEach(inject(
-        function(_$compile_, _$rootScope_){
+        function(_$compile_, _$rootScope_) {
             $compile          = _$compile_;
             $rootScope        = _$rootScope_;
             scope             = $rootScope;
@@ -182,25 +182,58 @@ describe('Unit test alfredDirectives: alfred', function() {
     describe('hotkeys test', function() {
         it("should select item on click event",
             function() {
-                var scopeDirective = element.isolateScope();
-                var liElems = element.find('li');
+                var scopeDirective = element.isolateScope(),
+                    liElems = element.find('li');
 
                 expect(liElems.eq(0).hasClass('active')).toBe(true);
                 expect(liElems.eq(1).hasClass('active')).toBe(false);
-                expect(scopeDirective.amount).toBe(6);
                 expect(scopeDirective.selectedIndex).toBe(0);
 
-                scope.$apply(scopeDirective.setSelectedConnection(1));
-                expect(scopeDirective.selectedIndex).toBe(1);
+                liElems.eq(2).trigger("click");
+                expect(liElems.eq(2).hasClass('active')).toBe(true);
                 expect(liElems.eq(0).hasClass('active')).toBe(false);
-                expect(liElems.eq(1).hasClass('active')).toBe(true);
+                expect(scopeDirective.selectedIndex).toBe(2);
 
-                liElems.eq(0).trigger("click");
-                expect(liElems.eq(0).hasClass('active')).toBe(true);
-                expect(liElems.eq(1).hasClass('active')).toBe(false);
+                liElems.eq(4).trigger("click");
+                expect(liElems.eq(4).hasClass('active')).toBe(true);
+                expect(liElems.eq(2).hasClass('active')).toBe(false);
+                expect(liElems.eq(0).hasClass('active')).toBe(false);
+                expect(scopeDirective.selectedIndex).toBe(4);
             }
         );
 
+        /*it("should make active list on event 'left/right arrow'",
+            function() {
+                var scopeDirective = element.isolateScope(),
+                    alfred = element.find('#left'),
+                    e = jQuery.Event('keydown');
+                e.keyCode = 37;
+                //KeyEvent.simulate('left'.charCodeAt(0), 90, undefined, input[0]);
+                alfred.trigger(e);
+                expect(scopeDirective.isLeftActive).toBe(true);
+                expect(scopeDirective.isRightActive).toBe(false);
+
+                e.keyCode = 39;
+                element.triggerHandler(e);
+                //KeyEvent.simulate('w'.charCodeAt(0), 90, undefined, input[0]);
+                //expect(scopeDirective.isLeftActive).toBe(false);
+                //expect(scopeDirective.isRightActive).toBe(true);
+            }
+        );
+
+        it("should make active next/previous element", function() {
+            var scopeDirective = element.isolateScope(),
+                input = element.find("#alfred-input"),
+                e = new KeyboardEvent("keydown", {keyIdentifier: "Right", which: 39, keyCode: 39});
+
+            console.log(scopeDirective.selectedIndex);
+
+            input.trigger(e);
+
+            console.log(scopeDirective.selectedIndex);
+
+        });
+        */
         /*it("should select item on event arrow",
             function() {
                 var liElems = element.find('li');
@@ -219,8 +252,6 @@ describe('Unit test alfredDirectives: alfred', function() {
                 expect(liElems.eq(1).hasClass('active')).toBe(false);
         })*/
     });
-
-
 
 });
 

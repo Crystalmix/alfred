@@ -10,10 +10,12 @@ module.exports = function(config){
         frameworks: ['jasmine'],
 
         files: [
+            'bower_components/underscore/underscore.js',
             'bower_components/jquery/dist/jquery.min.js',
             'bower_components/angular/angular.js',
             'bower_components/angular-resource/angular-resource.js',
             'bower_components/angular-mocks/angular-mocks.js',
+            'bower_components/mousetrap/tests/libs/key-event.js',
             'bower_components/mousetrap/mousetrap.js',
             'bower_components/angular-hotkeys/src/hotkeys.js',
             'app/js/**/*.js',

@@ -4,6 +4,10 @@
 
   alfredDirective = angular.module("alfredDirective", ['cfp.hotkeys']);
 
+  alfredDirective.config(function(hotkeysProvider) {
+    return hotkeysProvider.includeCheatSheet = true;
+  });
+
   alfredDirective.factory('quickConnectParse', function() {
     var trimArray;
     trimArray = function(array) {
@@ -40,20 +44,26 @@
                 rightInputArray = trimArray(_.compact(rightInputArray.split(" ")));
                 if (leftInputArray.length >= 2 && leftInputArray.indexOf('-p') !== -1) {
                   if (leftInputArray.length === 3 && leftInputArray[0] === "-p") {
-                    options.port = leftInputArray[1];
+                    options.port = parseInt(leftInputArray[1]);
+                  } else if (leftInputArray.length === 2 && leftInputArray[0].indexOf('-p') === 0) {
+                    options.port = parseInt(leftInputArray[0].slice(2));
+                  } else {
+                    return {};
                   }
-                  if (leftInputArray.length === 2 && leftInputArray[0].indexOf('-p') === 0) {
-                    options.port = leftInputArray[0].slice(2);
-                  }
+                } else if (leftInputArray.length >= 2 && leftInputArray.indexOf('-p') === -1) {
+                  return {};
                 }
                 options.ssh_username = leftInputArray[leftInputArray.length - 1];
                 if (rightInputArray.length >= 2 && rightInputArray.indexOf("-p") !== -1) {
                   if (rightInputArray.length === 2 && rightInputArray[1].indexOf("-p") === 0) {
-                    options.port = rightInputArray[1].slice(2);
+                    options.port = parseInt(rightInputArray[1].slice(2));
+                  } else if (rightInputArray.length === 3 && rightInputArray[1] === "-p") {
+                    options.port = parseInt(rightInputArray[2]);
+                  } else {
+                    return {};
                   }
-                  if (rightInputArray.length === 3 && rightInputArray[1] === "-p") {
-                    options.port = rightInputArray[2];
-                  }
+                } else if (rightInputArray.length >= 2 && rightInputArray.indexOf("-p") === -1) {
+                  return {};
                 }
                 options.hostname = rightInputArray[0];
                 if (!options.port) {
@@ -86,12 +96,85 @@
           placeholder: "="
         },
         controller: function($scope) {
+          var bindHotkeysCmd, detectCtrlOrCmd;
           $scope.query = null;
           $scope.entities = $scope.connections.concat($scope.histories);
           $scope.selectedIndex = 0;
           $scope.setSelectedConnection = function(index) {
             $scope.selectedIndex = index;
             return $scope.$broadcast("setSelectedIndex", index);
+          };
+          hotkeys.bindTo($scope).add({
+            combo: 'return',
+            description: 'Make active left list',
+            allowIn: ['INPUT'],
+            callback: (function(_this) {
+              return function() {
+                var connection;
+                if ($scope.query && $scope.query.indexOf("ssh") !== -1) {
+                  connection = quickConnectParse.parse($scope.query);
+                  return _this.enterCallback(connection);
+                } else {
+                  return $scope.$broadcast("enter");
+                }
+              };
+            })(this)
+          }).add({
+            combo: 'left',
+            description: 'Make active left list',
+            allowIn: ['INPUT'],
+            callback: function() {
+              $scope.isLeftActive = true;
+              return $scope.isRightActive = false;
+            }
+          }).add({
+            combo: 'right',
+            description: 'Make active right list',
+            allowIn: ['INPUT'],
+            callback: function() {
+              $scope.isLeftActive = false;
+              return $scope.isRightActive = true;
+            }
+          }).add({
+            combo: 'up',
+            description: 'Make active element above',
+            allowIn: ['INPUT'],
+            callback: function($event) {
+              $event.preventDefault();
+              return $scope.$broadcast("arrow", "up");
+            }
+          }).add({
+            combo: 'down',
+            description: 'Make active element above',
+            allowIn: ['INPUT'],
+            callback: function($event) {
+              $event.preventDefault();
+              return $scope.$broadcast("arrow", "down");
+            }
+          });
+          bindHotkeysCmd = function() {
+            var combo, i, _i, _ref, _results;
+            _results = [];
+            for (i = _i = 1, _ref = $scope.amount; 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
+              combo = "" + $scope.cmdSystemHotkey + "+" + i;
+              _results.push(hotkeys.bindTo($scope).add({
+                combo: combo,
+                description: 'Make active element ' + (i + 1),
+                allowIn: ['INPUT'],
+                callback: function($event) {
+                  $event.preventDefault();
+                  $scope.setSelectedConnection(parseInt(String.fromCharCode($event.keyCode)) - 1);
+                  return $scope.$broadcast("enter");
+                }
+              }));
+            }
+            return _results;
+          };
+          detectCtrlOrCmd = function() {
+            var hotKey, isMac;
+            isMac = navigator.userAgent.toLowerCase().indexOf('mac') !== -1;
+            hotKey = isMac ? 'command' : 'ctrl';
+            return hotKey;
           };
           this.setSelectedIndex = function(key) {
             return $scope.setSelectedConnection(key);
@@ -122,10 +205,12 @@
             }
             return $scope.$apply();
           };
+          $scope.cmdSystemHotkey = detectCtrlOrCmd();
+          bindHotkeysCmd();
           return this;
         },
         link: function(scope, element, attrs, alfredCtrl) {
-          var $input, bindHotkeysCmd, checkQuery, detectCtrlOrCmd, initializeParameters, initializeTableParameters;
+          var $input, checkQuery, initializeParameters, initializeTableParameters;
           $input = element.find('#alfred-input');
           scope.$watch($input, (function(_this) {
             return function() {
@@ -135,74 +220,6 @@
           scope.$watch("isTable", function() {
             return initializeParameters();
           });
-          hotkeys.bindTo(scope).add({
-            combo: 'return',
-            description: 'Make active left list',
-            allowIn: ['INPUT'],
-            callback: function() {
-              var connection;
-              if (scope.query.indexOf("ssh") !== -1) {
-                connection = quickConnectParse.parse(scope.query);
-                return alfredCtrl.enterCallback(connection);
-              } else {
-                return scope.$broadcast("enter");
-              }
-            }
-          }).add({
-            combo: 'left',
-            description: 'Make active left list',
-            allowIn: ['INPUT'],
-            callback: function() {
-              scope.isLeftActive = true;
-              return scope.isRightActive = false;
-            }
-          }).add({
-            combo: 'right',
-            description: 'Make active right list',
-            allowIn: ['INPUT'],
-            callback: function() {
-              scope.isLeftActive = false;
-              return scope.isRightActive = true;
-            }
-          }).add({
-            combo: 'up',
-            description: 'Make active element above',
-            allowIn: ['INPUT'],
-            callback: function() {
-              return scope.$broadcast("arrow", "up");
-            }
-          }).add({
-            combo: 'down',
-            description: 'Make active element above',
-            allowIn: ['INPUT'],
-            callback: function() {
-              return scope.$broadcast("arrow", "down");
-            }
-          });
-          bindHotkeysCmd = function() {
-            var combo, i, _i, _ref, _results;
-            _results = [];
-            for (i = _i = 1, _ref = scope.amount; 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
-              combo = "" + scope.cmdSystemHotkey + "+" + i;
-              _results.push(hotkeys.bindTo(scope).add({
-                combo: combo,
-                description: 'Cmd+i',
-                allowIn: ['INPUT'],
-                callback: function($event) {
-                  $event.preventDefault();
-                  scope.setSelectedConnection(parseInt(String.fromCharCode($event.keyCode)) - 1);
-                  return scope.$broadcast("enter");
-                }
-              }));
-            }
-            return _results;
-          };
-          detectCtrlOrCmd = function() {
-            var hotKey, isMac;
-            isMac = navigator.userAgent.toLowerCase().indexOf('mac') !== -1;
-            hotKey = isMac ? 'command' : 'ctrl';
-            return hotKey;
-          };
           checkQuery = function() {
             if (scope.query) {
               scope.isTable = false;
@@ -229,10 +246,8 @@
           scope.addConnection = function() {
             return scope.onAddCallback();
           };
-          scope.cmdSystemHotkey = detectCtrlOrCmd();
           initializeParameters();
-          initializeTableParameters();
-          return bindHotkeysCmd();
+          return initializeTableParameters();
         }
       };
     }
