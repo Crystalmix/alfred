@@ -209,7 +209,7 @@
           bindHotkeysCmd();
           return this;
         },
-        link: function(scope, element, attrs, alfredCtrl) {
+        link: function(scope, element) {
           var $input, checkQuery, initializeParameters, initializeTableParameters;
           $input = element.find('#alfred-input');
           scope.$watch($input, (function(_this) {
@@ -238,7 +238,7 @@
             scope.isLeftActive = true;
             return scope.isRightActive = false;
           };
-          scope.keydown = function($event) {
+          scope.keydown = function() {
             return setTimeout((function() {
               return checkQuery();
             }), 0);

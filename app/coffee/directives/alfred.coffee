@@ -181,7 +181,7 @@ alfredDirective.directive "alfred", ['hotkeys', 'quickConnectParse', (hotkeys, q
             return @
 
 
-        link: (scope, element, attrs, alfredCtrl) ->
+        link: (scope, element) ->
             $input = element.find '#alfred-input'
 
             scope.$watch $input, () =>
@@ -207,7 +207,7 @@ alfredDirective.directive "alfred", ['hotkeys', 'quickConnectParse', (hotkeys, q
                 scope.isLeftActive  = yes
                 scope.isRightActive = no
 
-            scope.keydown = ($event) ->
+            scope.keydown = () ->
                 setTimeout (->
                     do checkQuery
                 ), 0
@@ -215,11 +215,9 @@ alfredDirective.directive "alfred", ['hotkeys', 'quickConnectParse', (hotkeys, q
             scope.addConnection = () ->
                 do scope.onAddCallback
 
-            #scope.cmdSystemHotkey = do detectCtrlOrCmd
-
             do initializeParameters
             do initializeTableParameters
-            #do bindHotkeysCmd
+
 ]
 
 alfredDirective.directive "inactiveList",  () ->

@@ -180,6 +180,16 @@ describe('Unit test alfredDirectives: alfred', function() {
     });
 
     describe('hotkeys test', function() {
+        /* KeyCode
+            {
+                13: 'enter',
+                37: 'left',
+                38: 'up',
+                39: 'right',
+                40: 'down'
+            }
+        */
+
         it("should select item on click event",
             function() {
                 var scopeDirective = element.isolateScope(),
@@ -202,55 +212,77 @@ describe('Unit test alfredDirectives: alfred', function() {
             }
         );
 
-        /*it("should make active list on event 'left/right arrow'",
+        it("should make active list on event 'left/right arrow'",
             function() {
-                var scopeDirective = element.isolateScope(),
-                    alfred = element.find('#left'),
-                    e = jQuery.Event('keydown');
-                e.keyCode = 37;
-                //KeyEvent.simulate('left'.charCodeAt(0), 90, undefined, input[0]);
-                alfred.trigger(e);
+                var scopeDirective = element.isolateScope();
+
+                KeyEvent.simulate(0, 37);
                 expect(scopeDirective.isLeftActive).toBe(true);
                 expect(scopeDirective.isRightActive).toBe(false);
 
-                e.keyCode = 39;
-                element.triggerHandler(e);
-                //KeyEvent.simulate('w'.charCodeAt(0), 90, undefined, input[0]);
-                //expect(scopeDirective.isLeftActive).toBe(false);
-                //expect(scopeDirective.isRightActive).toBe(true);
+                KeyEvent.simulate(0, 39);
+                expect(scopeDirective.isLeftActive).toBe(false);
+                expect(scopeDirective.isRightActive).toBe(true);
+
+                KeyEvent.simulate(0, 39);
+                expect(scopeDirective.isLeftActive).toBe(false);
+                expect(scopeDirective.isRightActive).toBe(true);
+
+                KeyEvent.simulate(0, 37);
+                expect(scopeDirective.isLeftActive).toBe(true);
+                expect(scopeDirective.isRightActive).toBe(false);
             }
         );
 
-        it("should make active next/previous element", function() {
-            var scopeDirective = element.isolateScope(),
-                input = element.find("#alfred-input"),
-                e = new KeyboardEvent("keydown", {keyIdentifier: "Right", which: 39, keyCode: 39});
-
-            console.log(scopeDirective.selectedIndex);
-
-            input.trigger(e);
-
-            console.log(scopeDirective.selectedIndex);
-
-        });
-        */
-        /*it("should select item on event arrow",
+        it("should make active next/previous element",
             function() {
-                var liElems = element.find('li');
-                var input = element.find('#alfred-input');
+                var scopeDirective = element.isolateScope();
 
-                var e = jQuery.Event("keydown");
-                e.keyCode = 40;
-                input.trigger(e);
-                input.trigger("left")
-                expect(liElems.eq(0).hasClass('active')).toBe(false);
-                expect(liElems.eq(1).hasClass('active')).toBe(true);
+                expect(scopeDirective.selectedIndex).toBe(0);
+                KeyEvent.simulate(0, 40);
+                expect(scopeDirective.selectedIndex).toBe(1);
+                KeyEvent.simulate(0, 40);
+                expect(scopeDirective.selectedIndex).toBe(2);
+                KeyEvent.simulate(0, 40);
+                expect(scopeDirective.selectedIndex).toBe(3);
+                KeyEvent.simulate(0, 40);
+                expect(scopeDirective.selectedIndex).toBe(4);
+                KeyEvent.simulate(0, 40);
+                expect(scopeDirective.selectedIndex).toBe(5);
+                KeyEvent.simulate(0, 40);
+                expect(scopeDirective.selectedIndex).toBe(5);
 
-                e.keyCode = 38;
-                input.trigger(e);
-                expect(liElems.eq(0).hasClass('active')).toBe(true);
-                expect(liElems.eq(1).hasClass('active')).toBe(false);
-        })*/
+                KeyEvent.simulate(0, 38);
+                expect(scopeDirective.selectedIndex).toBe(4);
+                KeyEvent.simulate(0, 38);
+                expect(scopeDirective.selectedIndex).toBe(3);
+                KeyEvent.simulate(0, 38);
+                expect(scopeDirective.selectedIndex).toBe(2);
+                KeyEvent.simulate(0, 38);
+                expect(scopeDirective.selectedIndex).toBe(1);
+                KeyEvent.simulate(0, 38);
+                expect(scopeDirective.selectedIndex).toBe(0);
+                KeyEvent.simulate(0, 38);
+                expect(scopeDirective.selectedIndex).toBe(0);
+            }
+        );
+
+        it("should make active element on event 'command+i'",
+            function() {
+                var scopeDirective = element.isolateScope();
+                expect(scopeDirective.selectedIndex).toBe(0);
+                KeyEvent.simulate('2'.charCodeAt(0), 50, ['meta']);
+                expect(scopeDirective.selectedIndex).toBe(1);
+                KeyEvent.simulate('3'.charCodeAt(0), 51, ['meta']);
+                expect(scopeDirective.selectedIndex).toBe(2);
+                KeyEvent.simulate('4'.charCodeAt(0), 52, ['meta']);
+                expect(scopeDirective.selectedIndex).toBe(3);
+                KeyEvent.simulate('5'.charCodeAt(0), 53, ['meta']);
+                expect(scopeDirective.selectedIndex).toBe(4);
+                KeyEvent.simulate('6'.charCodeAt(0), 54, ['meta']);
+                expect(scopeDirective.selectedIndex).toBe(5);
+            }
+        );
     });
 
 });
