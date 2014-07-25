@@ -27,7 +27,8 @@ module.exports = function(config){
             stripPrefix: 'app/'
         },
 
-        autoWatch : true,
+        autoWatch : false,
+        logLevel: config.LOG_INFO,
 
         browsers : ['Chrome'],
 

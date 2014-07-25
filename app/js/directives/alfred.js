@@ -93,6 +93,8 @@
           heightCell: "=",
           onEnterCallback: "&",
           onAddCallback: "&",
+          onEditCallback: "&",
+          onRemoveCallback: "&",
           placeholder: "="
         },
         controller: function($scope) {
@@ -204,6 +206,20 @@
               $scope.isRightActive = false;
             }
             return $scope.$apply();
+          };
+          this.edit = function(connection) {
+            if (connection) {
+              return $scope.onEditCallback({
+                connection: connection
+              });
+            }
+          };
+          this.remove = function(connection) {
+            if (connection) {
+              return $scope.onRemoveCallback({
+                connection: connection
+              });
+            }
           };
           $scope.cmdSystemHotkey = detectCtrlOrCmd();
           bindHotkeysCmd();
@@ -382,6 +398,16 @@
             return ++$scope.offset;
           }
         };
+
+        /**
+        * Checking history entity
+         */
+        $scope.isHistory = function(connection) {
+          if (connection.id != null) {
+            return false;
+          }
+          return true;
+        };
         this.select = function(key) {
           $scope.setSelectedConnection(key);
           return $scope.$apply();
@@ -418,6 +444,16 @@
           connection = scope.subConnections[key];
           return scope.select(connection, key);
         });
+        scope.edit = function($event, connection) {
+          $event.preventDefault();
+          $event.stopPropagation();
+          return alfredCtrl.edit(connection);
+        };
+        scope.remove = function($event, connection) {
+          $event.preventDefault();
+          $event.stopPropagation();
+          return alfredCtrl.remove(connection);
+        };
         scope.changeSlider = function() {
           var sizer, sizes, slider;
           slider = (scope.amount * 100) / scope.filteredConnections.length;

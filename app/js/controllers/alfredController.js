@@ -23,52 +23,49 @@
       this.scope.addConnection = function() {
         return console.log("--- outerController add connection");
       };
+      this.scope.editConnection = function(connection) {
+        return console.log("--- outerController edit connection", connection);
+      };
+      this.scope.removeConnection = function(connection) {
+        return console.log("--- outerController remove connection", connection);
+      };
       this.scope.placeholder = "ssh user@hostname -p port";
       this.scope.query = null;
       this.scope.histories = [
         {
           "hostname": "dev.crystalnix.com",
-          "id": 11,
           "port": 22,
           "ssh_username": "110. serverauditor"
         }, {
           "hostname": "54.193.87.205",
-          "id": 12,
           "port": 22,
           "ssh_username": "111. ubuntu"
         }, {
           "hostname": "55.193.87.205",
-          "id": 13,
           "port": 22,
           "ssh_username": "112. ubuntu"
         }, {
           "hostname": "56.193.87.205",
-          "id": 14,
           "port": 22,
           "ssh_username": "113. ubuntu"
         }, {
           "hostname": "57.193.87.205",
-          "id": 15,
           "port": 22,
           "ssh_username": "114. ubuntu"
         }, {
           "hostname": "58.193.87.205",
-          "id": 16,
           "port": 22,
           "ssh_username": "115. ubuntu"
         }, {
           "hostname": "59.193.87.205",
-          "id": 17,
           "port": 22,
           "ssh_username": "116. ubuntu"
         }, {
           "hostname": "58.193.87.205",
-          "id": 18,
           "port": 22,
           "ssh_username": "117. ubuntu"
         }, {
           "hostname": "59.193.87.205",
-          "id": 19,
           "port": 22,
           "ssh_username": "118. ubuntu"
         }

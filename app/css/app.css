@@ -129,3 +129,10 @@ i {
 .glyphicon.glyphicon-plus {
     margin-left: 10px;
 }
+.enter-block {
+    width: 45px;
+    height: 16px;
+}
+.enter-block i {
+    margin-left: 5px;
+}

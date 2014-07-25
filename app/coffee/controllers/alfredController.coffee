@@ -19,61 +19,58 @@ class AlfredController
         @scope.addConnection = () ->
             console.log "--- outerController add connection"
 
+        @scope.editConnection = (connection) ->
+            console.log "--- outerController edit connection", connection
+
+        @scope.removeConnection = (connection) ->
+            console.log "--- outerController remove connection", connection
+
         @scope.placeholder = "ssh user@hostname -p port"
 
         @scope.query = null
         @scope.histories = [
             {
-                "hostname": "dev.crystalnix.com",
-                "id": 11,
+                "hostname": "dev.crystalnix.com"
                 "port": 22,
                 "ssh_username": "110. serverauditor"
             },
             {
-                "hostname": "54.193.87.205",
-                "id": 12,
+                "hostname": "54.193.87.205"
                 "port": 22,
                 "ssh_username": "111. ubuntu"
             },
             {
-                "hostname": "55.193.87.205",
-                "id": 13,
+                "hostname": "55.193.87.205"
                 "port": 22,
                 "ssh_username": "112. ubuntu"
             },
             {
-                "hostname": "56.193.87.205",
-                "id": 14,
+                "hostname": "56.193.87.205"
                 "port": 22,
                 "ssh_username": "113. ubuntu"
             },
             {
-                "hostname": "57.193.87.205",
-                "id": 15,
+                "hostname": "57.193.87.205"
                 "port": 22,
                 "ssh_username": "114. ubuntu"
             },
             {
-                "hostname": "58.193.87.205",
-                "id": 16,
+                "hostname": "58.193.87.205"
                 "port": 22,
                 "ssh_username": "115. ubuntu"
             },
             {
-                "hostname": "59.193.87.205",
-                "id": 17,
+                "hostname": "59.193.87.205"
                 "port": 22,
                 "ssh_username": "116. ubuntu"
             },
             {
-                "hostname": "58.193.87.205",
-                "id": 18,
+                "hostname": "58.193.87.205"
                 "port": 22,
                 "ssh_username": "117. ubuntu"
             },
             {
-                "hostname": "59.193.87.205",
-                "id": 19,
+                "hostname": "59.193.87.205"
                 "port": 22,
                 "ssh_username": "118. ubuntu"
             }

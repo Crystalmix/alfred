@@ -71,13 +71,15 @@ alfredDirective.directive "alfred", ['hotkeys', 'quickConnectParse', (hotkeys, q
         replace: yes
         transclude: yes
         scope:
-            connections:     "="
-            histories:       "="
-            amount:          "="
-            heightCell:      "="
-            onEnterCallback: "&"
-            onAddCallback:   "&"
-            placeholder:     "="
+            connections:        "="
+            histories:          "="
+            amount:             "="
+            heightCell:         "="
+            onEnterCallback:    "&"
+            onAddCallback:      "&"
+            onEditCallback:     "&"
+            onRemoveCallback:   "&"
+            placeholder:        "="
 
         controller: ($scope) ->
             $scope.query         = null
@@ -174,6 +176,14 @@ alfredDirective.directive "alfred", ['hotkeys', 'quickConnectParse', (hotkeys, q
                     $scope.isLeftActive  = yes
                     $scope.isRightActive = no
                 do $scope.$apply
+
+            @edit = (connection) ->
+                if connection
+                    $scope.onEditCallback({connection: connection})
+
+            @remove = (connection) ->
+                if connection
+                    $scope.onRemoveCallback({connection: connection})
 
             $scope.cmdSystemHotkey = do detectCtrlOrCmd
             do bindHotkeysCmd
@@ -325,6 +335,14 @@ alfredDirective.directive "activeList",  () ->
                     ++$scope.from
                     ++$scope.offset
 
+            ###*
+            * Checking history entity
+            ###
+            $scope.isHistory = (connection) ->
+                if connection.id?
+                    return no
+                return yes
+
             @select = (key) ->
                 $scope.setSelectedConnection key
                 do $scope.$apply
@@ -365,6 +383,16 @@ alfredDirective.directive "activeList",  () ->
                 connection = scope.subConnections[key]
                 scope.select connection, key
             )
+
+            scope.edit = ($event, connection) ->
+                do $event.preventDefault
+                do $event.stopPropagation
+                alfredCtrl.edit(connection)
+
+            scope.remove = ($event, connection) ->
+                do $event.preventDefault
+                do $event.stopPropagation
+                alfredCtrl.remove(connection)
 
             scope.changeSlider = () ->
                 slider = (scope.amount * 100) / scope.filteredConnections.length

@@ -23,7 +23,7 @@ module.exports = (grunt) ->
             unit:
                 configFile: 'test/karma.conf.js',
                 singleRun: true,
-                logLevel: 'DEBUG'
+                logLevel: 'INFO'
 
     grunt.loadNpmTasks 'grunt-contrib-watch'
     grunt.loadNpmTasks 'grunt-contrib-coffee'
