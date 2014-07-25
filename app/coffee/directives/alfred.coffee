@@ -1,29 +1,35 @@
 'use strict';
 
+
 alfredDirective = angular.module("alfredDirective", ['cfp.hotkeys'])
 
 
 alfredDirective.config (hotkeysProvider) ->
+    ###
+        'hotkeysProvider' is provider from angular.hotkeys.
+
+        Switch default cheatsheet: hotkey '?'
+    ###
     hotkeysProvider.includeCheatSheet = yes
 
 
 alfredDirective.factory 'quickConnectParse', () ->
+    ###
+        A hepler service that can parse quick connect parameters
+        Possible cases:
+                ssh               user@host
+                ssh               user@host   -p port
+                ssh               user@host   -pport
 
+                ssh    -p port    user@host
+                ssh    -pport     user@host
+    ###
     trimArray = (array) ->
         for i in [0...array.length]
             array[i] = $.trim(array[i])
         return array;
 
     parse : (input) ->
-        ###
-        Possible
-            ssh               user@host
-            ssh               user@host   -p port
-            ssh               user@host   -pport
-
-            ssh    -p port    user@host
-            ssh    -pport     user@host
-        ###
         options = {}
         if input.indexOf('ssh') isnt -1
             inputArray = input.split('ssh')
@@ -69,19 +75,23 @@ alfredDirective.directive "alfred", ['hotkeys', 'quickConnectParse', (hotkeys, q
         restrict: "E"
         templateUrl: "partials/alfred.html"
         replace: yes
-        transclude: yes
         scope:
             connections:        "="
             histories:          "="
             amount:             "="
             heightCell:         "="
+            placeholder:        "="
             onEnterCallback:    "&"
             onAddCallback:      "&"
             onEditCallback:     "&"
             onRemoveCallback:   "&"
-            placeholder:        "="
 
         controller: ($scope) ->
+            ###
+                "alfred" directive scope conatin next parameters:
+                    1. "isTable" - switch table/list
+                    2. "SelectedItem" - selected item is constant
+            ###
             $scope.query         = null
             $scope.entities      = $scope.connections.concat $scope.histories
             $scope.selectedIndex = 0
@@ -192,6 +202,8 @@ alfredDirective.directive "alfred", ['hotkeys', 'quickConnectParse', (hotkeys, q
 
 
         link: (scope, element) ->
+
+
             $input = element.find '#alfred-input'
 
             scope.$watch $input, () =>
@@ -217,6 +229,30 @@ alfredDirective.directive "alfred", ['hotkeys', 'quickConnectParse', (hotkeys, q
                 scope.isLeftActive  = yes
                 scope.isRightActive = no
 
+            makeFakeLists = () ->
+                # amount = amount || entities.length
+                maxLength = if scope.connections.length > scope.histories.length then scope.connections.length else scope.histories.length
+                minLength = if scope.connections.length > scope.histories.length then scope.histories.length else scope.connections.length
+                scope.amount = if maxLength < scope.amount then maxLength else scope.amount
+                if minLength < scope.amount
+                    difference = scope.amount - minLength
+                    if scope.histories.length < scope.connections.length
+                        scope.fakeHistories = scope.histories.concat(addFakeCell(Math.abs(difference)))
+                        scope.fakeConnections = scope.connections
+                    else
+                        scope.fakeHistories = scope.histories
+                        scope.fakeConnections = scope.connections.concat(addFakeCell(Math.abs(difference)))
+                else
+                    scope.fakeConnections = scope.connections
+                    scope.fakeHistories = scope.histories
+
+
+            addFakeCell = (difference) ->
+                list = []
+                for i in [0...difference]
+                    list.push({})
+                return list
+
             scope.keydown = () ->
                 setTimeout (->
                     do checkQuery
@@ -227,6 +263,7 @@ alfredDirective.directive "alfred", ['hotkeys', 'quickConnectParse', (hotkeys, q
 
             do initializeParameters
             do initializeTableParameters
+            do makeFakeLists
 
 ]
 
@@ -353,6 +390,9 @@ alfredDirective.directive "activeList",  () ->
 
 
         link: (scope, element, attrs, alfredCtrl) ->
+            # Check if list length is more than amount of cells
+            scope.selectedIndex = if scope.selectedIndex > scope.connections.length then (scope.connections.length-1) else scope.selectedIndex
+
             scope.alfredController = alfredCtrl
             scope.prevquery = null
 
@@ -460,6 +500,20 @@ alfredDirective.directive "connectionItem",  () ->
             element.bind "mouseenter", () ->
                 connectionListCtrl.select scope.key
 
+
+alfredDirective.directive('whenScrolled', () ->
+        restrict: 'A'
+
+        link: (scope, element) ->
+
+            element.bind('mousewheel', (event) ->
+                if(event.originalEvent.wheelDelta < 0)
+                    scope.$apply scope.loadDown
+                else
+                    scope.$apply scope.loadUp
+                event.preventDefault();
+            )
+)
 
 alfredDirective.filter "filterConnections", ["$filter", ($filter) ->
         (input, query, arg1, arg2) ->

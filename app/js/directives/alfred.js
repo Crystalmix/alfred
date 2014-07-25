@@ -5,10 +5,27 @@
   alfredDirective = angular.module("alfredDirective", ['cfp.hotkeys']);
 
   alfredDirective.config(function(hotkeysProvider) {
+
+    /*
+        'hotkeysProvider' is provider from angular.hotkeys.
+    
+        Switch default cheatsheet: hotkey '?'
+     */
     return hotkeysProvider.includeCheatSheet = true;
   });
 
   alfredDirective.factory('quickConnectParse', function() {
+
+    /*
+        A hepler service that can parse quick connect parameters
+        Possible cases:
+                ssh               user@host
+                ssh               user@host   -p port
+                ssh               user@host   -pport
+    
+                ssh    -p port    user@host
+                ssh    -pport     user@host
+     */
     var trimArray;
     trimArray = function(array) {
       var i, _i, _ref;
@@ -19,16 +36,6 @@
     };
     return {
       parse: function(input) {
-
-        /*
-        Possible
-            ssh               user@host
-            ssh               user@host   -p port
-            ssh               user@host   -pport
-        
-            ssh    -p port    user@host
-            ssh    -pport     user@host
-         */
         var inputArray, leftInputArray, options, rightInputArray;
         options = {};
         if (input.indexOf('ssh') !== -1) {
@@ -85,19 +92,24 @@
         restrict: "E",
         templateUrl: "partials/alfred.html",
         replace: true,
-        transclude: true,
         scope: {
           connections: "=",
           histories: "=",
           amount: "=",
           heightCell: "=",
+          placeholder: "=",
           onEnterCallback: "&",
           onAddCallback: "&",
           onEditCallback: "&",
-          onRemoveCallback: "&",
-          placeholder: "="
+          onRemoveCallback: "&"
         },
         controller: function($scope) {
+
+          /*
+              "alfred" directive scope conatin next parameters:
+                  1. "isTable" - switch table/list
+                  2. "SelectedItem" - selected item is constant
+           */
           var bindHotkeysCmd, detectCtrlOrCmd;
           $scope.query = null;
           $scope.entities = $scope.connections.concat($scope.histories);
@@ -226,7 +238,7 @@
           return this;
         },
         link: function(scope, element) {
-          var $input, checkQuery, initializeParameters, initializeTableParameters;
+          var $input, addFakeCell, checkQuery, initializeParameters, initializeTableParameters, makeFakeLists;
           $input = element.find('#alfred-input');
           scope.$watch($input, (function(_this) {
             return function() {
@@ -254,6 +266,33 @@
             scope.isLeftActive = true;
             return scope.isRightActive = false;
           };
+          makeFakeLists = function() {
+            var difference, maxLength, minLength;
+            maxLength = scope.connections.length > scope.histories.length ? scope.connections.length : scope.histories.length;
+            minLength = scope.connections.length > scope.histories.length ? scope.histories.length : scope.connections.length;
+            scope.amount = maxLength < scope.amount ? maxLength : scope.amount;
+            if (minLength < scope.amount) {
+              difference = scope.amount - minLength;
+              if (scope.histories.length < scope.connections.length) {
+                scope.fakeHistories = scope.histories.concat(addFakeCell(Math.abs(difference)));
+                return scope.fakeConnections = scope.connections;
+              } else {
+                scope.fakeHistories = scope.histories;
+                return scope.fakeConnections = scope.connections.concat(addFakeCell(Math.abs(difference)));
+              }
+            } else {
+              scope.fakeConnections = scope.connections;
+              return scope.fakeHistories = scope.histories;
+            }
+          };
+          addFakeCell = function(difference) {
+            var i, list, _i;
+            list = [];
+            for (i = _i = 0; 0 <= difference ? _i < difference : _i > difference; i = 0 <= difference ? ++_i : --_i) {
+              list.push({});
+            }
+            return list;
+          };
           scope.keydown = function() {
             return setTimeout((function() {
               return checkQuery();
@@ -263,7 +302,8 @@
             return scope.onAddCallback();
           };
           initializeParameters();
-          return initializeTableParameters();
+          initializeTableParameters();
+          return makeFakeLists();
         }
       };
     }
@@ -417,6 +457,7 @@
       },
       link: function(scope, element, attrs, alfredCtrl) {
         var activateNextItem, activatePreviousItem;
+        scope.selectedIndex = scope.selectedIndex > scope.connections.length ? scope.connections.length - 1 : scope.selectedIndex;
         scope.alfredController = alfredCtrl;
         scope.prevquery = null;
         scope.enterText = '↩';
@@ -535,6 +576,22 @@
       link: function(scope, element, attrs, connectionListCtrl) {
         return element.bind("mouseenter", function() {
           return connectionListCtrl.select(scope.key);
+        });
+      }
+    };
+  });
+
+  alfredDirective.directive('whenScrolled', function() {
+    return {
+      restrict: 'A',
+      link: function(scope, element) {
+        return element.bind('mousewheel', function(event) {
+          if (event.originalEvent.wheelDelta < 0) {
+            scope.$apply(scope.loadDown);
+          } else {
+            scope.$apply(scope.loadUp);
+          }
+          return event.preventDefault();
         });
       }
     };

@@ -17,7 +17,7 @@
             </div>
 
             <div class="left-list" ng-if="isLeftActive">
-                <active-list connections        = "connections"
+                <active-list connections        = "fakeConnections"
                              amount             = "amount"
                              height-cell        = "heightCell"
                              query              = "query"
@@ -27,7 +27,7 @@
                 </active-list>
             </div>
             <div class="left-list" ng-if="isRightActive">
-                <inactive-list connections  = "connections"
+                <inactive-list connections  = "fakeConnections"
                                amount       = "amount"
                                height-cell  = "heightCell"
                                from         = "fromConnection">
@@ -43,20 +43,20 @@
                 </i>
             </div>
             <div class="left-list" ng-if="isLeftActive">
-                <inactive-list connections  = "histories"
+                <inactive-list connections  = "fakeHistories"
                                amount       = "amount"
                                height-cell  = "heightCell"
                                from         = "fromHistory">
                 </inactive-list>
             </div>
             <div class="left-list" ng-if="isRightActive">
-                <active-list connections        = "histories"
-                             amount             = "amount"
-                             height-cell        = "heightCell"
-                             query              = "query"
-                             from               = "fromHistory"
-                             selected-index     = "selectedIndex"
-                            cmd-system-hotkey   = "cmdSystemHotkey">
+                <active-list connections         = "fakeHistories"
+                             amount              = "amount"
+                             height-cell         = "heightCell"
+                             query               = "query"
+                             from                = "fromHistory"
+                             selected-index      = "selectedIndex"
+                             cmd-system-hotkey   = "cmdSystemHotkey">
                 </active-list>
             </div>
         </div>
