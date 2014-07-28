@@ -138,16 +138,20 @@
             description: 'Make active left list',
             allowIn: ['INPUT'],
             callback: function() {
-              $scope.isLeftActive = true;
-              return $scope.isRightActive = false;
+              if ($scope.connections.length) {
+                $scope.isLeftActive = true;
+                return $scope.isRightActive = false;
+              }
             }
           }).add({
             combo: 'right',
             description: 'Make active right list',
             allowIn: ['INPUT'],
             callback: function() {
-              $scope.isLeftActive = false;
-              return $scope.isRightActive = true;
+              if ($scope.histories.length) {
+                $scope.isLeftActive = false;
+                return $scope.isRightActive = true;
+              }
             }
           }).add({
             combo: 'up',
@@ -238,7 +242,7 @@
           return this;
         },
         link: function(scope, element) {
-          var $input, addFakeCell, checkQuery, initializeParameters, initializeTableParameters, makeFakeLists;
+          var $input, checkQuery, initializeParameters, initializeTableParameters, makeRestLists;
           $input = element.find('#alfred-input');
           scope.$watch($input, (function(_this) {
             return function() {
@@ -263,35 +267,39 @@
           };
           initializeTableParameters = function() {
             scope.isTable = true;
-            scope.isLeftActive = true;
-            return scope.isRightActive = false;
+            scope.isLeftActive = scope.connections.length ? true : false;
+            return scope.isRightActive = scope.connections.length ? false : true;
           };
-          makeFakeLists = function() {
-            var difference, maxLength, minLength;
-            maxLength = scope.connections.length > scope.histories.length ? scope.connections.length : scope.histories.length;
-            minLength = scope.connections.length > scope.histories.length ? scope.histories.length : scope.connections.length;
-            scope.amount = maxLength < scope.amount ? maxLength : scope.amount;
+          makeRestLists = function() {
+
+            /*
+            If one of the lists is empty or maximum/minimum length of lists is smaller than amount,
+            we should fill out list with empty cell
+             */
+            var maxLength, minLength;
+            minLength = scope.connections.length < scope.histories.length ? scope.connections.length : scope.histories.length;
             if (minLength < scope.amount) {
-              difference = scope.amount - minLength;
-              if (scope.histories.length < scope.connections.length) {
-                scope.fakeHistories = scope.histories.concat(addFakeCell(Math.abs(difference)));
-                return scope.fakeConnections = scope.connections;
+              maxLength = scope.connections.length > scope.histories.length ? scope.connections.length : scope.histories.length;
+              if (maxLength === 0) {
+
+              } else if (maxLength < scope.amount) {
+                if (scope.connections.length < scope.histories.length) {
+                  scope.restOfConnections = new Array(maxLength - minLength);
+                  return scope.restOfHistories = new Array(0);
+                } else {
+                  scope.restOfConnections = new Array(0);
+                  return scope.restOfHistories = new Array(maxLength - minLength);
+                }
               } else {
-                scope.fakeHistories = scope.histories;
-                return scope.fakeConnections = scope.connections.concat(addFakeCell(Math.abs(difference)));
+                if (scope.connections.length < scope.histories.length) {
+                  scope.restOfConnections = new Array(scope.amount - minLength);
+                  return scope.restOfHistories = new Array(0);
+                } else {
+                  scope.restOfConnections = new Array(0);
+                  return scope.restOfHistories = new Array(scope.amount - minLength);
+                }
               }
-            } else {
-              scope.fakeConnections = scope.connections;
-              return scope.fakeHistories = scope.histories;
             }
-          };
-          addFakeCell = function(difference) {
-            var i, list, _i;
-            list = [];
-            for (i = _i = 0; 0 <= difference ? _i < difference : _i > difference; i = 0 <= difference ? ++_i : --_i) {
-              list.push({});
-            }
-            return list;
           };
           scope.keydown = function() {
             return setTimeout((function() {
@@ -303,7 +311,7 @@
           };
           initializeParameters();
           initializeTableParameters();
-          return makeFakeLists();
+          return makeRestLists();
         }
       };
     }
@@ -318,7 +326,8 @@
         connections: "=",
         amount: "=",
         heightCell: "=",
-        from: "="
+        from: "=",
+        rest: "="
       },
       controller: function($scope) {
         $scope.setHeight = function() {
@@ -343,7 +352,9 @@
       link: function(scope, element, attrs, alfredCtrl) {
         scope.changeOffset();
         element.bind("mouseenter", function() {
-          return alfredCtrl.changeActiveList();
+          if (scope.connections.length) {
+            return alfredCtrl.changeActiveList();
+          }
         });
         scope._normalizeSliderHeight = function(sliderHeight, sizerHeight) {
           if (sizerHeight > 100 - sliderHeight) {
@@ -391,7 +402,8 @@
         query: "=",
         from: "=",
         selectedIndex: "=",
-        cmdSystemHotkey: "="
+        cmdSystemHotkey: "=",
+        rest: "="
       },
       controller: function($scope) {
         $scope.setHeight = function() {
@@ -457,7 +469,7 @@
       },
       link: function(scope, element, attrs, alfredCtrl) {
         var activateNextItem, activatePreviousItem;
-        scope.selectedIndex = scope.selectedIndex > scope.connections.length ? scope.connections.length - 1 : scope.selectedIndex;
+        scope.selectedIndex = scope.selectedIndex >= scope.connections.length ? scope.connections.length - 1 : scope.selectedIndex;
         scope.alfredController = alfredCtrl;
         scope.prevquery = null;
         scope.enterText = '↩';
@@ -524,17 +536,17 @@
           current = element.find(".active");
           next = current.next();
           currentIndex = scope.getSelectedConnection();
-          if (next.length === 0) {
+          if (next.length === 0 || !next[0].id) {
             scope.loadDown();
             return setTimeout((function() {
               next = current.next();
-              if (next.length === 0) {
+              if (next.length === 0 || !next[0].id) {
                 scope.from = 0;
                 scope.offset = scope.amount;
                 scope.setSelectedConnection(0);
                 return scope.$apply();
               }
-            }), 100);
+            }), 0);
           } else {
             return scope.setSelectedConnection(++currentIndex);
           }
@@ -544,12 +556,12 @@
           current = element.find(".active");
           prev = current.prev();
           currentIndex = scope.getSelectedConnection();
-          if (prev.length === 0) {
+          if (prev.length === 0 || !prev[0].id) {
             scope.loadUp();
             return setTimeout((function() {
               var from;
               prev = current.prev();
-              if (prev.length === 0) {
+              if (prev.length === 0 || !prev[0].id) {
                 from = scope.filteredConnections.length - scope.amount;
                 if (from > 0) {
                   scope.from = from;
@@ -560,7 +572,7 @@
                 }
                 return scope.$apply();
               }
-            }), 100);
+            }), 0);
           } else {
             return scope.setSelectedConnection(--currentIndex);
           }

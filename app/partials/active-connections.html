@@ -30,6 +30,10 @@
                 <i ng-if="!(key === selectedIndex)">{{cmdSystemHotkey}}{{key+1}}</i>
             </span>
         </li>
+        <li ng-repeat="i in rest track by $index"
+            ng-style="setHeight()"
+            class="empty-cell">
+        </li>
         <li ng-if="!subConnections.length">Nothing</li>
     </ul>
 </div>

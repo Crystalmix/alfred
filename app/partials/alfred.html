@@ -6,18 +6,71 @@
            ng-keydown="keydown($event)"
            placeholder="{{placeholder}}"/>
 
-    <div ng-if="isTable">
-        <div id="left" ng-class="{ active: isLeftActive }">
-            <div class="header">
-                <span>Hosts</span>
-                <a type="button" ng-click="addConnection()"><span class="add glyphicon glyphicon-plus"></span></a>
-                <i class="pull-right" ng-show="isLeftActive">
-                    <a type="button"><span class="glyphicon glyphicon-arrow-left"></span></a>
-                </i>
+    <div ng-if="connections.length || histories.length">
+
+        <div ng-if="isTable">
+            <div id="left" ng-class="{ active: isLeftActive }">
+                <div class="header">
+                    <span>Hosts</span>
+                    <a type="button" ng-click="addConnection()"><span class="add glyphicon glyphicon-plus"></span></a>
+                    <i class="pull-right" ng-show="isLeftActive">
+                        <a type="button"><span class="glyphicon glyphicon-arrow-left"></span></a>
+                    </i>
+                </div>
+
+                <div class="left-list" ng-if="isLeftActive">
+                    <active-list connections        = "connections"
+                                 amount             = "amount"
+                                 height-cell        = "heightCell"
+                                 query              = "query"
+                                 from               = "fromConnection"
+                                 selected-index       = "selectedIndex"
+                                 rest  = "restOfConnections"
+                                 cmd-system-hotkey  = "cmdSystemHotkey">
+                    </active-list>
+                </div>
+                <div class="left-list" ng-if="isRightActive">
+                    <inactive-list connections  = "connections"
+                                   amount       = "amount"
+                                   height-cell  = "heightCell"
+                                   from         = "fromConnection"
+                                   rest  = "restOfConnections">
+                    </inactive-list>
+                </div>
             </div>
 
-            <div class="left-list" ng-if="isLeftActive">
-                <active-list connections        = "fakeConnections"
+            <div id="right" ng-class="{ active: isRightActive }">
+                <div class="header">
+                    <span>History</span>
+                    <i class="pull-right" ng-show="isRightActive">
+                        <a type="button"><span class="glyphicon glyphicon-arrow-right"></span></a>
+                    </i>
+                </div>
+                <div class="left-list" ng-if="isLeftActive">
+                    <inactive-list connections  = "histories"
+                                   amount       = "amount"
+                                   height-cell  = "heightCell"
+                                   from         = "fromHistory"
+                                   rest ="restOfHistories">
+                    </inactive-list>
+                </div>
+                <div class="left-list" ng-if="isRightActive">
+                    <active-list connections         = "histories"
+                                 amount              = "amount"
+                                 height-cell         = "heightCell"
+                                 query               = "query"
+                                 from                = "fromHistory"
+                                 selected-index      = "selectedIndex"
+                                 rest ="restOfHistories"
+                                 cmd-system-hotkey   = "cmdSystemHotkey">
+                    </active-list>
+                </div>
+            </div>
+        </div>
+
+        <div ng-if="!isTable">
+            <div class="main-list">
+                <active-list connections        = "entities"
                              amount             = "amount"
                              height-cell        = "heightCell"
                              query              = "query"
@@ -26,53 +79,7 @@
                              cmd-system-hotkey  = "cmdSystemHotkey">
                 </active-list>
             </div>
-            <div class="left-list" ng-if="isRightActive">
-                <inactive-list connections  = "fakeConnections"
-                               amount       = "amount"
-                               height-cell  = "heightCell"
-                               from         = "fromConnection">
-                </inactive-list>
-            </div>
         </div>
 
-        <div id="right" ng-class="{ active: isRightActive }">
-            <div class="header">
-                <span>History</span>
-                <i class="pull-right" ng-show="isRightActive">
-                    <a type="button"><span class="glyphicon glyphicon-arrow-right"></span></a>
-                </i>
-            </div>
-            <div class="left-list" ng-if="isLeftActive">
-                <inactive-list connections  = "fakeHistories"
-                               amount       = "amount"
-                               height-cell  = "heightCell"
-                               from         = "fromHistory">
-                </inactive-list>
-            </div>
-            <div class="left-list" ng-if="isRightActive">
-                <active-list connections         = "fakeHistories"
-                             amount              = "amount"
-                             height-cell         = "heightCell"
-                             query               = "query"
-                             from                = "fromHistory"
-                             selected-index      = "selectedIndex"
-                             cmd-system-hotkey   = "cmdSystemHotkey">
-                </active-list>
-            </div>
-        </div>
     </div>
-
-    <div ng-if="!isTable">
-        <div class="main-list">
-            <active-list connections    = "entities"
-                         amount         = "amount"
-                         height-cell        = "heightCell"
-                         query              = "query"
-                         from               = "fromConnection"
-                         selected-index     = "selectedIndex"
-                         cmd-system-hotkey  = "cmdSystemHotkey">
-            </active-list>
-        </div>
-    </div>
-
 </div>

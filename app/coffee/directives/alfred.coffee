@@ -117,16 +117,18 @@ alfredDirective.directive "alfred", ['hotkeys', 'quickConnectParse', (hotkeys, q
                     description: 'Make active left list'
                     allowIn: ['INPUT']
                     callback: () ->
-                        $scope.isLeftActive  = yes
-                        $scope.isRightActive = no
+                        if $scope.connections.length
+                            $scope.isLeftActive  = yes
+                            $scope.isRightActive = no
                 })
                 .add({
                     combo: 'right'
                     description: 'Make active right list'
                     allowIn: ['INPUT']
                     callback: () ->
-                        $scope.isLeftActive  = no
-                        $scope.isRightActive = yes
+                        if $scope.histories.length
+                            $scope.isLeftActive  = no
+                            $scope.isRightActive = yes
                 })
                 .add({
                     combo: 'up'
@@ -202,8 +204,6 @@ alfredDirective.directive "alfred", ['hotkeys', 'quickConnectParse', (hotkeys, q
 
 
         link: (scope, element) ->
-
-
             $input = element.find '#alfred-input'
 
             scope.$watch $input, () =>
@@ -226,33 +226,36 @@ alfredDirective.directive "alfred", ['hotkeys', 'quickConnectParse', (hotkeys, q
 
             initializeTableParameters = () ->
                 scope.isTable       = yes
-                scope.isLeftActive  = yes
-                scope.isRightActive = no
+                scope.isLeftActive  = if scope.connections.length then yes else no
+                scope.isRightActive = if scope.connections.length then no else yes
 
-            makeFakeLists = () ->
-                # amount = amount || entities.length
-                maxLength = if scope.connections.length > scope.histories.length then scope.connections.length else scope.histories.length
-                minLength = if scope.connections.length > scope.histories.length then scope.histories.length else scope.connections.length
-                scope.amount = if maxLength < scope.amount then maxLength else scope.amount
+            makeRestLists = () ->
+                ###
+                If one of the lists is empty or maximum/minimum length of lists is smaller than amount,
+                we should fill out list with empty cell
+                ###
+                minLength = if scope.connections.length < scope.histories.length then scope.connections.length else scope.histories.length
+
                 if minLength < scope.amount
-                    difference = scope.amount - minLength
-                    if scope.histories.length < scope.connections.length
-                        scope.fakeHistories = scope.histories.concat(addFakeCell(Math.abs(difference)))
-                        scope.fakeConnections = scope.connections
+                    maxLength = if scope.connections.length > scope.histories.length then scope.connections.length else scope.histories.length
+                    if maxLength is 0
+                        return
+                    else if maxLength < scope.amount
+                        if scope.connections.length < scope.histories.length
+                            scope.restOfConnections = new Array(maxLength - minLength)
+                            scope.restOfHistories   = new Array 0
+                        else
+                            scope.restOfConnections = new Array 0
+                            scope.restOfHistories   = new Array(maxLength - minLength)
                     else
-                        scope.fakeHistories = scope.histories
-                        scope.fakeConnections = scope.connections.concat(addFakeCell(Math.abs(difference)))
-                else
-                    scope.fakeConnections = scope.connections
-                    scope.fakeHistories = scope.histories
+                        if scope.connections.length < scope.histories.length
+                            scope.restOfConnections = new Array(scope.amount - minLength)
+                            scope.restOfHistories   = new Array 0
+                        else
+                            scope.restOfConnections = new Array 0
+                            scope.restOfHistories   = new Array(scope.amount - minLength)
 
-
-            addFakeCell = (difference) ->
-                list = []
-                for i in [0...difference]
-                    list.push({})
-                return list
-
+                            
             scope.keydown = () ->
                 setTimeout (->
                     do checkQuery
@@ -263,7 +266,7 @@ alfredDirective.directive "alfred", ['hotkeys', 'quickConnectParse', (hotkeys, q
 
             do initializeParameters
             do initializeTableParameters
-            do makeFakeLists
+            do makeRestLists
 
 ]
 
@@ -276,6 +279,7 @@ alfredDirective.directive "inactiveList",  () ->
             amount:        "="
             heightCell:    "="
             from:          "="
+            rest: "="
 
         controller: ($scope) ->
             $scope.setHeight = () ->
@@ -294,7 +298,8 @@ alfredDirective.directive "inactiveList",  () ->
             do scope.changeOffset
 
             element.bind "mouseenter", () ->
-                do alfredCtrl.changeActiveList
+                if scope.connections.length
+                    do alfredCtrl.changeActiveList
 
             scope._normalizeSliderHeight = (sliderHeight, sizerHeight) ->
                 if sizerHeight > 100 - sliderHeight
@@ -333,6 +338,7 @@ alfredDirective.directive "activeList",  () ->
             from:            "="
             selectedIndex:   "="
             cmdSystemHotkey: "="
+            rest: "="
 
         # subConnetions is a visible array
         controller: ($scope) ->
@@ -391,7 +397,7 @@ alfredDirective.directive "activeList",  () ->
 
         link: (scope, element, attrs, alfredCtrl) ->
             # Check if list length is more than amount of cells
-            scope.selectedIndex = if scope.selectedIndex > scope.connections.length then (scope.connections.length-1) else scope.selectedIndex
+            scope.selectedIndex = if scope.selectedIndex >= scope.connections.length then (scope.connections.length-1) else scope.selectedIndex
 
             scope.alfredController = alfredCtrl
             scope.prevquery = null
@@ -457,16 +463,16 @@ alfredDirective.directive "activeList",  () ->
                 current = element.find(".active")
                 next = current.next()
                 currentIndex = scope.getSelectedConnection()
-                if next.length is 0
+                if next.length is 0 or not next[0].id
                     do scope.loadDown
                     setTimeout (->
                         next = current.next()
-                        if next.length is 0
+                        if next.length is 0 or not next[0].id
                             scope.from   = 0
                             scope.offset = scope.amount
                             scope.setSelectedConnection(0)
                             scope.$apply()
-                    ), 100
+                    ), 0
                 else
                     scope.setSelectedConnection(++currentIndex)
 
@@ -474,11 +480,11 @@ alfredDirective.directive "activeList",  () ->
                 current = element.find(".active")
                 prev = current.prev()
                 currentIndex = scope.getSelectedConnection()
-                if prev.length is 0
+                if prev.length is 0 or not prev[0].id
                     do scope.loadUp
                     setTimeout (->
                         prev = current.prev()
-                        if prev.length is 0
+                        if prev.length is 0 or not prev[0].id
                             from = scope.filteredConnections.length - scope.amount
                             if from > 0
                                 scope.from   = from
@@ -487,7 +493,7 @@ alfredDirective.directive "activeList",  () ->
                             else
                                 scope.setSelectedConnection(scope.filteredConnections.length - 1)
                             scope.$apply()
-                    ), 100
+                    ), 0
                 else
                     scope.setSelectedConnection(--currentIndex)
 

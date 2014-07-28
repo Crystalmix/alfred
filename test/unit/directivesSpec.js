@@ -77,6 +77,72 @@ describe('Unit test alfredDirectives: alfred', function() {
             }
         );
 
+        it("should render empty lists",
+            function() {
+                element = $compile(angular.element('<alfred connections="[]" histories="[]" amount="6" height-cell="42" placeholder="placeholder"></alfred>'))($rootScope);
+                scope.$digest();
+                var input,
+                    ul,
+                    li,
+                    leftList,
+                    rightList,
+                    mainList;
+
+                input = element.find("input");
+                ul = element.find("ul");
+                li = element.find("li");
+                leftList = element.find("#left");
+                rightList = element.find("#right");
+                mainList = element.find(".main-list");
+
+                expect(input.length).toBe(1);
+                expect(ul.length).toBe(0);
+                expect(li.length).toBe(0);
+                expect(leftList.length).toBe(0);
+                expect(rightList.length).toBe(0);
+                expect(mainList.length).toBe(0);
+            }
+        );
+
+        it("should render empty cells",
+            function() {
+                scope.connections = generateConnectionArray(10);
+                scope.histories   = generateHistoryArray(4);
+                scope.placeholder = "ssh user@hostname -p port";
+
+                element = $compile(angular.element('<alfred connections="connections" histories="[]" amount="6" height-cell="42" placeholder="placeholder"></alfred>'))($rootScope);
+                scope.$digest();
+                var input,
+                    ul,
+                    li,
+                    emptyCells,
+                    scopeDirective;
+
+                input = element.find("input");
+                ul = element.find("ul");
+                li = element.find("li");
+                emptyCells = element.find(".empty-cell");
+
+                expect(input.length).toBe(1);
+                expect(ul.length).toBe(2);
+                expect(li.length).toBe(12);
+                expect(emptyCells.length).toBe(6);
+
+                element = $compile(angular.element('<alfred connections="connections" histories="histories" amount="6" height-cell="42" placeholder="placeholder"></alfred>'))($rootScope);
+                scope.$digest();
+                emptyCells = element.find(".empty-cell");
+                expect(emptyCells.length).toBe(2);
+
+                element = $compile(angular.element('<alfred connections="[]" histories="histories" amount="6" height-cell="42" placeholder="placeholder"></alfred>'))($rootScope);
+                scope.$digest();
+                emptyCells = element.find(".empty-cell");
+                scopeDirective = element.isolateScope();
+                expect(scopeDirective.isRightActive).toBe(true);
+                expect(scopeDirective.isLeftActive).toBe(false);
+                expect(emptyCells.length).toBe(4);
+            }
+        );
+
         it("isolate scope should get parameters", function() {
             var input,
                 scopeDirective = element.isolateScope(),
