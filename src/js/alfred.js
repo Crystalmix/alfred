@@ -90,7 +90,7 @@
     'hotkeys', 'quickConnectParse', function(hotkeys, quickConnectParse) {
       return {
         restrict: "E",
-        templateUrl: "partials/alfred.html",
+        templateUrl: "/src/templates/alfred.html",
         replace: true,
         scope: {
           connections: "=",
@@ -321,7 +321,7 @@
     return {
       require: "^alfred",
       restrict: "AE",
-      templateUrl: "partials/inactive-connections.html",
+      templateUrl: "/src/templates/inactive-connections.html",
       scope: {
         connections: "=",
         amount: "=",
@@ -394,7 +394,7 @@
        */
       require: "^alfred",
       restrict: "AE",
-      templateUrl: "partials/active-connections.html",
+      templateUrl: "/src/templates/active-connections.html",
       scope: {
         connections: "=",
         amount: "=",

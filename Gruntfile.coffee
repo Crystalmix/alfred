@@ -1,6 +1,6 @@
 
-jsPath = "app/js"
-coffeePath = "app/coffee"
+
+coffeePath = "src/coffee"
 
 module.exports = (grunt) ->
     grunt.initConfig
@@ -9,14 +9,37 @@ module.exports = (grunt) ->
             coffeescript:
                 files: ["#{coffeePath}/**/*.coffee"],
                 tasks: ['default'],
+            dev:
+                files: ["demo/coffee/**/*.coffee"],
+                tasks: ['demo'],
+
+        concat:
+            dist:
+                src: [
+                    "#{coffeePath}/module.coffee",
+                    "#{coffeePath}/services/quickConnectParser.coffee"
+                    "#{coffeePath}/directives/alfred.coffee",
+                    "#{coffeePath}/directives/inactiveList.coffee",
+                    "#{coffeePath}/directives/activeList.coffee",
+                    "#{coffeePath}/directives/connectionItem.coffee",
+                    "#{coffeePath}/directives/whenScrolled.coffee",
+                    "#{coffeePath}/filteres/filterConnections.coffee"
+                    ],
+                dest: "#{coffeePath}/alfred.coffee",
 
         coffee:
             compile:
                 files:
-                    "app/js/app.js": "#{coffeePath}/app.coffee"
-                    "app/js/controllers/alfredController.js": "#{coffeePath}/controllers/alfredController.coffee"
-                    "app/js/services/httpService.js": "#{coffeePath}/services/httpService.coffee"
-                    "app/js/directives/alfred.js": "#{coffeePath}/directives/alfred.coffee"
+                    "src/js/alfred.js": "#{coffeePath}/alfred.coffee"
+
+            dev:
+                files:
+                    "demo/js/app.js": "demo/coffee/app.coffee"
+                    "demo/js/controllers/alfredController.js": "demo/coffee//controllers/alfredController.coffee"
+                    "demo/js/services/httpService.js": "demo/coffee//services/httpService.coffee"
+
+        clean:
+            build: "#{coffeePath}/alfred.coffee"
 
         karma:
             unit:
@@ -27,6 +50,9 @@ module.exports = (grunt) ->
     grunt.loadNpmTasks 'grunt-contrib-watch'
     grunt.loadNpmTasks 'grunt-contrib-coffee'
     grunt.loadNpmTasks 'grunt-karma'
+    grunt.loadNpmTasks 'grunt-contrib-concat'
+    grunt.loadNpmTasks 'grunt-contrib-clean'
 
-    grunt.registerTask 'default', ['coffee']
+    grunt.registerTask 'default', ['concat', 'coffee', 'clean']
+    grunt.registerTask 'demo', ['coffee:dev']
     grunt.registerTask 'test', ['karma']
