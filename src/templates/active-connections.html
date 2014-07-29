@@ -34,7 +34,8 @@
             ng-style="setHeight()"
             class="empty-cell">
         </li>
-        <li ng-if="!subConnections.length">Nothing</li>
+        <li ng-if="quickConnectionsParams" ng-bind="quickConnectionsParams"></li>
+        <li ng-if="!subConnections.length && !quickConnectionsParams">Nothing</li>
     </ul>
 </div>
 <div class="scroller" ng-if="filteredConnections.length > amount">

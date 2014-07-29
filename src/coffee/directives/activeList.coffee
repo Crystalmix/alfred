@@ -1,10 +1,12 @@
 
+###
+    The activeList directive displays active list with all hotkeys handlers
+
+    connections         --  array of all json-objects
+    filteredConnections --  array of queried json-objects
+    subConnections      --  array of visible json-objects
+###
 alfredDirective.directive "activeList",  () ->
-        ###
-            connections         --  array of all hosts
-            filteredConnections --  array of queried hosts
-            subConnections      --  array of visible hosts
-        ###
         require: "^alfred"
         restrict: "AE"
         templateUrl: "src/templates/active-connections.html"
@@ -16,9 +18,8 @@ alfredDirective.directive "activeList",  () ->
             from:            "="
             selectedIndex:   "="
             cmdSystemHotkey: "="
-            rest: "="
+            rest:            "="
 
-        # subConnetions is a visible array
         controller: ($scope) ->
             $scope.setHeight = () ->
                 height: $scope.heightCell + 'px'
@@ -56,14 +57,15 @@ alfredDirective.directive "activeList",  () ->
                     ++$scope.from
                     ++$scope.offset
 
-            ###*
-            * Checking history entity
-            ###
+            # Checks is it history entity
+            #
+            #@param connection    json-object
             $scope.isHistory = (connection) ->
                 if connection.id?
                     return no
                 return yes
 
+            # Method api for child directive
             @select = (key) ->
                 $scope.setSelectedConnection key
                 do $scope.$apply
@@ -74,9 +76,10 @@ alfredDirective.directive "activeList",  () ->
 
 
         link: (scope, element, attrs, alfredCtrl) ->
-            # Check if list length is more than amount of cells
+            # Checks if list length is less than amount of cells
             scope.selectedIndex = if scope.selectedIndex >= scope.connections.length then (scope.connections.length-1) else scope.selectedIndex
 
+            # Saves parent controller at the scope variable
             scope.alfredController = alfredCtrl
             scope.prevquery = null
 
@@ -91,6 +94,10 @@ alfredDirective.directive "activeList",  () ->
                 scope.offset = scope.from + scope.amount
                 alfredCtrl.changeFromProperty(from)
 
+            # Listens to parent events 'arrow'
+            #
+            # @param event          jQuery event
+            # @param orientation    ↓ or ↑
             scope.$on('arrow', (event, orientation) ->
                 if orientation is 'up'
                     do activatePreviousItem
@@ -98,14 +105,28 @@ alfredDirective.directive "activeList",  () ->
                     do activateNextItem
             )
 
+            # Listens to parent events 'setSelectedIndex'
+            #
+            # @param event    jQuery event
+            # @param key      index within [1-scope.amount]
             scope.$on('setSelectedIndex', (event, key) ->
                 scope.selectedIndex = key
             )
 
+            # Listens to parent events 'enter'
             scope.$on('enter', () ->
                 key = scope.getSelectedConnection()
                 connection = scope.subConnections[key]
                 scope.select connection, key
+            )
+
+            # Listens to parent events 'quickConnect'
+            #
+            # @param event    jQuery event
+            # @param params   parameters from command quick connection
+            scope.$on('quickConnect', (event, params) ->
+                scope.quickConnectionsParams = params
+                do scope.$apply
             )
 
             scope.edit = ($event, connection) ->
@@ -121,11 +142,11 @@ alfredDirective.directive "activeList",  () ->
             scope.changeSlider = () ->
                 slider = (scope.amount * 100) / scope.filteredConnections.length
                 sizer = (scope.from * 100) / scope.filteredConnections.length
-                sizes = scope._normalizeSliderHeight(slider, sizer)
+                sizes = _normalizeSliderHeight(slider, sizer)
                 scope.slider = sizes.sliderHeight
                 scope.sizer = sizes.sizerHeight
 
-            scope._normalizeSliderHeight = (sliderHeight, sizerHeight) ->
+            _normalizeSliderHeight = (sliderHeight, sizerHeight) ->
                 if sizerHeight > 100 - sliderHeight
                     sizerHeight = 100 - sliderHeight
                 if  sliderHeight > 100

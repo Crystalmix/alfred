@@ -1,4 +1,11 @@
 
+###
+    The whenScrolled directive displays active list with all hotkeys handlers
+
+    connections         --  array of all json-objects
+    filteredConnections --  array of queried json-objects
+    subConnections      --  array of visible json-objects
+###
 alfredDirective.directive('whenScrolled', () ->
         restrict: 'A'
 

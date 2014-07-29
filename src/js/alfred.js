@@ -14,18 +14,19 @@
     return hotkeysProvider.includeCheatSheet = true;
   });
 
-  alfredDirective.factory('quickConnectParse', function() {
 
-    /*
-        A hepler service that can parse quick connect parameters
-        Possible cases:
-                ssh               user@host
-                ssh               user@host   -p port
-                ssh               user@host   -pport
-    
-                ssh    -p port    user@host
-                ssh    -pport     user@host
-     */
+  /*
+      A hepler service that can parse quick connect parameters
+      Possible cases:
+          ssh               user@host
+          ssh               user@host   -p port
+          ssh               user@host   -pport
+  
+          ssh    -p port    user@host
+          ssh    -pport     user@host
+   */
+
+  alfredDirective.factory('quickConnectParse', function() {
     var trimArray;
     trimArray = function(array) {
       var i, _i, _ref;
@@ -35,6 +36,11 @@
       return array;
     };
     return {
+
+      /*
+          Parses parameters
+          @param input string that contains one of the possible cases
+       */
       parse: function(input) {
         var inputArray, leftInputArray, options, rightInputArray;
         options = {};
@@ -86,8 +92,13 @@
     };
   });
 
+
+  /*
+      The alfred directive indicates input field, determines display table or list
+   */
+
   alfredDirective.directive("alfred", [
-    'hotkeys', 'quickConnectParse', '$templateCache', function(hotkeys, quickConnectParse, $templateCache) {
+    'hotkeys', 'quickConnectParse', function(hotkeys, quickConnectParse) {
       return {
         restrict: "E",
         replace: true,
@@ -104,12 +115,6 @@
           onRemoveCallback: "&"
         },
         controller: function($scope) {
-
-          /*
-              "alfred" directive scope conatin next parameters:
-                  1. "isTable" - switch table/list
-                  2. "SelectedItem" - selected item is constant
-           */
           var bindHotkeysCmd, detectCtrlOrCmd;
           $scope.query = null;
           $scope.entities = $scope.connections.concat($scope.histories);
@@ -194,6 +199,10 @@
             hotKey = isMac ? 'command' : 'ctrl';
             return hotKey;
           };
+
+          /*
+              Methods are api between alfred directive and child directives
+           */
           this.setSelectedIndex = function(key) {
             return $scope.setSelectedConnection(key);
           };
@@ -237,11 +246,14 @@
               });
             }
           };
+          $scope.addConnection = function() {
+            return $scope.onAddCallback();
+          };
           $scope.cmdSystemHotkey = detectCtrlOrCmd();
           bindHotkeysCmd();
           return this;
         },
-        link: function(scope, element, attrs) {
+        link: function(scope, element) {
           var $input, checkQuery, initializeParameters, initializeTableParameters, makeRestLists;
           $input = element.find('#alfred-input');
           scope.$watch($input, (function(_this) {
@@ -271,11 +283,6 @@
             return scope.isRightActive = scope.connections.length ? false : true;
           };
           makeRestLists = function() {
-
-            /*
-            If one of the lists is empty or maximum/minimum length of lists is smaller than amount,
-            we should fill out list with empty cell
-             */
             var maxLength, minLength;
             minLength = scope.connections.length < scope.histories.length ? scope.connections.length : scope.histories.length;
             if (minLength < scope.amount) {
@@ -303,11 +310,13 @@
           };
           scope.keydown = function() {
             return setTimeout((function() {
-              return checkQuery();
+              checkQuery();
+              if (scope.query && scope.query.indexOf("ssh") === 0) {
+                return scope.$broadcast("quickConnect", scope.query);
+              } else {
+                return scope.$broadcast("quickConnect", null);
+              }
             }), 0);
-          };
-          scope.addConnection = function() {
-            return scope.onAddCallback();
           };
           initializeParameters();
           initializeTableParameters();
@@ -316,6 +325,12 @@
       };
     }
   ]);
+
+
+  /*
+      The inactiveList directive simply displays list
+      It has only one event 'mouseenter' which changes active list
+   */
 
   alfredDirective.directive("inactiveList", function() {
     return {
@@ -350,13 +365,22 @@
         };
       },
       link: function(scope, element, attrs, alfredCtrl) {
+        var _normalizeSliderHeight;
         scope.changeOffset();
         element.bind("mouseenter", function() {
           if (scope.connections.length) {
             return alfredCtrl.changeActiveList();
           }
         });
-        scope._normalizeSliderHeight = function(sliderHeight, sizerHeight) {
+        scope.changeSlider = function() {
+          var sizer, sizes, slider;
+          slider = (scope.amount * 100) / scope.filteredConnections.length;
+          sizer = (scope.from * 100) / scope.filteredConnections.length;
+          sizes = _normalizeSliderHeight(slider, sizer);
+          scope.slider = sizes.sliderHeight;
+          return scope.sizer = sizes.sizerHeight;
+        };
+        return _normalizeSliderHeight = function(sliderHeight, sizerHeight) {
           if (sizerHeight > 100 - sliderHeight) {
             sizerHeight = 100 - sliderHeight;
           }
@@ -372,26 +396,21 @@
             sizerHeight: sizerHeight
           };
         };
-        return scope.changeSlider = function() {
-          var sizer, sizes, slider;
-          slider = (scope.amount * 100) / scope.filteredConnections.length;
-          sizer = (scope.from * 100) / scope.filteredConnections.length;
-          sizes = scope._normalizeSliderHeight(slider, sizer);
-          scope.slider = sizes.sliderHeight;
-          return scope.sizer = sizes.sizerHeight;
-        };
       }
     };
   });
 
+
+  /*
+      The activeList directive displays active list with all hotkeys handlers
+  
+      connections         --  array of all json-objects
+      filteredConnections --  array of queried json-objects
+      subConnections      --  array of visible json-objects
+   */
+
   alfredDirective.directive("activeList", function() {
     return {
-
-      /*
-          connections         --  array of all hosts
-          filteredConnections --  array of queried hosts
-          subConnections      --  array of visible hosts
-       */
       require: "^alfred",
       restrict: "AE",
       templateUrl: "src/templates/active-connections.html",
@@ -450,10 +469,6 @@
             return ++$scope.offset;
           }
         };
-
-        /**
-        * Checking history entity
-         */
         $scope.isHistory = function(connection) {
           if (connection.id != null) {
             return false;
@@ -468,7 +483,7 @@
         return this;
       },
       link: function(scope, element, attrs, alfredCtrl) {
-        var activateNextItem, activatePreviousItem;
+        var activateNextItem, activatePreviousItem, _normalizeSliderHeight;
         scope.selectedIndex = scope.selectedIndex >= scope.connections.length ? scope.connections.length - 1 : scope.selectedIndex;
         scope.alfredController = alfredCtrl;
         scope.prevquery = null;
@@ -497,6 +512,10 @@
           connection = scope.subConnections[key];
           return scope.select(connection, key);
         });
+        scope.$on('quickConnect', function(event, params) {
+          scope.quickConnectionsParams = params;
+          return scope.$apply();
+        });
         scope.edit = function($event, connection) {
           $event.preventDefault();
           $event.stopPropagation();
@@ -511,11 +530,11 @@
           var sizer, sizes, slider;
           slider = (scope.amount * 100) / scope.filteredConnections.length;
           sizer = (scope.from * 100) / scope.filteredConnections.length;
-          sizes = scope._normalizeSliderHeight(slider, sizer);
+          sizes = _normalizeSliderHeight(slider, sizer);
           scope.slider = sizes.sliderHeight;
           return scope.sizer = sizes.sizerHeight;
         };
-        scope._normalizeSliderHeight = function(sliderHeight, sizerHeight) {
+        _normalizeSliderHeight = function(sliderHeight, sizerHeight) {
           if (sizerHeight > 100 - sliderHeight) {
             sizerHeight = 100 - sliderHeight;
           }
@@ -593,6 +612,15 @@
     };
   });
 
+
+  /*
+      The whenScrolled directive displays active list with all hotkeys handlers
+  
+      connections         --  array of all json-objects
+      filteredConnections --  array of queried json-objects
+      subConnections      --  array of visible json-objects
+   */
+
   alfredDirective.directive('whenScrolled', function() {
     return {
       restrict: 'A',
@@ -630,6 +658,6 @@
 
 angular.module('alfredDirective').run(['$templateCache', function ($templateCache) {
 	$templateCache.put('src/templates/alfred.html', '<div class="alfred"> <input type="text" id="alfred-input" class="form-control input-lg input" ng-model="query" ng-keydown="keydown($event)" placeholder="{{placeholder}}"/> <div ng-if="connections.length || histories.length"> <div ng-if="isTable"> <div id="left" ng-class="{ active: isLeftActive }"> <div class="header"> <span>Hosts</span> <a type="button" ng-click="addConnection()"><span class="add glyphicon glyphicon-plus"></span></a> <i class="pull-right" ng-show="isLeftActive"> <a type="button"><span class="glyphicon glyphicon-arrow-left"></span></a> </i> </div> <div class="left-list" ng-if="isLeftActive"> <active-list connections="connections" amount="amount" height-cell="heightCell" query="query" from="fromConnection" selected-index="selectedIndex" rest="restOfConnections" cmd-system-hotkey="cmdSystemHotkey"> </active-list> </div> <div class="left-list" ng-if="isRightActive"> <inactive-list connections="connections" amount="amount" height-cell="heightCell" from="fromConnection" rest="restOfConnections"> </inactive-list> </div> </div> <div id="right" ng-class="{ active: isRightActive }"> <div class="header"> <span>History</span> <i class="pull-right" ng-show="isRightActive"> <a type="button"><span class="glyphicon glyphicon-arrow-right"></span></a> </i> </div> <div class="left-list" ng-if="isLeftActive"> <inactive-list connections="histories" amount="amount" height-cell="heightCell" from="fromHistory" rest="restOfHistories"> </inactive-list> </div> <div class="left-list" ng-if="isRightActive"> <active-list connections="histories" amount="amount" height-cell="heightCell" query="query" from="fromHistory" selected-index="selectedIndex" rest="restOfHistories" cmd-system-hotkey="cmdSystemHotkey"> </active-list> </div> </div> </div> <div ng-if="!isTable"> <div class="main-list"> <active-list connections="entities" amount="amount" height-cell="heightCell" query="query" from="fromConnection" selected-index="selectedIndex" cmd-system-hotkey="cmdSystemHotkey"> </active-list> </div> </div> </div> </div>');
-	$templateCache.put('src/templates/active-connections.html', '<div id="fixed" when-scrolled="loadMore()"> <ul class="list-group"> <li ng-repeat="(key,connection) in subConnections=(connections | filterConnections:query:from:offset)" id="{{key}}" ng-click="select(connection, key)" connection-item="connection" key="{{key}}" ng-class="{ active: (key===selectedIndex) }" ng-style="setHeight()"> <span ng-if="connection.label"> {{connection.label}} <i class="active actions" ng-if="(key===selectedIndex)"> <div class="enter-block"> <i ng-if="!isHistory(connection)" class="glyphicon glyphicon-pencil" ng-click="edit($event, connection)"></i> <i class="glyphicon glyphicon-trash" ng-click="remove($event, connection)"></i> </div> <i>{{enterText}}</i> </i> <i ng-if="!(key===selectedIndex)">{{cmdSystemHotkey}}{{key+1}}</i> </span> <span ng-if="!connection.label"> {{connection.ssh_username}}@{{connection.hostname}} <i class="active actions" ng-if="(key===selectedIndex)"> <div class="enter-block"> <i ng-if="!isHistory(connection)" class="glyphicon glyphicon-pencil" ng-click="edit($event, connection)"></i> <i class="glyphicon glyphicon-trash" ng-click="remove($event, connection)"></i> </div> <i>{{enterText}}</i> </i> <i ng-if="!(key===selectedIndex)">{{cmdSystemHotkey}}{{key+1}}</i> </span> </li> <li ng-repeat="i in rest track by $index" ng-style="setHeight()" class="empty-cell"> </li> <li ng-if="!subConnections.length">Nothing</li> </ul> </div> <div class="scroller" ng-if="filteredConnections.length> amount"> <div class="sizer" ng-style="setSizerHeight()"></div> <div class="slider" ng-style="setSliderHeight()"></div> </div>');
+	$templateCache.put('src/templates/active-connections.html', '<div id="fixed" when-scrolled="loadMore()"> <ul class="list-group"> <li ng-repeat="(key,connection) in subConnections=(connections | filterConnections:query:from:offset)" id="{{key}}" ng-click="select(connection, key)" connection-item="connection" key="{{key}}" ng-class="{ active: (key===selectedIndex) }" ng-style="setHeight()"> <span ng-if="connection.label"> {{connection.label}} <i class="active actions" ng-if="(key===selectedIndex)"> <div class="enter-block"> <i ng-if="!isHistory(connection)" class="glyphicon glyphicon-pencil" ng-click="edit($event, connection)"></i> <i class="glyphicon glyphicon-trash" ng-click="remove($event, connection)"></i> </div> <i>{{enterText}}</i> </i> <i ng-if="!(key===selectedIndex)">{{cmdSystemHotkey}}{{key+1}}</i> </span> <span ng-if="!connection.label"> {{connection.ssh_username}}@{{connection.hostname}} <i class="active actions" ng-if="(key===selectedIndex)"> <div class="enter-block"> <i ng-if="!isHistory(connection)" class="glyphicon glyphicon-pencil" ng-click="edit($event, connection)"></i> <i class="glyphicon glyphicon-trash" ng-click="remove($event, connection)"></i> </div> <i>{{enterText}}</i> </i> <i ng-if="!(key===selectedIndex)">{{cmdSystemHotkey}}{{key+1}}</i> </span> </li> <li ng-repeat="i in rest track by $index" ng-style="setHeight()" class="empty-cell"> </li> <li ng-if="quickConnectionsParams" ng-bind="quickConnectionsParams"></li> <li ng-if="!subConnections.length && !quickConnectionsParams">Nothing</li> </ul> </div> <div class="scroller" ng-if="filteredConnections.length> amount"> <div class="sizer" ng-style="setSizerHeight()"></div> <div class="slider" ng-style="setSliderHeight()"></div> </div>');
 	$templateCache.put('src/templates/inactive-connections.html', '<div id="inactive-list"> <ul class="list-group"> <li ng-repeat="(key,connection) in connections | filterConnections:null:from:offset" ng-style="setHeight()"> <span ng-if="connection.label"> {{connection.label}} </span> <span ng-if="!connection.label"> {{connection.ssh_username}}@{{connection.hostname}} </span> </li> <li ng-repeat="i in rest track by $index" ng-style="setHeight()" class="empty-cell"> </li> </ul> </div> <div class="scroller" ng-if="connections.length> amount"> <div class="sizer" ng-style="setSizerHeight()"></div> <div class="slider" ng-style="setSliderHeight()"></div> </div>');
 }]);

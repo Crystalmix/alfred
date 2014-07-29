@@ -1,20 +1,26 @@
 
-alfredDirective.factory 'quickConnectParse', () ->
-    ###
-        A hepler service that can parse quick connect parameters
-        Possible cases:
-                ssh               user@host
-                ssh               user@host   -p port
-                ssh               user@host   -pport
+###
+    A hepler service that can parse quick connect parameters
+    Possible cases:
+        ssh               user@host
+        ssh               user@host   -p port
+        ssh               user@host   -pport
 
-                ssh    -p port    user@host
-                ssh    -pport     user@host
-    ###
+        ssh    -p port    user@host
+        ssh    -pport     user@host
+###
+alfredDirective.factory 'quickConnectParse', () ->
+
+    # Trims each element of array
     trimArray = (array) ->
         for i in [0...array.length]
             array[i] = $.trim(array[i])
         return array;
 
+    ###
+        Parses parameters
+        @param input string that contains one of the possible cases
+    ###
     parse : (input) ->
         options = {}
         if input.indexOf('ssh') isnt -1

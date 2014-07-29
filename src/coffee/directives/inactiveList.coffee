@@ -1,4 +1,8 @@
 
+###
+    The inactiveList directive simply displays list
+    It has only one event 'mouseenter' which changes active list
+###
 alfredDirective.directive "inactiveList",  () ->
         require: "^alfred"
         restrict: "AE"
@@ -8,7 +12,7 @@ alfredDirective.directive "inactiveList",  () ->
             amount:        "="
             heightCell:    "="
             from:          "="
-            rest: "="
+            rest:          "="
 
 
         controller: ($scope) ->
@@ -31,7 +35,14 @@ alfredDirective.directive "inactiveList",  () ->
                 if scope.connections.length
                     do alfredCtrl.changeActiveList
 
-            scope._normalizeSliderHeight = (sliderHeight, sizerHeight) ->
+            scope.changeSlider = () ->
+                slider = (scope.amount * 100) / scope.filteredConnections.length
+                sizer = (scope.from * 100) / scope.filteredConnections.length
+                sizes = _normalizeSliderHeight(slider, sizer)
+                scope.slider = sizes.sliderHeight
+                scope.sizer = sizes.sizerHeight
+
+            _normalizeSliderHeight = (sliderHeight, sizerHeight) ->
                 if sizerHeight > 100 - sliderHeight
                     sizerHeight = 100 - sliderHeight
                 if  sliderHeight > 100
@@ -42,10 +53,3 @@ alfredDirective.directive "inactiveList",  () ->
                 sliderHeight = Math.ceil(sliderHeight) / 100
 
                 return {sliderHeight: sliderHeight, sizerHeight: sizerHeight}
-
-            scope.changeSlider = () ->
-                slider = (scope.amount * 100) / scope.filteredConnections.length
-                sizer = (scope.from * 100) / scope.filteredConnections.length
-                sizes = scope._normalizeSliderHeight(slider, sizer)
-                scope.slider = sizes.sliderHeight
-                scope.sizer = sizes.sizerHeight

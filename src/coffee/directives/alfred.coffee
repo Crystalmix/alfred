@@ -1,5 +1,8 @@
 
-alfredDirective.directive "alfred", ['hotkeys', 'quickConnectParse', '$templateCache', (hotkeys, quickConnectParse, $templateCache) ->
+###
+    The alfred directive indicates input field, determines display table or list
+###
+alfredDirective.directive "alfred", ['hotkeys', 'quickConnectParse', (hotkeys, quickConnectParse) ->
         restrict: "E"
         replace: yes
         templateUrl: "src/templates/alfred.html"
@@ -14,13 +17,7 @@ alfredDirective.directive "alfred", ['hotkeys', 'quickConnectParse', '$templateC
             onEditCallback:     "&"
             onRemoveCallback:   "&"
 
-
         controller: ($scope) ->
-            ###
-                "alfred" directive scope conatin next parameters:
-                    1. "isTable" - switch table/list
-                    2. "SelectedItem" - selected item is constant
-            ###
             $scope.query         = null
             $scope.entities      = $scope.connections.concat $scope.histories
             $scope.selectedIndex = 0
@@ -29,6 +26,7 @@ alfredDirective.directive "alfred", ['hotkeys', 'quickConnectParse', '$templateC
                 $scope.selectedIndex = index
                 $scope.$broadcast "setSelectedIndex", index
 
+            # Binds hotkeys to the scope
             hotkeys.bindTo($scope)
                 .add({
                     combo: 'return'
@@ -76,6 +74,7 @@ alfredDirective.directive "alfred", ['hotkeys', 'quickConnectParse', '$templateC
                         $scope.$broadcast "arrow", "down"
                 })
 
+            # Binds hotkeys cmd+[1-scope.amount]
             bindHotkeysCmd = () ->
                 for i in [1..$scope.amount]
                     combo = "#{$scope.cmdSystemHotkey}+#{i}"
@@ -90,18 +89,30 @@ alfredDirective.directive "alfred", ['hotkeys', 'quickConnectParse', '$templateC
                                 $scope.$broadcast "enter"
                         })
 
+            # Detects operating system in order to use correct hotkey
             detectCtrlOrCmd = () ->
                 isMac = navigator.userAgent.toLowerCase().indexOf('mac') isnt -1
                 hotKey = if isMac then 'command' else 'ctrl'
                 hotKey
 
+            ###
+                Methods are api between alfred directive and child directives
+            ###
+
+            # Sets seleceted item
+            #
+            # @param key    index within [1-scope.amount]
             @setSelectedIndex = (key) ->
                 $scope.setSelectedConnection key
 
+            # Calls callback function on event 'enter'
+            #
+            # @param connection    json-object
             @enterCallback = (connection) ->
                 if connection
                     $scope.onEnterCallback({connection:connection})
 
+            # Saves paramaters: fromConnection, fromHistories
             @changeFromProperty = (from) ->
                 if $scope.isTable
                     if $scope.isLeftActive
@@ -109,6 +120,7 @@ alfredDirective.directive "alfred", ['hotkeys', 'quickConnectParse', '$templateC
                     else
                         $scope.fromHistory = from
 
+            # Changes active list on hotkeys
             @changeActiveList = () ->
                 if $scope.isLeftActive
                     $scope.isLeftActive  = no
@@ -118,13 +130,23 @@ alfredDirective.directive "alfred", ['hotkeys', 'quickConnectParse', '$templateC
                     $scope.isRightActive = no
                 do $scope.$apply
 
+            # Calls callback function on event 'edit'
+            #
+            # @param connection    json-object
             @edit = (connection) ->
                 if connection
                     $scope.onEditCallback({connection: connection})
 
+            # Calls callback function on event 'remove'
+            #
+            # @param connection    json-object
             @remove = (connection) ->
                 if connection
                     $scope.onRemoveCallback({connection: connection})
+
+            # Calls callback function on event 'add'
+            $scope.addConnection = () ->
+                do $scope.onAddCallback
 
             $scope.cmdSystemHotkey = do detectCtrlOrCmd
             do bindHotkeysCmd
@@ -132,7 +154,7 @@ alfredDirective.directive "alfred", ['hotkeys', 'quickConnectParse', '$templateC
             return @
 
 
-        link: (scope, element, attrs) ->
+        link: (scope, element) ->
             $input = element.find '#alfred-input'
 
             scope.$watch $input, () =>
@@ -141,6 +163,7 @@ alfredDirective.directive "alfred", ['hotkeys', 'quickConnectParse', '$templateC
             scope.$watch "isTable", () ->
                 do initializeParameters
 
+            # Checks query in order to switch/switch off table state
             checkQuery = () ->
                 if scope.query
                     scope.isTable = no
@@ -158,11 +181,11 @@ alfredDirective.directive "alfred", ['hotkeys', 'quickConnectParse', '$templateC
                 scope.isLeftActive  = if scope.connections.length then yes else no
                 scope.isRightActive = if scope.connections.length then no else yes
 
+            # Adds empty cells to the lists if it is needed
+            #
+            # If one of the lists is empty or maximum/minimum length of lists is smaller than amount,
+            # we should fill out list with empty cell
             makeRestLists = () ->
-                ###
-                If one of the lists is empty or maximum/minimum length of lists is smaller than amount,
-                we should fill out list with empty cell
-                ###
                 minLength = if scope.connections.length < scope.histories.length then scope.connections.length else scope.histories.length
 
                 if minLength < scope.amount
@@ -188,10 +211,12 @@ alfredDirective.directive "alfred", ['hotkeys', 'quickConnectParse', '$templateC
             scope.keydown = () ->
                 setTimeout (->
                     do checkQuery
+                    if scope.query and scope.query.indexOf("ssh") is 0
+                        scope.$broadcast "quickConnect" , scope.query   # If it is quick connect we should add element with parameters to the list
+                    else
+                        scope.$broadcast "quickConnect" , null
                 ), 0
 
-            scope.addConnection = () ->
-                do scope.onAddCallback
 
             do initializeParameters
             do initializeTableParameters
