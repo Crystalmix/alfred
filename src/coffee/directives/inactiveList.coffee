@@ -2,13 +2,14 @@
 alfredDirective.directive "inactiveList",  () ->
         require: "^alfred"
         restrict: "AE"
-        templateUrl: "/src/templates/inactive-connections.html"
+        templateUrl: "src/templates/inactive-connections.html"
         scope:
             connections:   "="
             amount:        "="
             heightCell:    "="
             from:          "="
             rest: "="
+
 
         controller: ($scope) ->
             $scope.setHeight = () ->

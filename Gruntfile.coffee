@@ -1,5 +1,4 @@
 
-
 coffeePath = "src/coffee"
 
 module.exports = (grunt) ->
@@ -27,6 +26,10 @@ module.exports = (grunt) ->
                     ],
                 dest: "#{coffeePath}/alfred.coffee",
 
+            addTemplates:
+                src: ["src/js/alfred.js", "templates/template.js"]
+                dest: "src/js/alfred.js"
+
         coffee:
             compile:
                 files:
@@ -35,11 +38,20 @@ module.exports = (grunt) ->
             dev:
                 files:
                     "demo/js/app.js": "demo/coffee/app.coffee"
-                    "demo/js/controllers/alfredController.js": "demo/coffee//controllers/alfredController.coffee"
-                    "demo/js/services/httpService.js": "demo/coffee//services/httpService.coffee"
+                    "demo/js/controllers/alfredController.js": "demo/coffee/controllers/alfredController.coffee"
+                    "demo/js/services/httpService.js": "demo/coffee/services/httpService.coffee"
 
         clean:
             build: "#{coffeePath}/alfred.coffee"
+            release: ["templates"]
+
+        ngTemplateCache:
+            options:
+                module: "alfredDirective"
+            views:
+                files: [
+                    'templates/template.js': ['src/templates/alfred.html', 'src/templates/active-connections.html', 'src/templates/inactive-connections.html']
+                ]
 
         karma:
             unit:
@@ -47,12 +59,14 @@ module.exports = (grunt) ->
                 singleRun: true,
                 logLevel: 'INFO'
 
+
     grunt.loadNpmTasks 'grunt-contrib-watch'
     grunt.loadNpmTasks 'grunt-contrib-coffee'
     grunt.loadNpmTasks 'grunt-karma'
     grunt.loadNpmTasks 'grunt-contrib-concat'
     grunt.loadNpmTasks 'grunt-contrib-clean'
+    grunt.loadNpmTasks 'grunt-hustler'
 
-    grunt.registerTask 'default', ['concat', 'coffee', 'clean']
+    grunt.registerTask 'default', ['ngTemplateCache', 'concat:dist', 'coffee', 'concat:addTemplates', 'clean']
     grunt.registerTask 'demo', ['coffee:dev']
     grunt.registerTask 'test', ['karma']

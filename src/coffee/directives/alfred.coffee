@@ -1,8 +1,8 @@
 
-alfredDirective.directive "alfred", ['hotkeys', 'quickConnectParse', (hotkeys, quickConnectParse) ->
+alfredDirective.directive "alfred", ['hotkeys', 'quickConnectParse', '$templateCache', (hotkeys, quickConnectParse, $templateCache) ->
         restrict: "E"
-        templateUrl: "/src/templates/alfred.html"
         replace: yes
+        templateUrl: "src/templates/alfred.html"
         scope:
             connections:        "="
             histories:          "="
@@ -13,6 +13,7 @@ alfredDirective.directive "alfred", ['hotkeys', 'quickConnectParse', (hotkeys, q
             onAddCallback:      "&"
             onEditCallback:     "&"
             onRemoveCallback:   "&"
+
 
         controller: ($scope) ->
             ###
@@ -131,7 +132,7 @@ alfredDirective.directive "alfred", ['hotkeys', 'quickConnectParse', (hotkeys, q
             return @
 
 
-        link: (scope, element) ->
+        link: (scope, element, attrs) ->
             $input = element.find '#alfred-input'
 
             scope.$watch $input, () =>

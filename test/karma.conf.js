@@ -18,13 +18,13 @@ module.exports = function(config){
             'bower_components/mousetrap/tests/libs/key-event.js',
             'bower_components/mousetrap/mousetrap.js',
             'bower_components/angular-hotkeys/src/hotkeys.js',
-            'app/js/**/*.js',
+            'src/js/*.js',
             'test/unit/*.js',
-            'app/partials/*.html'
+            'src/templates/*.html'
         ],
 
         ngHtml2JsPreprocessor: {
-            stripPrefix: 'app/'
+            stripPrefix: 'src/'
         },
 
         autoWatch : false,

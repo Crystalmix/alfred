@@ -7,7 +7,7 @@ alfredDirective.directive "activeList",  () ->
         ###
         require: "^alfred"
         restrict: "AE"
-        templateUrl: "/src/templates/active-connections.html"
+        templateUrl: "src/templates/active-connections.html"
         scope:
             connections:     "="
             amount:          "="

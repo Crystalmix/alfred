@@ -8,7 +8,6 @@ describe('Unit test alfredDirectives: alfred', function() {
         element;
 
     beforeEach(module('cfp.hotkeys', 'alfredDirective'));
-    beforeEach(module('partials/alfred.html', 'partials/inactive-connections.html', 'partials/active-connections.html'));
 
     beforeEach(inject(
         function(_$compile_, _$rootScope_) {
