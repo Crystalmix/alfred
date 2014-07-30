@@ -12,6 +12,7 @@
                 <i class="active actions" ng-if="(key === selectedIndex)">
                     <div class="enter-block">
                         <i ng-if="!isHistory(connection)" class="glyphicon glyphicon-pencil" ng-click="edit($event, connection)"></i>
+                        <i ng-if="isHistory(connection)" class="glyphicon glyphicon-upload" ng-click="upload($event, connection)"></i>
                         <i class="glyphicon glyphicon-trash" ng-click="remove($event, connection)"></i>
                     </div>
                     <i>{{enterText}}</i>
@@ -23,6 +24,7 @@
                 <i class="active actions" ng-if="(key === selectedIndex)">
                     <div class="enter-block">
                         <i ng-if="!isHistory(connection)" class="glyphicon glyphicon-pencil" ng-click="edit($event, connection)"></i>
+                        <i ng-if="isHistory(connection)" class="glyphicon glyphicon-upload" ng-click="upload($event, connection)"></i>
                         <i class="glyphicon glyphicon-trash" ng-click="remove($event, connection)"></i>
                     </div>
                     <i>{{enterText}}</i>

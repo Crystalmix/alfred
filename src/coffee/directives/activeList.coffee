@@ -134,6 +134,11 @@ alfredDirective.directive "activeList",  () ->
                 do $event.stopPropagation
                 alfredCtrl.edit(connection)
 
+            scope.upload = ($event, connection) ->
+                do $event.preventDefault
+                do $event.stopPropagation
+                alfredCtrl.upload(connection)
+
             scope.remove = ($event, connection) ->
                 do $event.preventDefault
                 do $event.stopPropagation

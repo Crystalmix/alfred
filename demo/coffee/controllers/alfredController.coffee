@@ -22,6 +22,9 @@ class AlfredController
         @scope.editConnection = (connection) ->
             console.log "--- outerController edit connection", connection
 
+        @scope.uploadConnection = (connection) ->
+            console.log "--- outerController upload connection", connection
+
         @scope.removeConnection = (connection) ->
             console.log "--- outerController remove connection", connection
 

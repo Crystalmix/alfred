@@ -15,6 +15,7 @@ alfredDirective.directive "alfred", ['hotkeys', 'quickConnectParse', (hotkeys, q
             onEnterCallback:    "&"
             onAddCallback:      "&"
             onEditCallback:     "&"
+            onUploadCallback:   "&"
             onRemoveCallback:   "&"
 
         controller: ($scope) ->
@@ -137,6 +138,13 @@ alfredDirective.directive "alfred", ['hotkeys', 'quickConnectParse', (hotkeys, q
                 if connection
                     $scope.onEditCallback({connection: connection})
 
+            # Calls callback function on event 'upload'
+            #
+            # @param connection    json-object
+            @upload = (connection) ->
+                if connection
+                    $scope.onUploadCallback({connection: connection})
+
             # Calls callback function on event 'remove'
             #
             # @param connection    json-object
@@ -171,6 +179,11 @@ alfredDirective.directive "alfred", ['hotkeys', 'quickConnectParse', (hotkeys, q
             if not angular.isDefined(attrs.onEditCallback)
                 scope.onEditCallback = (connection) ->
                     $input.trigger "onEditCallback", connection.connection
+                    return no
+
+            if not angular.isDefined(attrs.onUploadCallback)
+                scope.onUploadCallback = (connection) ->
+                    $input.trigger "onUploadCallback", connection.connection
                     return no
 
             if not angular.isDefined(attrs.onRemoveCallback)

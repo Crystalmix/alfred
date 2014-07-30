@@ -26,6 +26,9 @@
       this.scope.editConnection = function(connection) {
         return console.log("--- outerController edit connection", connection);
       };
+      this.scope.uploadConnection = function(connection) {
+        return console.log("--- outerController upload connection", connection);
+      };
       this.scope.removeConnection = function(connection) {
         return console.log("--- outerController remove connection", connection);
       };

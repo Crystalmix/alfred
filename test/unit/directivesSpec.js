@@ -25,6 +25,7 @@ describe('Unit test alfredDirectives: alfred', function() {
                                                                     on-enter-callback="enterConnection(connection)" \
                                                                     on-add-callback="addConnection()" \
                                                                     on-edit-callback="editConnection(connection)" \
+                                                                    on-upload-callback="uploadConnection(connection)" \
                                                                     on-remove-callback="removeConnection(connection)"> \
                                                             </alfred>'))($rootScope);
             scope.$digest();
@@ -49,7 +50,6 @@ describe('Unit test alfredDirectives: alfred', function() {
         var arr = [];
             for(var i = 1; i <= length; ++i) {
                 arr.push({
-                    id : i,
                     hostname: "history - hostname" + i.toString(),
                     ssh_username: "history - ssh_username" + i.toString()
                 });
@@ -188,6 +188,10 @@ describe('Unit test alfredDirectives: alfred', function() {
                 scope.removeConnection = function(connection) {
                     expect(connection.id).toBe(2);
                 };
+
+                scope.uploadConnection = function(connection) {
+                    expect(connection.hostname).toBe('history - hostname2');
+                };
                 scope.connections = generateConnectionArray(16);
                 scope.histories   = generateHistoryArray(10);
                 scope.placeholder = "ssh user@hostname -p port";
@@ -199,6 +203,7 @@ describe('Unit test alfredDirectives: alfred', function() {
                                                                     on-enter-callback="enterConnection(connection)" \
                                                                     on-add-callback="addConnection()" \
                                                                     on-edit-callback="editConnection(connection)" \
+                                                                    on-upload-callback="uploadConnection(connection)" \
                                                                     on-remove-callback="removeConnection(connection)"> \
                                                               </alfred>'))($rootScope);
                 scope.$digest();
@@ -216,6 +221,11 @@ describe('Unit test alfredDirectives: alfred', function() {
                 var add = element.find(".add");
                 e = jQuery.Event("click");
                 add.trigger(e);
+
+                KeyEvent.simulate(0, 39);
+                var upload = element.find(".glyphicon-upload");
+                e = jQuery.Event("click");
+                upload.trigger(e);
             }
         );
 
@@ -244,6 +254,9 @@ describe('Unit test alfredDirectives: alfred', function() {
                 input.on("onAddCallback", function(event, connection){
                     expect(connection).not.toBeDefined();
                 });
+                input.on("onUploadCallback", function(event, connection){
+                    expect(connection.hostname).toBe('history - hostname2');
+                });
                 KeyEvent.simulate('3'.charCodeAt(0), 50, [hotKey]);
 
                 var edit = element.find(".glyphicon-pencil"),
@@ -257,6 +270,11 @@ describe('Unit test alfredDirectives: alfred', function() {
                 var add = element.find(".add");
                 e = jQuery.Event("click");
                 add.trigger(e);
+
+                KeyEvent.simulate(0, 39);
+                var upload = element.find(".glyphicon-upload");
+                e = jQuery.Event("click");
+                upload.trigger(e);
             }
         );
     });
