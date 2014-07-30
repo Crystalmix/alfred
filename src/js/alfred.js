@@ -598,42 +598,34 @@
           currentIndex = scope.getSelectedConnection();
           next = scope.subConnections[currentIndex + 1];
           if (next == null) {
-            scope.loadDown();
-            return setTimeout((function() {
-              var current;
-              current = scope.subConnections[currentIndex];
-              if (current === _.last(scope.filteredConnections)) {
-                scope.from = 0;
-                scope.offset = scope.amount;
-                scope.setSelectedConnection(0);
-                return scope.$apply();
-              }
-            }), 0);
+            if (_.isEqual(_.last(scope.subConnections), _.last(scope.filteredConnections))) {
+              scope.from = 0;
+              scope.offset = scope.amount;
+              return scope.setSelectedConnection(0);
+            } else {
+              return scope.loadDown();
+            }
           } else {
             return scope.setSelectedConnection(++currentIndex);
           }
         };
         return activatePreviousItem = function() {
-          var currentIndex, prev;
+          var currentIndex, from, prev;
           currentIndex = scope.getSelectedConnection();
           prev = scope.subConnections[currentIndex - 1];
           if (prev == null) {
-            scope.loadUp();
-            return setTimeout((function() {
-              var current, from;
-              current = scope.subConnections[currentIndex];
-              if (current === scope.filteredConnections[0]) {
-                from = scope.filteredConnections.length - scope.amount;
-                if (from > 0) {
-                  scope.from = from;
-                  scope.offset = scope.filteredConnections.length - 1;
-                  scope.setSelectedConnection(scope.amount - 1);
-                } else {
-                  scope.setSelectedConnection(scope.filteredConnections.length - 1);
-                }
-                return scope.$apply();
+            if (_.isEqual(_.first(scope.subConnections), _.first(scope.filteredConnections))) {
+              from = scope.filteredConnections.length - scope.amount;
+              if (from > 0) {
+                scope.from = from;
+                scope.offset = scope.filteredConnections.length - 1;
+                return scope.setSelectedConnection(scope.amount - 1);
+              } else {
+                return scope.setSelectedConnection(scope.filteredConnections.length - 1);
               }
-            }), 0);
+            } else {
+              return scope.loadUp();
+            }
           } else {
             return scope.setSelectedConnection(--currentIndex);
           }

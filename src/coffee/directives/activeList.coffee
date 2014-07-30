@@ -168,17 +168,12 @@ alfredDirective.directive "activeList",  () ->
                 next = scope.subConnections[currentIndex+1]
                 # Checks is next element?
                 unless next?
-                    do scope.loadDown
-                    setTimeout (->
-                        current = scope.subConnections[currentIndex]
-                        # Checks is it last element?
-                        if current is _.last scope.filteredConnections
-                            # Returns initial order
-                            scope.from   = 0
-                            scope.offset = scope.amount
-                            scope.setSelectedConnection(0)
-                            scope.$apply()
-                    ), 0
+                    if _.isEqual(_.last(scope.subConnections), _.last(scope.filteredConnections))
+                        scope.from   = 0
+                        scope.offset = scope.amount
+                        scope.setSelectedConnection(0)
+                    else
+                        do scope.loadDown
                 else
                     scope.setSelectedConnection(++currentIndex)
 
@@ -187,20 +182,15 @@ alfredDirective.directive "activeList",  () ->
                 prev = scope.subConnections[currentIndex-1]
                 # Checks is prev element?
                 unless prev?
-                    do scope.loadUp
-                    setTimeout (->
-                        current = scope.subConnections[currentIndex]
-                        # Checks is it first element?
-                        if current is scope.filteredConnections[0]
-                            # Returns last order
-                            from = scope.filteredConnections.length - scope.amount
-                            if from > 0
-                                scope.from   = from
-                                scope.offset = scope.filteredConnections.length - 1
-                                scope.setSelectedConnection(scope.amount - 1)
-                            else
-                                scope.setSelectedConnection(scope.filteredConnections.length - 1)
-                            scope.$apply()
-                    ), 0
+                    if _.isEqual(_.first(scope.subConnections), _.first(scope.filteredConnections))
+                        from = scope.filteredConnections.length - scope.amount
+                        if from > 0
+                            scope.from   = from
+                            scope.offset = scope.filteredConnections.length - 1
+                            scope.setSelectedConnection(scope.amount - 1)
+                        else
+                            scope.setSelectedConnection(scope.filteredConnections.length - 1)
+                    else
+                        do scope.loadUp
                 else
                     scope.setSelectedConnection(--currentIndex)

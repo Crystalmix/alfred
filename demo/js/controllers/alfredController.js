@@ -43,34 +43,6 @@
           "hostname": "54.193.87.205",
           "port": 22,
           "ssh_username": "111. ubuntu"
-        }, {
-          "hostname": "55.193.87.205",
-          "port": 22,
-          "ssh_username": "112. ubuntu"
-        }, {
-          "hostname": "56.193.87.205",
-          "port": 22,
-          "ssh_username": "113. ubuntu"
-        }, {
-          "hostname": "57.193.87.205",
-          "port": 22,
-          "ssh_username": "114. ubuntu"
-        }, {
-          "hostname": "58.193.87.205",
-          "port": 22,
-          "ssh_username": "115. ubuntu"
-        }, {
-          "hostname": "59.193.87.205",
-          "port": 22,
-          "ssh_username": "116. ubuntu"
-        }, {
-          "hostname": "58.193.87.205",
-          "port": 22,
-          "ssh_username": "117. ubuntu"
-        }, {
-          "hostname": "59.193.87.205",
-          "port": 22,
-          "ssh_username": "118. ubuntu"
         }
       ];
       this.scope.connections = [
