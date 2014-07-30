@@ -253,9 +253,33 @@
           bindHotkeysCmd();
           return this;
         },
-        link: function(scope, element) {
+        link: function(scope, element, attrs) {
           var $input, checkQuery, initializeParameters, initializeTableParameters, makeRestLists;
           $input = element.find('#alfred-input');
+          if (!angular.isDefined(attrs.onEnterCallback)) {
+            scope.onEnterCallback = function(connection) {
+              $input.trigger("onEnterCallback", connection.connection);
+              return false;
+            };
+          }
+          if (!angular.isDefined(attrs.onAddCallback)) {
+            scope.onAddCallback = function() {
+              $input.trigger("onAddCallback");
+              return false;
+            };
+          }
+          if (!angular.isDefined(attrs.onEditCallback)) {
+            scope.onEditCallback = function(connection) {
+              $input.trigger("onEditCallback", connection.connection);
+              return false;
+            };
+          }
+          if (!angular.isDefined(attrs.onRemoveCallback)) {
+            scope.onRemoveCallback = function(connection) {
+              $input.trigger("onRemoveCallback", connection.connection);
+              return false;
+            };
+          }
           scope.$watch($input, (function(_this) {
             return function() {
               return $input.focus();

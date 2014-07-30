@@ -17,7 +17,16 @@ describe('Unit test alfredDirectives: alfred', function() {
             scope.connections = generateConnectionArray(16);
             scope.histories   = generateHistoryArray(10);
             scope.placeholder = "ssh user@hostname -p port";
-            element           = $compile(angular.element('<alfred connections="connections" histories="histories" amount="6" height-cell="42" placeholder="placeholder"></alfred>'))($rootScope);
+            element           = $compile(angular.element('<alfred connections="connections" \
+                                                                    histories="histories" \
+                                                                    amount="6" \
+                                                                    height-cell="42" \
+                                                                    placeholder="placeholder" \
+                                                                    on-enter-callback="enterConnection(connection)" \
+                                                                    on-add-callback="addConnection()" \
+                                                                    on-edit-callback="editConnection(connection)" \
+                                                                    on-remove-callback="removeConnection(connection)"> \
+                                                            </alfred>'))($rootScope);
             scope.$digest();
         })
     );
@@ -158,6 +167,98 @@ describe('Unit test alfredDirectives: alfred', function() {
             expect(scopeActiveList.filteredConnections.length).toEqual(16);
             expect(scopeActiveList.subConnections.length).toEqual(scopeActiveList.amount);
         });
+
+        it("should trigger parent scope callback",
+            function() {
+                var input = element.find("input"),
+                    isMac = navigator.userAgent.toLowerCase().indexOf('mac') !== -1,
+                    hotKey = isMac ? 'meta' : 'ctrl';
+
+                scope.enterConnection = function(connection) {
+                    expect(connection.id).toBe(2);
+                };
+                scope.addConnection = function(connection) {
+                    expect(connection).not.toBeDefined();
+                };
+
+                scope.editConnection = function(connection) {
+                    expect(connection.id).toBe(2);
+                };
+
+                scope.removeConnection = function(connection) {
+                    expect(connection.id).toBe(2);
+                };
+                scope.connections = generateConnectionArray(16);
+                scope.histories   = generateHistoryArray(10);
+                scope.placeholder = "ssh user@hostname -p port";
+                element           = $compile(angular.element('<alfred connections="connections" \
+                                                                    histories="histories" \
+                                                                    amount="6" \
+                                                                    height-cell="42" \
+                                                                    placeholder="placeholder" \
+                                                                    on-enter-callback="enterConnection(connection)" \
+                                                                    on-add-callback="addConnection()" \
+                                                                    on-edit-callback="editConnection(connection)" \
+                                                                    on-remove-callback="removeConnection(connection)"> \
+                                                              </alfred>'))($rootScope);
+                scope.$digest();
+
+                KeyEvent.simulate('2'.charCodeAt(0), 50, [hotKey]);
+
+                var edit = element.find(".glyphicon-pencil"),
+                    e = jQuery.Event("click");
+                edit.trigger(e);
+
+                var remove = element.find(".glyphicon-trash");
+                e = jQuery.Event("click");
+                remove.trigger(e);
+
+                var add = element.find(".add");
+                e = jQuery.Event("click");
+                add.trigger(e);
+            }
+        );
+
+        it("should trigger jQuery events instead of callback",
+            function() {
+                var isMac = navigator.userAgent.toLowerCase().indexOf('mac') !== -1,
+                    hotKey = isMac ? 'meta' : 'ctrl',
+                    input;
+                element = $compile(angular.element('<alfred connections="connections" histories="histories" amount="6" height-cell="42" placeholder="placeholder"></alfred>'))($rootScope);
+                scope.$digest();
+                input = element.find("#alfred-input");
+
+
+                input.on("onEnterCallback", function(event, connection){
+                    expect(connection.id).toBe(2);
+                    expect(connection.label).toBe('2');
+                });
+                input.on("onEditCallback", function(event, connection){
+                    expect(connection.id).toBe(2);
+                    expect(connection.label).toBe('2');
+                });
+                input.on("onRemoveCallback", function(event, connection){
+                    expect(connection.id).toBe(2);
+                    expect(connection.label).toBe('2');
+                });
+                input.on("onAddCallback", function(event, connection){
+                    expect(connection).not.toBeDefined();
+                });
+                KeyEvent.simulate('3'.charCodeAt(0), 50, [hotKey]);
+
+                var edit = element.find(".glyphicon-pencil"),
+                    e = jQuery.Event("click");
+                edit.trigger(e);
+
+                var remove = element.find(".glyphicon-trash");
+                e = jQuery.Event("click");
+                remove.trigger(e);
+
+                var add = element.find(".add");
+                e = jQuery.Event("click");
+                add.trigger(e);
+            }
+        );
     });
 
 

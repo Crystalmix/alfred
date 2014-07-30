@@ -10,12 +10,12 @@ describe('Unit test filters: alfred', function() {
             scope.prevquery = scope.query = null;
             scope.setSelectedConnection = function(index) {
                 scope.selectedIndex = index;
-            }
+            };
             scope.initializeParameteres = function() {
                 scope.from = 0;
                 scope.setSelectedConnection(0);
-            }
-            scope.changeSlider = function() {}
+            };
+            scope.changeSlider = function() {};
             filter = $injector.get("$filter")("filterConnections");
         })
     );
@@ -29,7 +29,7 @@ describe('Unit test filters: alfred', function() {
                 });
             }
         return arr;
-    }
+    };
 
     it("should get initial list",
         function() {
@@ -44,7 +44,7 @@ describe('Unit test filters: alfred', function() {
     it("should get empty list",
         function() {
             var filteredConnections;
-            scope.connections = scope.connections.slice(0, 1)
+            scope.connections = scope.connections.slice(0, 1);
 
             filteredConnections = filter.call(scope, scope.connections, null, 1, 7);
             expect(filteredConnections.length).toEqual(0);
@@ -56,7 +56,7 @@ describe('Unit test filters: alfred', function() {
 
     it("should initialize parameters if previous query doesn`t match to current",
         function() {
-            scope.query = "2"
+            scope.query = "2";
             filter.call(scope, scope.connections, null, 0, 6);
             expect(scope.from).toEqual(0);
             expect(scope.selectedIndex).toEqual(0);

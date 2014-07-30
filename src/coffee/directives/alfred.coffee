@@ -154,8 +154,29 @@ alfredDirective.directive "alfred", ['hotkeys', 'quickConnectParse', (hotkeys, q
             return @
 
 
-        link: (scope, element) ->
+        link: (scope, element, attrs) ->
             $input = element.find '#alfred-input'
+
+            # If not define attrs, we should trigger jQuery events
+            if not angular.isDefined(attrs.onEnterCallback)
+                scope.onEnterCallback = (connection) ->
+                    $input.trigger "onEnterCallback", connection.connection
+                    return no
+
+            if not angular.isDefined(attrs.onAddCallback)
+                scope.onAddCallback = () ->
+                    $input.trigger "onAddCallback"
+                    return no
+
+            if not angular.isDefined(attrs.onEditCallback)
+                scope.onEditCallback = (connection) ->
+                    $input.trigger "onEditCallback", connection.connection
+                    return no
+
+            if not angular.isDefined(attrs.onRemoveCallback)
+                scope.onRemoveCallback = (connection) ->
+                    $input.trigger "onRemoveCallback", connection.connection
+                    return no
 
             scope.$watch $input, () =>
                 do $input.focus
