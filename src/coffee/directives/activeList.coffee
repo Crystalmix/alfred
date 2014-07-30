@@ -137,7 +137,7 @@ alfredDirective.directive "activeList",  () ->
             scope.upload = ($event, connection) ->
                 do $event.preventDefault
                 do $event.stopPropagation
-                alfredCtrl.upload(connection)
+                alfredCtrl.edit(connection)
 
             scope.remove = ($event, connection) ->
                 do $event.preventDefault
@@ -164,14 +164,16 @@ alfredDirective.directive "activeList",  () ->
                 return {sliderHeight: sliderHeight, sizerHeight: sizerHeight};
 
             activateNextItem = () ->
-                current = element.find(".active")
-                next = current.next()
                 currentIndex = scope.getSelectedConnection()
-                if next.length is 0 or not next[0].id
+                next = scope.subConnections[currentIndex+1]
+                # Checks is next element?
+                unless next?
                     do scope.loadDown
                     setTimeout (->
-                        next = current.next()
-                        if next.length is 0 or not next[0].id
+                        current = scope.subConnections[currentIndex]
+                        # Checks is it last element?
+                        if current is _.last scope.filteredConnections
+                            # Returns initial order
                             scope.from   = 0
                             scope.offset = scope.amount
                             scope.setSelectedConnection(0)
@@ -181,14 +183,16 @@ alfredDirective.directive "activeList",  () ->
                     scope.setSelectedConnection(++currentIndex)
 
             activatePreviousItem = () ->
-                current = element.find(".active")
-                prev = current.prev()
                 currentIndex = scope.getSelectedConnection()
-                if prev.length is 0 or not prev[0].id
+                prev = scope.subConnections[currentIndex-1]
+                # Checks is prev element?
+                unless prev?
                     do scope.loadUp
                     setTimeout (->
-                        prev = current.prev()
-                        if prev.length is 0 or not prev[0].id
+                        current = scope.subConnections[currentIndex]
+                        # Checks is it first element?
+                        if current is scope.filteredConnections[0]
+                            # Returns last order
                             from = scope.filteredConnections.length - scope.amount
                             if from > 0
                                 scope.from   = from

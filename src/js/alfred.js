@@ -562,7 +562,7 @@
         scope.upload = function($event, connection) {
           $event.preventDefault();
           $event.stopPropagation();
-          return alfredCtrl.upload(connection);
+          return alfredCtrl.edit(connection);
         };
         scope.remove = function($event, connection) {
           $event.preventDefault();
@@ -594,15 +594,15 @@
           };
         };
         activateNextItem = function() {
-          var current, currentIndex, next;
-          current = element.find(".active");
-          next = current.next();
+          var currentIndex, next;
           currentIndex = scope.getSelectedConnection();
-          if (next.length === 0 || !next[0].id) {
+          next = scope.subConnections[currentIndex + 1];
+          if (next == null) {
             scope.loadDown();
             return setTimeout((function() {
-              next = current.next();
-              if (next.length === 0 || !next[0].id) {
+              var current;
+              current = scope.subConnections[currentIndex];
+              if (current === _.last(scope.filteredConnections)) {
                 scope.from = 0;
                 scope.offset = scope.amount;
                 scope.setSelectedConnection(0);
@@ -614,16 +614,15 @@
           }
         };
         return activatePreviousItem = function() {
-          var current, currentIndex, prev;
-          current = element.find(".active");
-          prev = current.prev();
+          var currentIndex, prev;
           currentIndex = scope.getSelectedConnection();
-          if (prev.length === 0 || !prev[0].id) {
+          prev = scope.subConnections[currentIndex - 1];
+          if (prev == null) {
             scope.loadUp();
             return setTimeout((function() {
-              var from;
-              prev = current.prev();
-              if (prev.length === 0 || !prev[0].id) {
+              var current, from;
+              current = scope.subConnections[currentIndex];
+              if (current === scope.filteredConnections[0]) {
                 from = scope.filteredConnections.length - scope.amount;
                 if (from > 0) {
                   scope.from = from;
