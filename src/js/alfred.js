@@ -566,7 +566,7 @@
         scope.upload = function($event, connection) {
           $event.preventDefault();
           $event.stopPropagation();
-          return alfredCtrl.edit(connection);
+          return alfredCtrl.upload(connection);
         };
         scope.remove = function($event, connection) {
           $event.preventDefault();
