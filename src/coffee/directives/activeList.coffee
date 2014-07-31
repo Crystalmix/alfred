@@ -114,10 +114,15 @@ alfredDirective.directive "activeList",  () ->
             )
 
             # Listens to parent events 'enter'
-            scope.$on('enter', () ->
-                key = scope.getSelectedConnection()
-                connection = scope.subConnections[key]
-                scope.select connection, key
+            scope.$on('enter', (event, key) ->
+                unless key?
+                    key = scope.getSelectedConnection()
+                if scope.subConnections[key]?
+                    scope.setSelectedConnection(key)
+                    connection = scope.subConnections[key]
+                    scope.select connection, key
+
+
             )
 
             # Listens to parent events 'quickConnect'

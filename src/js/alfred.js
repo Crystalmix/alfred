@@ -187,8 +187,7 @@
                 allowIn: ['INPUT'],
                 callback: function($event) {
                   $event.preventDefault();
-                  $scope.setSelectedConnection(parseInt(String.fromCharCode($event.keyCode)) - 1);
-                  return $scope.$broadcast("enter");
+                  return $scope.$broadcast("enter", parseInt(String.fromCharCode($event.keyCode), 10) - 1);
                 }
               }));
             }
@@ -544,11 +543,16 @@
         scope.$on('setSelectedIndex', function(event, key) {
           return scope.selectedIndex = key;
         });
-        scope.$on('enter', function() {
-          var connection, key;
-          key = scope.getSelectedConnection();
-          connection = scope.subConnections[key];
-          return scope.select(connection, key);
+        scope.$on('enter', function(event, key) {
+          var connection;
+          if (key == null) {
+            key = scope.getSelectedConnection();
+          }
+          if (scope.subConnections[key] != null) {
+            scope.setSelectedConnection(key);
+            connection = scope.subConnections[key];
+            return scope.select(connection, key);
+          }
         });
         scope.$on('quickConnect', function(event, params) {
           scope.quickConnectionsParams = params;

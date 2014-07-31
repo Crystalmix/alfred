@@ -86,8 +86,8 @@ alfredDirective.directive "alfred", ['hotkeys', 'quickConnectParse', (hotkeys, q
                             allowIn: ['INPUT']
                             callback: ($event) ->
                                 do $event.preventDefault
-                                $scope.setSelectedConnection(parseInt(String.fromCharCode($event.keyCode)) - 1)
-                                $scope.$broadcast "enter"
+                                #$scope.setSelectedConnection(parseInt(String.fromCharCode($event.keyCode)) - 1)
+                                $scope.$broadcast "enter", parseInt(String.fromCharCode($event.keyCode), 10) - 1
                         })
 
             # Detects operating system in order to use correct hotkey
