@@ -1,0 +1,18 @@
+
+{{name}}
+<div ng-app="alfred">
+    <div ng-controller="Hello">
+        <span ng-bind="s"></span>
+        <alfred connections="connections"
+                histories="histories"
+                amount="6"
+                height-cell="45"
+                placeholder="placeholder"
+                on-enter-callback="enterConnection(connection)"
+                on-add-callback="addConnection()"
+                on-edit-callback="editConnection(connection)"
+                on-upload-callback="uploadConnection(connection)"
+                on-remove-callback="removeConnection(connection)">
+        </alfred>
+    </div>
+</div>
