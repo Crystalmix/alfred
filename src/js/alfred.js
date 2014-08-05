@@ -27,14 +27,6 @@
    */
 
   alfredDirective.factory('quickConnectParse', function() {
-    var trimArray;
-    trimArray = function(array) {
-      var i, _i, _ref;
-      for (i = _i = 0, _ref = array.length; 0 <= _ref ? _i < _ref : _i > _ref; i = 0 <= _ref ? ++_i : --_i) {
-        array[i] = $.trim(array[i]);
-      }
-      return array;
-    };
     return {
 
       /*

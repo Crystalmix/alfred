@@ -10,13 +10,6 @@
         ssh    -pport     user@host
 ###
 alfredDirective.factory 'quickConnectParse', () ->
-
-    # Trims each element of array
-    trimArray = (array) ->
-        for i in [0...array.length]
-            array[i] = $.trim(array[i])
-        return array;
-
     ###
         Parses parameters
         @param input string that contains one of the possible cases
