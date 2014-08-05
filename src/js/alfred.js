@@ -42,50 +42,37 @@
           @param input string that contains one of the possible cases
        */
       parse: function(input) {
-        var inputArray, leftInputArray, options, rightInputArray;
+        var ARGS, cmd, options, parser, query;
         options = {};
-        if (input.indexOf('ssh') !== -1) {
-          inputArray = input.split('ssh');
-          if (inputArray.length === 2 && inputArray[0] === "") {
-            input = inputArray[1].trim();
-            if (input && input.length > 2) {
-              inputArray = _.compact(input.split("@"));
-              if (inputArray.length === 2) {
-                leftInputArray = inputArray[0].trim();
-                rightInputArray = inputArray[1].trim();
-                leftInputArray = trimArray(_.compact(leftInputArray.split(" ")));
-                rightInputArray = trimArray(_.compact(rightInputArray.split(" ")));
-                if (leftInputArray.length >= 2 && leftInputArray.indexOf('-p') !== -1) {
-                  if (leftInputArray.length === 3 && leftInputArray[0] === "-p") {
-                    options.port = parseInt(leftInputArray[1]);
-                  } else if (leftInputArray.length === 2 && leftInputArray[0].indexOf('-p') === 0) {
-                    options.port = parseInt(leftInputArray[0].slice(2));
-                  } else {
-                    return {};
-                  }
-                } else if (leftInputArray.length >= 2 && leftInputArray.indexOf('-p') === -1) {
-                  return {};
-                }
-                options.ssh_username = leftInputArray[leftInputArray.length - 1];
-                if (rightInputArray.length >= 2 && rightInputArray.indexOf("-p") !== -1) {
-                  if (rightInputArray.length === 2 && rightInputArray[1].indexOf("-p") === 0) {
-                    options.port = parseInt(rightInputArray[1].slice(2));
-                  } else if (rightInputArray.length === 3 && rightInputArray[1] === "-p") {
-                    options.port = parseInt(rightInputArray[2]);
-                  } else {
-                    return {};
-                  }
-                } else if (rightInputArray.length >= 2 && rightInputArray.indexOf("-p") === -1) {
-                  return {};
-                }
-                options.hostname = rightInputArray[0];
-                if (!options.port) {
-                  options.port = 22;
-                }
-                return options;
-              }
-            }
+        cmd = null;
+        ARGS = [['-p', '--port [NUMBER]', 'Port to connect to on the remote host.']];
+        parser = new optparse.OptionParser(ARGS);
+        parser.on('port', function(name, value) {
+          return options.port = value;
+        });
+        parser.on(0, function(value) {
+          return cmd = value;
+        });
+        parser.on(1, function(value) {
+          value = value.split('@');
+          if (value.length === 2) {
+            options.ssh_username = value[0];
+            return options.hostname = value[1];
           }
+        });
+        parser.on(2, function(value) {
+          return options.other_args = value;
+        });
+        query = input.replace(/\s+@/g, '@').replace(/@\s+/g, '@').split(/\s+/);
+        parser.parse(query);
+        if (cmd === 'ssh') {
+          if (!options.ssh_username || !options.hostname || (options.other_args != null)) {
+            return {};
+          }
+          if (options.port == null) {
+            options.port = 22;
+          }
+          return options;
         }
         return {};
       }

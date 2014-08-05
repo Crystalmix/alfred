@@ -23,41 +23,37 @@ alfredDirective.factory 'quickConnectParse', () ->
     ###
     parse : (input) ->
         options = {}
-        if input.indexOf('ssh') isnt -1
-            inputArray = input.split('ssh')
-            if inputArray.length is 2 and inputArray[0] is ""
-                input = inputArray[1].trim()
-                if input and input.length > 2
-                    inputArray = _.compact(input.split("@"))
-                    if inputArray.length is 2
-                        leftInputArray  = inputArray[0].trim()
-                        rightInputArray = inputArray[1].trim()
-                        leftInputArray  = trimArray(_.compact(leftInputArray.split(" ")))
-                        rightInputArray = trimArray(_.compact(rightInputArray.split(" ")))
 
-                        if leftInputArray.length >= 2 and leftInputArray.indexOf('-p') isnt -1
-                            if leftInputArray.length is 3 and leftInputArray[0] is "-p"
-                                options.port = parseInt(leftInputArray[1])
-                            else if leftInputArray.length is 2 and leftInputArray[0].indexOf('-p') is 0
-                                options.port = parseInt(leftInputArray[0].slice(2))
-                            else
-                                return {}
-                        else if leftInputArray.length >= 2 and leftInputArray.indexOf('-p') is -1
-                            return {}
-                        options.ssh_username = leftInputArray[leftInputArray.length - 1]
+        cmd = null
 
-                        if rightInputArray.length >=2 and rightInputArray.indexOf("-p") isnt -1
-                            if rightInputArray.length is 2 and rightInputArray[1].indexOf("-p") is 0
-                                options.port = parseInt(rightInputArray[1].slice(2))
-                            else if rightInputArray.length is 3 and rightInputArray[1] is "-p"
-                                options.port = parseInt(rightInputArray[2])
-                            else
-                                return {}
-                        else if rightInputArray.length >=2 and rightInputArray.indexOf("-p") is -1
-                            return {}
-                        options.hostname = rightInputArray[0]
-                        if not options.port
-                            options.port = 22
+        ARGS = [
+            ['-p', '--port [NUMBER]', 'Port to connect to on the remote host.'],
+        ]
 
-                        return options
+        parser = new optparse.OptionParser(ARGS)
+
+        parser.on 'port', (name, value) ->
+            options.port = value
+
+        parser.on 0, (value) ->
+            cmd = value
+
+        parser.on 1, (value) ->
+            value = value.split('@')
+            if value.length is 2
+                options.ssh_username = value[0]
+                options.hostname = value[1]
+
+        parser.on 2, (value) ->
+            options.other_args = value
+
+        query = input.replace(/\s+@/g, '@').replace(/@\s+/g, '@').split(/\s+/) # remove duplicate white spaces in a string
+        parser.parse(query)
+
+        if cmd is 'ssh'
+            if not options.ssh_username or not options.hostname or options.other_args?
+                return {}
+            options.port = 22 if not options.port?
+            return options
+
         return {}
