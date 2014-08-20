@@ -33,7 +33,7 @@ describe('Unit test filters: alfred', function() {
 
     it("should get initial list",
         function() {
-            var filteredConnections = filter.call(scope, scope.connections, null, 0, 6);
+            var filteredConnections = filter.call(scope, scope.connections, null, 0, 6, scope);
             expect(filteredConnections.length).toEqual(6);
             expect(filteredConnections[0].label).toEqual("1");
             expect(scope.from).not.toBeDefined();
@@ -46,10 +46,10 @@ describe('Unit test filters: alfred', function() {
             var filteredConnections;
             scope.connections = scope.connections.slice(0, 1);
 
-            filteredConnections = filter.call(scope, scope.connections, null, 1, 7);
+            filteredConnections = filter.call(scope, scope.connections, null, 1, 7, scope);
             expect(filteredConnections.length).toEqual(0);
 
-            filteredConnections = filter.call(scope, scope.connections, null, 0, 6);
+            filteredConnections = filter.call(scope, scope.connections, null, 0, 6, scope);
             expect(filteredConnections.length).toEqual(1);
         }
     );
@@ -57,7 +57,7 @@ describe('Unit test filters: alfred', function() {
     it("should initialize parameters if previous query doesn`t match to current",
         function() {
             scope.query = "2";
-            filter.call(scope, scope.connections, null, 0, 6);
+            filter.call(scope, scope.connections, null, 0, 6, scope);
             expect(scope.from).toEqual(0);
             expect(scope.selectedIndex).toEqual(0);
             expect(scope.prevquery).toEqual("2");
