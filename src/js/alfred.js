@@ -332,7 +332,7 @@
               } else {
                 return scope.$broadcast("quickConnect", null);
               }
-            }), 0);
+            }), 50);
           };
           initializeParameters();
           initializeTableParameters();

@@ -249,7 +249,7 @@ alfredDirective.directive "alfred", ['hotkeys', 'quickConnectParse', (hotkeys, q
                         scope.$broadcast "quickConnect" , scope.query   # If it is quick connect we should add element with parameters to the list
                     else
                         scope.$broadcast "quickConnect" , null
-                ), 0
+                ), 50
 
 
             do initializeParameters
