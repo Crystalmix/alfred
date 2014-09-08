@@ -18,7 +18,7 @@ alfredDirective.directive "alfred", ['hotkeys', 'quickConnectParse', (hotkeys, q
             onUploadCallback:   "&"
             onRemoveCallback:   "&"
 
-        controller: ($scope) ->
+        controller: ($scope, $element) ->
             $scope.query         = null
             $scope.entities      = $scope.connections.concat $scope.histories
             $scope.selectedIndex = 0
@@ -26,6 +26,21 @@ alfredDirective.directive "alfred", ['hotkeys', 'quickConnectParse', (hotkeys, q
             $scope.setSelectedConnection = (index) ->
                 $scope.selectedIndex = index
                 $scope.$broadcast "setSelectedIndex", index
+
+            $scope.listener = new keypress.Listener($element[0], {
+                is_unordered: true,
+                prevent_repeat: true
+            })
+
+            $scope.listener.simple_combo ['left'], =>
+                if $scope.connections.length
+                    $scope.isLeftActive  = yes
+                    $scope.isRightActive = no
+
+            $scope.listener.simple_combo ['right'], =>
+                if $scope.connections.length
+                    $scope.isLeftActive  = no
+                    $scope.isRightActive = yes
 
             # Binds hotkeys to the scope
             hotkeys.bindTo($scope)
@@ -39,24 +54,6 @@ alfredDirective.directive "alfred", ['hotkeys', 'quickConnectParse', (hotkeys, q
                             @enterCallback connection
                         else
                             $scope.$broadcast "enter"
-                })
-                .add({
-                    combo: 'left'
-                    description: 'Make active left list'
-                    allowIn: ['INPUT']
-                    callback: () ->
-                        if $scope.connections.length
-                            $scope.isLeftActive  = yes
-                            $scope.isRightActive = no
-                })
-                .add({
-                    combo: 'right'
-                    description: 'Make active right list'
-                    allowIn: ['INPUT']
-                    callback: () ->
-                        if $scope.histories.length
-                            $scope.isLeftActive  = no
-                            $scope.isRightActive = yes
                 })
                 .add({
                     combo: 'up'

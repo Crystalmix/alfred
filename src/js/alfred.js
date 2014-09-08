@@ -94,7 +94,7 @@
           onUploadCallback: "&",
           onRemoveCallback: "&"
         },
-        controller: function($scope) {
+        controller: function($scope, $element) {
           var bindHotkeysCmd, detectCtrlOrCmd;
           $scope.query = null;
           $scope.entities = $scope.connections.concat($scope.histories);
@@ -103,6 +103,26 @@
             $scope.selectedIndex = index;
             return $scope.$broadcast("setSelectedIndex", index);
           };
+          $scope.listener = new keypress.Listener($element[0], {
+            is_unordered: true,
+            prevent_repeat: true
+          });
+          $scope.listener.simple_combo(['left'], (function(_this) {
+            return function() {
+              if ($scope.connections.length) {
+                $scope.isLeftActive = true;
+                return $scope.isRightActive = false;
+              }
+            };
+          })(this));
+          $scope.listener.simple_combo(['right'], (function(_this) {
+            return function() {
+              if ($scope.connections.length) {
+                $scope.isLeftActive = false;
+                return $scope.isRightActive = true;
+              }
+            };
+          })(this));
           hotkeys.bindTo($scope).add({
             combo: 'return',
             description: 'Make active left list',
@@ -118,26 +138,6 @@
                 }
               };
             })(this)
-          }).add({
-            combo: 'left',
-            description: 'Make active left list',
-            allowIn: ['INPUT'],
-            callback: function() {
-              if ($scope.connections.length) {
-                $scope.isLeftActive = true;
-                return $scope.isRightActive = false;
-              }
-            }
-          }).add({
-            combo: 'right',
-            description: 'Make active right list',
-            allowIn: ['INPUT'],
-            callback: function() {
-              if ($scope.histories.length) {
-                $scope.isLeftActive = false;
-                return $scope.isRightActive = true;
-              }
-            }
           }).add({
             combo: 'up',
             description: 'Make active element above',
