@@ -57,19 +57,25 @@ alfredDirective.directive "alfred", ['hotkeys', 'quickConnectParse', (hotkeys, q
                     $scope.$broadcast "enter"
 
             # Binds hotkeys cmd+[1-scope.amount]
+#            bindHotkeysCmd = () ->
+#                for i in [1..$scope.amount]
+#                    combo = "#{$scope.cmdSystemHotkey}+#{i}"
+#                    hotkeys.bindTo($scope)
+#                        .add({
+#                            combo: combo
+#                            description: 'Make active element ' + (i+1)
+#                            allowIn: ['INPUT']
+#                            callback: ($event) ->
+#                                do $event.preventDefault
+#                                #$scope.setSelectedConnection(parseInt(String.fromCharCode($event.keyCode)) - 1)
+#                                $scope.$broadcast "enter", parseInt(String.fromCharCode($event.keyCode), 10) - 1
+#                        })
+
             bindHotkeysCmd = () ->
                 for i in [1..$scope.amount]
-                    combo = "#{$scope.cmdSystemHotkey}+#{i}"
-                    hotkeys.bindTo($scope)
-                        .add({
-                            combo: combo
-                            description: 'Make active element ' + (i+1)
-                            allowIn: ['INPUT']
-                            callback: ($event) ->
-                                do $event.preventDefault
-                                #$scope.setSelectedConnection(parseInt(String.fromCharCode($event.keyCode)) - 1)
-                                $scope.$broadcast "enter", parseInt(String.fromCharCode($event.keyCode), 10) - 1
-                        })
+                    combo = "meta #{i}"
+                    $scope.listener.simple_combo combo, ($event) ->
+                        $scope.$broadcast "enter", parseInt(String.fromCharCode($event.keyCode), 10) - 1
 
             # Detects operating system in order to use correct hotkey
             detectCtrlOrCmd = () ->

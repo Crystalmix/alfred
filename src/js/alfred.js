@@ -148,15 +148,9 @@
             var combo, i, _i, _ref, _results;
             _results = [];
             for (i = _i = 1, _ref = $scope.amount; 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
-              combo = "" + $scope.cmdSystemHotkey + "+" + i;
-              _results.push(hotkeys.bindTo($scope).add({
-                combo: combo,
-                description: 'Make active element ' + (i + 1),
-                allowIn: ['INPUT'],
-                callback: function($event) {
-                  $event.preventDefault();
-                  return $scope.$broadcast("enter", parseInt(String.fromCharCode($event.keyCode), 10) - 1);
-                }
+              combo = "meta " + i;
+              _results.push($scope.listener.simple_combo(combo, function($event) {
+                return $scope.$broadcast("enter", parseInt(String.fromCharCode($event.keyCode), 10) - 1);
               }));
             }
             return _results;

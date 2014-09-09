@@ -641,17 +641,27 @@ describe('Unit test alfredDirectives: alfred', function() {
             function() {
                 var scopeDirective = element.isolateScope(),
                     isMac = navigator.userAgent.toLowerCase().indexOf('mac') !== -1,
-                    hotKey = isMac ? 'meta' : 'ctrl';
+                    hotKey = isMac ? 'cmd' : 'ctrl';
                 expect(scopeDirective.selectedIndex).toBe(0);
-                KeyEvent.simulate('2'.charCodeAt(0), 50, [hotKey]);
+                on_keydown(hotKey);
+                on_keydown('2');
+                scopeDirective.$digest();
                 expect(scopeDirective.selectedIndex).toBe(1);
-                KeyEvent.simulate('3'.charCodeAt(0), 51, [hotKey]);
+                on_keydown(hotKey);
+                on_keydown('3');
+                scopeDirective.$digest();
                 expect(scopeDirective.selectedIndex).toBe(2);
-                KeyEvent.simulate('4'.charCodeAt(0), 52, [hotKey]);
+                on_keydown(hotKey);
+                on_keydown('4');
+                scopeDirective.$digest();
                 expect(scopeDirective.selectedIndex).toBe(3);
-                KeyEvent.simulate('5'.charCodeAt(0), 53, [hotKey]);
+                on_keydown(hotKey);
+                on_keydown('5');
+                scopeDirective.$digest();
                 expect(scopeDirective.selectedIndex).toBe(4);
-                KeyEvent.simulate('6'.charCodeAt(0), 54, [hotKey]);
+                on_keydown(hotKey);
+                on_keydown('6');
+                scopeDirective.$digest();
                 expect(scopeDirective.selectedIndex).toBe(5);
             }
         );
