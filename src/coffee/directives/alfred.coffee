@@ -42,35 +42,19 @@ alfredDirective.directive "alfred", ['hotkeys', 'quickConnectParse', (hotkeys, q
                     $scope.isLeftActive  = no
                     $scope.isRightActive = yes
 
-            # Binds hotkeys to the scope
-            hotkeys.bindTo($scope)
-                .add({
-                    combo: 'return'
-                    description: 'Make active left list'
-                    allowIn: ['INPUT']
-                    callback: () =>
-                        if $scope.query and $scope.query.indexOf("ssh") isnt -1
-                            connection = quickConnectParse.parse $scope.query
-                            @enterCallback connection
-                        else
-                            $scope.$broadcast "enter"
-                })
-                .add({
-                    combo: 'up'
-                    description: 'Make active element above'
-                    allowIn: ['INPUT']
-                    callback: ($event) ->
-                        do $event.preventDefault
-                        $scope.$broadcast "arrow", "up"
-                })
-                .add({
-                    combo: 'down'
-                    description: 'Make active element above'
-                    allowIn: ['INPUT']
-                    callback: ($event) ->
-                        do $event.preventDefault
-                        $scope.$broadcast "arrow", "down"
-                })
+            $scope.listener.simple_combo ['up'], =>
+                $scope.$broadcast "arrow", "up"
+
+            $scope.listener.simple_combo ['down'], =>
+                $scope.$broadcast "arrow", "down"
+
+
+            $scope.listener.simple_combo ['enter'], =>
+                if $scope.query and $scope.query.indexOf("ssh") isnt -1
+                    connection = quickConnectParse.parse $scope.query
+                    @enterCallback connection
+                else
+                    $scope.$broadcast "enter"
 
             # Binds hotkeys cmd+[1-scope.amount]
             bindHotkeysCmd = () ->

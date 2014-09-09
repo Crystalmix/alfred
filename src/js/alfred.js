@@ -123,38 +123,27 @@
               }
             };
           })(this));
-          hotkeys.bindTo($scope).add({
-            combo: 'return',
-            description: 'Make active left list',
-            allowIn: ['INPUT'],
-            callback: (function(_this) {
-              return function() {
-                var connection;
-                if ($scope.query && $scope.query.indexOf("ssh") !== -1) {
-                  connection = quickConnectParse.parse($scope.query);
-                  return _this.enterCallback(connection);
-                } else {
-                  return $scope.$broadcast("enter");
-                }
-              };
-            })(this)
-          }).add({
-            combo: 'up',
-            description: 'Make active element above',
-            allowIn: ['INPUT'],
-            callback: function($event) {
-              $event.preventDefault();
+          $scope.listener.simple_combo(['up'], (function(_this) {
+            return function() {
               return $scope.$broadcast("arrow", "up");
-            }
-          }).add({
-            combo: 'down',
-            description: 'Make active element above',
-            allowIn: ['INPUT'],
-            callback: function($event) {
-              $event.preventDefault();
+            };
+          })(this));
+          $scope.listener.simple_combo(['down'], (function(_this) {
+            return function() {
               return $scope.$broadcast("arrow", "down");
-            }
-          });
+            };
+          })(this));
+          $scope.listener.simple_combo(['enter'], (function(_this) {
+            return function() {
+              var connection;
+              if ($scope.query && $scope.query.indexOf("ssh") !== -1) {
+                connection = quickConnectParse.parse($scope.query);
+                return _this.enterCallback(connection);
+              } else {
+                return $scope.$broadcast("enter");
+              }
+            };
+          })(this));
           bindHotkeysCmd = function() {
             var combo, i, _i, _ref, _results;
             _results = [];
