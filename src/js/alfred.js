@@ -83,6 +83,7 @@
         replace: true,
         templateUrl: "src/templates/alfred.html",
         scope: {
+          id: "=",
           connections: "=",
           histories: "=",
           amount: "=",
@@ -255,6 +256,11 @@
               return false;
             };
           }
+          scope.$on("setFocus", function(event, id) {
+            if (id === scope.id) {
+              return setTimeout(scope.setFocusAtInput, 0);
+            }
+          });
           scope.setFocusAtInput = function() {
             $input.focus();
             return false;

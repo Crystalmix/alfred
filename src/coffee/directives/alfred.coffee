@@ -7,6 +7,7 @@ alfredDirective.directive "alfred", ['hotkeys', 'quickConnectParse', (hotkeys, q
         replace: yes
         templateUrl: "src/templates/alfred.html"
         scope:
+            id:                 "="
             connections:        "="
             histories:          "="
             amount:             "="
@@ -163,6 +164,10 @@ alfredDirective.directive "alfred", ['hotkeys', 'quickConnectParse', (hotkeys, q
                 scope.onRemoveCallback = (connection) ->
                     $input.trigger "onRemoveCallback", connection.connection
                     return no
+
+            scope.$on "setFocus", (event, id) ->
+                if id is scope.id
+                    setTimeout scope.setFocusAtInput, 0
 
             scope.setFocusAtInput = () ->
                 do $input.focus
