@@ -2,7 +2,7 @@
 ###
     The alfred directive indicates input field, determines display table or list
 ###
-alfredDirective.directive "alfred", ['hotkeys', 'quickConnectParse', (hotkeys, quickConnectParse) ->
+alfredDirective.directive "alfred", ["quickConnectParse", (quickConnectParse) ->
         restrict: "E"
         replace: yes
         templateUrl: "src/templates/alfred.html"
@@ -34,14 +34,24 @@ alfredDirective.directive "alfred", ['hotkeys', 'quickConnectParse', (hotkeys, q
             })
 
             $scope.listener.simple_combo ['left'], =>
-                if $scope.connections.length
+                if $scope.isTable and $scope.connections.length
                     $scope.isLeftActive  = yes
                     $scope.isRightActive = no
+                else unless $scope.isTable
+                    return yes
 
             $scope.listener.simple_combo ['right'], =>
-                if $scope.connections.length
+                if $scope.isTable and $scope.histories.length
                     $scope.isLeftActive  = no
                     $scope.isRightActive = yes
+                else unless $scope.isTable
+                    return yes
+
+            $scope.listener.simple_combo ['tab'], =>
+                if $scope.isTable and $scope.connections.length and $scope.histories.length
+                    $scope.isLeftActive  = not $scope.isLeftActive
+                    $scope.isRightActive = not $scope.isRightActive
+                    return no
 
             $scope.listener.simple_combo ['up'], =>
                 $scope.$broadcast "arrow", "up"

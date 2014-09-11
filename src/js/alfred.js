@@ -2,17 +2,7 @@
   'use strict';
   var alfredDirective;
 
-  alfredDirective = angular.module("alfredDirective", ['cfp.hotkeys']);
-
-  alfredDirective.config(function(hotkeysProvider) {
-
-    /*
-        'hotkeysProvider' is provider from angular.hotkeys.
-    
-        Switch default cheatsheet: hotkey '?'
-     */
-    return hotkeysProvider.includeCheatSheet = true;
-  });
+  alfredDirective = angular.module("alfredDirective", []);
 
 
   /*
@@ -77,7 +67,7 @@
    */
 
   alfredDirective.directive("alfred", [
-    'hotkeys', 'quickConnectParse', function(hotkeys, quickConnectParse) {
+    "quickConnectParse", function(quickConnectParse) {
       return {
         restrict: "E",
         replace: true,
@@ -110,17 +100,30 @@
           });
           $scope.listener.simple_combo(['left'], (function(_this) {
             return function() {
-              if ($scope.connections.length) {
+              if ($scope.isTable && $scope.connections.length) {
                 $scope.isLeftActive = true;
                 return $scope.isRightActive = false;
+              } else if (!$scope.isTable) {
+                return true;
               }
             };
           })(this));
           $scope.listener.simple_combo(['right'], (function(_this) {
             return function() {
-              if ($scope.connections.length) {
+              if ($scope.isTable && $scope.histories.length) {
                 $scope.isLeftActive = false;
                 return $scope.isRightActive = true;
+              } else if (!$scope.isTable) {
+                return true;
+              }
+            };
+          })(this));
+          $scope.listener.simple_combo(['tab'], (function(_this) {
+            return function() {
+              if ($scope.isTable && $scope.connections.length && $scope.histories.length) {
+                $scope.isLeftActive = !$scope.isLeftActive;
+                $scope.isRightActive = !$scope.isRightActive;
+                return false;
               }
             };
           })(this));
