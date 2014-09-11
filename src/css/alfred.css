@@ -1,3 +1,7 @@
+.alfred-widget .table {
+  display: inline-table;
+  width: 100%;
+}
 .alfred-widget .menu {
   list-style: none;
   border-bottom: 0.1em solid black;
@@ -24,6 +28,7 @@
 .alfred-widget .alfred {
   width: 70%;
   margin: 0 auto;
+  margin-top: 100px;
 }
 .alfred-widget .table-data {
   vertical-align: top;

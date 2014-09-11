@@ -57,20 +57,6 @@ alfredDirective.directive "alfred", ['hotkeys', 'quickConnectParse', (hotkeys, q
                     $scope.$broadcast "enter"
 
             # Binds hotkeys cmd+[1-scope.amount]
-#            bindHotkeysCmd = () ->
-#                for i in [1..$scope.amount]
-#                    combo = "#{$scope.cmdSystemHotkey}+#{i}"
-#                    hotkeys.bindTo($scope)
-#                        .add({
-#                            combo: combo
-#                            description: 'Make active element ' + (i+1)
-#                            allowIn: ['INPUT']
-#                            callback: ($event) ->
-#                                do $event.preventDefault
-#                                #$scope.setSelectedConnection(parseInt(String.fromCharCode($event.keyCode)) - 1)
-#                                $scope.$broadcast "enter", parseInt(String.fromCharCode($event.keyCode), 10) - 1
-#                        })
-
             bindHotkeysCmd = () ->
                 for i in [1..$scope.amount]
                     combo = "meta #{i}"
@@ -177,6 +163,10 @@ alfredDirective.directive "alfred", ['hotkeys', 'quickConnectParse', (hotkeys, q
                 scope.onRemoveCallback = (connection) ->
                     $input.trigger "onRemoveCallback", connection.connection
                     return no
+
+            scope.setFocusAtInput = () ->
+                do $input.focus
+                return no
 
             scope.$watch $input, () =>
                 do $input.focus

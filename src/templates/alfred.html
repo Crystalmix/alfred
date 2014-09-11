@@ -1,4 +1,4 @@
-<div class="alfred-widget">
+<div class="alfred-widget" ng-click="setFocusAtInput()">
     <div class="alfred">
         <input type="text"
                id="alfred-input"
@@ -9,7 +9,7 @@
 
         <div ng-if="connections.length || histories.length">
 
-            <div ng-if="isTable">
+            <div ng-if="isTable" class="table">
                 <div id="left" ng-class="{ active: isLeftActive }">
                     <div class="header">
                         <span>Hosts</span>
