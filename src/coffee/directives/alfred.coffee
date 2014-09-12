@@ -7,7 +7,7 @@ alfredDirective.directive "alfred", ["quickConnectParse", (quickConnectParse) ->
         replace: yes
         templateUrl: "src/templates/alfred.html"
         scope:
-            id:                 "="
+            uid:                "="
             connections:        "="
             histories:          "="
             amount:             "="
@@ -29,11 +29,12 @@ alfredDirective.directive "alfred", ["quickConnectParse", (quickConnectParse) ->
                 $scope.$broadcast "setSelectedIndex", index
 
             $scope.listener = new keypress.Listener($element[0], {
-                is_unordered: true,
-                prevent_repeat: true
+                is_unordered: yes
+                is_exclusive: yes
+                is_solitary: yes
             })
 
-            $scope.listener.simple_combo ['left'], =>
+            $scope.listener.simple_combo ['left'], () =>
                 if $scope.isTable and $scope.connections.length
                     $scope.isLeftActive  = yes
                     $scope.isRightActive = no
@@ -175,8 +176,8 @@ alfredDirective.directive "alfred", ["quickConnectParse", (quickConnectParse) ->
                     $input.trigger "onRemoveCallback", connection.connection
                     return no
 
-            scope.$on "setFocus", (event, id) ->
-                if id is scope.id
+            scope.$on "setFocus", (event, uid) ->
+                if uid is scope.uid
                     setTimeout scope.setFocusAtInput, 0
 
             scope.setFocusAtInput = () ->
