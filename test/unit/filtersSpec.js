@@ -2,7 +2,7 @@ describe('Unit test filters: alfred', function() {
     var scope = {},
         filter;
 
-    beforeEach(module('cfp.hotkeys', 'alfredDirective'));
+    beforeEach(module('alfredDirective'));
 
     beforeEach(inject(
         function($injector) {

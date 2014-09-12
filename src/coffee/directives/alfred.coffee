@@ -31,37 +31,36 @@ alfredDirective.directive "alfred", ["quickConnectParse", (quickConnectParse) ->
             $scope.listener = new keypress.Listener($element[0], {
                 is_unordered: yes
                 is_exclusive: yes
-                is_solitary: yes
+                is_solitary:  yes
             })
 
-            $scope.listener.simple_combo ['left'], () =>
+            $scope.listener.simple_combo 'left', =>
                 if $scope.isTable and $scope.connections.length
                     $scope.isLeftActive  = yes
                     $scope.isRightActive = no
-                else unless $scope.isTable
+                else unless $scope.isTable is no
                     return yes
 
-            $scope.listener.simple_combo ['right'], =>
+            $scope.listener.simple_combo 'right', =>
                 if $scope.isTable and $scope.histories.length
                     $scope.isLeftActive  = no
                     $scope.isRightActive = yes
-                else unless $scope.isTable
+                else unless $scope.isTable is no
                     return yes
 
-            $scope.listener.simple_combo ['tab'], =>
-                if $scope.isTable and $scope.connections.length and $scope.histories.length
+            $scope.listener.simple_combo 'tab', =>
+                if $scope.isTable is yes and $scope.connections.length and $scope.histories.length
                     $scope.isLeftActive  = not $scope.isLeftActive
                     $scope.isRightActive = not $scope.isRightActive
                     return no
 
-            $scope.listener.simple_combo ['up'], =>
+            $scope.listener.simple_combo 'up', =>
                 $scope.$broadcast "arrow", "up"
 
-            $scope.listener.simple_combo ['down'], =>
+            $scope.listener.simple_combo 'down', =>
                 $scope.$broadcast "arrow", "down"
 
-
-            $scope.listener.simple_combo ['enter'], =>
+            $scope.listener.simple_combo 'enter', =>
                 if $scope.query and $scope.query.indexOf("ssh") isnt -1
                     connection = quickConnectParse.parse $scope.query
                     @enterCallback connection
@@ -244,9 +243,7 @@ alfredDirective.directive "alfred", ["quickConnectParse", (quickConnectParse) ->
                         scope.$broadcast "quickConnect" , null
                 ), 50
 
-
             do initializeParameters
             do initializeTableParameters
             do makeRestLists
-
 ]

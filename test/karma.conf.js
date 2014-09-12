@@ -17,8 +17,6 @@ module.exports = function(config){
             'bower_components/angular-mocks/angular-mocks.js',
             'bower_components/mousetrap/tests/libs/key-event.js',
             'bower_components/Keypress/keypress.js',
-            'bower_components/mousetrap/mousetrap.js',
-            'bower_components/angular-hotkeys/src/hotkeys.js',
             'bower_components/optparse/lib/optparse.js',
             'src/js/*.js',
             'test/unit/*.js',

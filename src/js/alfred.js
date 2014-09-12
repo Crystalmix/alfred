@@ -99,48 +99,46 @@
             is_exclusive: true,
             is_solitary: true
           });
-          $scope.listener.simple_combo(['left'], (function(_this) {
+          $scope.listener.simple_combo('left', (function(_this) {
             return function() {
-              console.log("LEFT");
               if ($scope.isTable && $scope.connections.length) {
                 $scope.isLeftActive = true;
                 return $scope.isRightActive = false;
-              } else if (!$scope.isTable) {
+              } else if ($scope.isTable !== false) {
                 return true;
               }
             };
           })(this));
-          $scope.listener.simple_combo(['right'], (function(_this) {
+          $scope.listener.simple_combo('right', (function(_this) {
             return function() {
-              console.log("Right");
               if ($scope.isTable && $scope.histories.length) {
                 $scope.isLeftActive = false;
                 return $scope.isRightActive = true;
-              } else if (!$scope.isTable) {
+              } else if ($scope.isTable !== false) {
                 return true;
               }
             };
           })(this));
-          $scope.listener.simple_combo(['tab'], (function(_this) {
+          $scope.listener.simple_combo('tab', (function(_this) {
             return function() {
-              if ($scope.isTable && $scope.connections.length && $scope.histories.length) {
+              if ($scope.isTable === true && $scope.connections.length && $scope.histories.length) {
                 $scope.isLeftActive = !$scope.isLeftActive;
                 $scope.isRightActive = !$scope.isRightActive;
                 return false;
               }
             };
           })(this));
-          $scope.listener.simple_combo(['up'], (function(_this) {
+          $scope.listener.simple_combo('up', (function(_this) {
             return function() {
               return $scope.$broadcast("arrow", "up");
             };
           })(this));
-          $scope.listener.simple_combo(['down'], (function(_this) {
+          $scope.listener.simple_combo('down', (function(_this) {
             return function() {
               return $scope.$broadcast("arrow", "down");
             };
           })(this));
-          $scope.listener.simple_combo(['enter'], (function(_this) {
+          $scope.listener.simple_combo('enter', (function(_this) {
             return function() {
               var connection;
               if ($scope.query && $scope.query.indexOf("ssh") !== -1) {

@@ -3,7 +3,7 @@ describe('Unit test filters: alfred', function() {
         query,
         response;
 
-    beforeEach(module('cfp.hotkeys', 'alfredDirective'));
+    beforeEach(module('alfredDirective'));
 
     beforeEach(inject(
         function($injector) {

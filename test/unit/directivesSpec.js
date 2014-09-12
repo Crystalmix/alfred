@@ -114,7 +114,7 @@ describe('Unit test alfredDirectives: alfred', function() {
 
     SHIFT = false;
 
-    beforeEach(module('cfp.hotkeys', 'alfredDirective'));
+    beforeEach(module('alfredDirective'));
 
     beforeEach(inject(
         function(_$compile_, _$rootScope_) {
@@ -347,20 +347,20 @@ describe('Unit test alfredDirectives: alfred', function() {
                 var input = element.find("input"),
                     isMac = navigator.userAgent.toLowerCase().indexOf('mac') !== -1,
                     hotKey = isMac ? 'meta' : 'ctrl';
-
+                var scopeDirective = element.isolateScope();
                 scope.enterConnection = function(connection) {
-                    expect(connection.id).toBe(2);
+                    expect(connection.id).toBe(1);
                 };
                 scope.addConnection = function(connection) {
                     expect(connection).not.toBeDefined();
                 };
 
                 scope.editConnection = function(connection) {
-                    expect(connection.id).toBe(2);
+                    expect(connection.id).toBe(1);
                 };
 
                 scope.removeConnection = function(connection) {
-                    expect(connection.id).toBe(2);
+                    expect(connection.id).toBe(1);
                 };
 
                 scope.uploadConnection = function(connection) {
@@ -382,8 +382,6 @@ describe('Unit test alfredDirectives: alfred', function() {
                                                               </alfred>'))($rootScope);
                 scope.$digest();
 
-                KeyEvent.simulate('2'.charCodeAt(0), 50, [hotKey]);
-
                 var edit = element.find(".glyphicon-pencil"),
                     e = jQuery.Event("click");
                 edit.trigger(e);
@@ -396,7 +394,8 @@ describe('Unit test alfredDirectives: alfred', function() {
                 e = jQuery.Event("click");
                 add.trigger(e);
 
-                KeyEvent.simulate(0, 39);
+                press_key("rigth");
+                scopeDirective.$digest();
                 var upload = element.find(".glyphicon-upload");
                 e = jQuery.Event("click");
                 upload.trigger(e);
@@ -411,6 +410,8 @@ describe('Unit test alfredDirectives: alfred', function() {
                 element = $compile(angular.element('<alfred connections="connections" histories="histories" amount="6" height-cell="42" placeholder="placeholder"></alfred>'))($rootScope);
                 scope.$digest();
                 input = element.find("#alfred-input");
+
+                var scopeDirective = element.isolateScope();
 
 
                 input.on("onEnterCallback", function(event, connection){
@@ -431,8 +432,8 @@ describe('Unit test alfredDirectives: alfred', function() {
                 input.on("onUploadCallback", function(event, connection){
                     expect(connection.hostname).toBe('history - hostname2');
                 });
-                KeyEvent.simulate('3'.charCodeAt(0), 50, [hotKey]);
-
+                press_key("cmd 3")
+                scopeDirective.$digest();
                 var edit = element.find(".glyphicon-pencil"),
                     e = jQuery.Event("click");
                 edit.trigger(e);
@@ -445,7 +446,8 @@ describe('Unit test alfredDirectives: alfred', function() {
                 e = jQuery.Event("click");
                 add.trigger(e);
 
-                KeyEvent.simulate(0, 39);
+                press_key("rigth")
+                scopeDirective.$digest();
                 var upload = element.find(".glyphicon-upload");
                 e = jQuery.Event("click");
                 upload.trigger(e);
