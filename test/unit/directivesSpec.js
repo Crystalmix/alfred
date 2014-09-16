@@ -412,6 +412,7 @@ describe('Unit test alfredDirectives: alfred', function() {
                 input = element.find("#alfred-input");
 
                 var scopeDirective = element.isolateScope();
+                listener = scopeDirective.listener;
 
 
                 input.on("onEnterCallback", function(event, connection){
@@ -432,7 +433,8 @@ describe('Unit test alfredDirectives: alfred', function() {
                 input.on("onUploadCallback", function(event, connection){
                     expect(connection.hostname).toBe('history - hostname2');
                 });
-                press_key("cmd 3")
+                on_keydown('cmd');
+                on_keydown('2');
                 scopeDirective.$digest();
                 var edit = element.find(".glyphicon-pencil"),
                     e = jQuery.Event("click");
