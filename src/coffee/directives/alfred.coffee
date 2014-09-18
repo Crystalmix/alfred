@@ -34,45 +34,54 @@ alfredDirective.directive "alfred", ["quickConnectParse", (quickConnectParse) ->
                 is_solitary:  yes
             })
 
-            $scope.listener.simple_combo 'left', =>
-                if $scope.isTable and $scope.connections.length
-                    $scope.isLeftActive  = yes
-                    $scope.isRightActive = no
-                else unless $scope.isTable is no
-                    return yes
-
-            $scope.listener.simple_combo 'right', =>
+            jwerty.key '→', (->
                 if $scope.isTable and $scope.histories.length
                     $scope.isLeftActive  = no
                     $scope.isRightActive = yes
                 else unless $scope.isTable is no
                     return yes
+            ), $element
 
-            $scope.listener.simple_combo 'tab', =>
+            jwerty.key '←', (->
+                if $scope.isTable and $scope.connections.length
+                    $scope.isLeftActive  = yes
+                    $scope.isRightActive = no
+                else unless $scope.isTable is no
+                    return yes
+            ), $element
+
+            jwerty.key '⇥', (->
                 if $scope.isTable is yes and $scope.connections.length and $scope.histories.length
                     $scope.isLeftActive  = not $scope.isLeftActive
                     $scope.isRightActive = not $scope.isRightActive
-                    return no
+                return no
+            ), $element
 
-            $scope.listener.simple_combo 'up', =>
+            jwerty.key '↑', (->
                 $scope.$broadcast "arrow", "up"
+            ), $element
 
-            $scope.listener.simple_combo 'down', =>
+            jwerty.key '↓', (->
                 $scope.$broadcast "arrow", "down"
+            ), $element
 
-            $scope.listener.simple_combo 'enter', =>
+
+            jwerty.key '↩', (=>
                 if $scope.query and $scope.query.indexOf("ssh") isnt -1
                     connection = quickConnectParse.parse $scope.query
                     @enterCallback connection
                 else
                     $scope.$broadcast "enter"
+            ), $element
+
 
             # Binds hotkeys cmd+[1-scope.amount]
             bindHotkeysCmd = () ->
                 for i in [1..$scope.amount]
-                    combo = "meta #{i}"
-                    $scope.listener.simple_combo combo, ($event) ->
+                    jwerty.key "⌘+#{i}", (($event)->
                         $scope.$broadcast "enter", parseInt(String.fromCharCode($event.keyCode), 10) - 1
+                        return no
+                    ), $element
 
             # Detects operating system in order to use correct hotkey
             detectCtrlOrCmd = () ->

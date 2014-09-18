@@ -99,46 +99,36 @@
             is_exclusive: true,
             is_solitary: true
           });
-          $scope.listener.simple_combo('left', (function(_this) {
-            return function() {
-              if ($scope.isTable && $scope.connections.length) {
-                $scope.isLeftActive = true;
-                return $scope.isRightActive = false;
-              } else if ($scope.isTable !== false) {
-                return true;
-              }
-            };
-          })(this));
-          $scope.listener.simple_combo('right', (function(_this) {
-            return function() {
-              if ($scope.isTable && $scope.histories.length) {
-                $scope.isLeftActive = false;
-                return $scope.isRightActive = true;
-              } else if ($scope.isTable !== false) {
-                return true;
-              }
-            };
-          })(this));
-          $scope.listener.simple_combo('tab', (function(_this) {
-            return function() {
-              if ($scope.isTable === true && $scope.connections.length && $scope.histories.length) {
-                $scope.isLeftActive = !$scope.isLeftActive;
-                $scope.isRightActive = !$scope.isRightActive;
-                return false;
-              }
-            };
-          })(this));
-          $scope.listener.simple_combo('up', (function(_this) {
-            return function() {
-              return $scope.$broadcast("arrow", "up");
-            };
-          })(this));
-          $scope.listener.simple_combo('down', (function(_this) {
-            return function() {
-              return $scope.$broadcast("arrow", "down");
-            };
-          })(this));
-          $scope.listener.simple_combo('enter', (function(_this) {
+          jwerty.key('→', (function() {
+            if ($scope.isTable && $scope.histories.length) {
+              $scope.isLeftActive = false;
+              return $scope.isRightActive = true;
+            } else if ($scope.isTable !== false) {
+              return true;
+            }
+          }), $element);
+          jwerty.key('←', (function() {
+            if ($scope.isTable && $scope.connections.length) {
+              $scope.isLeftActive = true;
+              return $scope.isRightActive = false;
+            } else if ($scope.isTable !== false) {
+              return true;
+            }
+          }), $element);
+          jwerty.key('⇥', (function() {
+            if ($scope.isTable === true && $scope.connections.length && $scope.histories.length) {
+              $scope.isLeftActive = !$scope.isLeftActive;
+              $scope.isRightActive = !$scope.isRightActive;
+            }
+            return false;
+          }), $element);
+          jwerty.key('↑', (function() {
+            return $scope.$broadcast("arrow", "up");
+          }), $element);
+          jwerty.key('↓', (function() {
+            return $scope.$broadcast("arrow", "down");
+          }), $element);
+          jwerty.key('↩', ((function(_this) {
             return function() {
               var connection;
               if ($scope.query && $scope.query.indexOf("ssh") !== -1) {
@@ -148,15 +138,15 @@
                 return $scope.$broadcast("enter");
               }
             };
-          })(this));
+          })(this)), $element);
           bindHotkeysCmd = function() {
-            var combo, i, _i, _ref, _results;
+            var i, _i, _ref, _results;
             _results = [];
             for (i = _i = 1, _ref = $scope.amount; 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
-              combo = "meta " + i;
-              _results.push($scope.listener.simple_combo(combo, function($event) {
-                return $scope.$broadcast("enter", parseInt(String.fromCharCode($event.keyCode), 10) - 1);
-              }));
+              _results.push(jwerty.key("⌘+" + i, (function($event) {
+                $scope.$broadcast("enter", parseInt(String.fromCharCode($event.keyCode), 10) - 1);
+                return false;
+              }), $element));
             }
             return _results;
           };
