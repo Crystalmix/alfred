@@ -94,11 +94,6 @@
             $scope.selectedIndex = index;
             return $scope.$broadcast("setSelectedIndex", index);
           };
-          $scope.listener = new keypress.Listener($element[0], {
-            is_unordered: true,
-            is_exclusive: true,
-            is_solitary: true
-          });
           jwerty.key('→', (function() {
             if ($scope.isTable && $scope.histories.length) {
               $scope.isLeftActive = false;

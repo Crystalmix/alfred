@@ -28,12 +28,6 @@ alfredDirective.directive "alfred", ["quickConnectParse", (quickConnectParse) ->
                 $scope.selectedIndex = index
                 $scope.$broadcast "setSelectedIndex", index
 
-            $scope.listener = new keypress.Listener($element[0], {
-                is_unordered: yes
-                is_exclusive: yes
-                is_solitary:  yes
-            })
-
             jwerty.key '→', (->
                 if $scope.isTable and $scope.histories.length
                     $scope.isLeftActive  = no

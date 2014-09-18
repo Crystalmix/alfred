@@ -15,7 +15,6 @@
         "underscore": "~1.6.0",
         "jasmine-jquery": "https://github.com/velesin/jasmine-jquery.git#~2.0.5",
         "optparse": "~1.0.5",
-        "Keypress": "~2.0.3",
         "jwerty": "~0.3.2"
     }
 }
