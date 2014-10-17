@@ -50,6 +50,7 @@ describe('Unit test alfredDirectives: alfred', function() {
         var arr = [];
             for(var i = 1; i <= length; ++i) {
                 arr.push({
+                    id: i,
                     hostname: "history - hostname" + i.toString(),
                     ssh_username: "history - ssh_username" + i.toString()
                 });

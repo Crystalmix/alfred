@@ -36,41 +36,35 @@
       this.scope.query = null;
       this.scope.histories = [
         {
-          "hostname": "dev.crystalnix.com",
+          "$$hashKey": "object:68",
+          "hostname": "127.0.0.1",
+          "id": "dcbfb663-ce0f-6f89-7b5d-a856c4fb6f0a",
           "port": 22,
-          "ssh_username": "110. serverauditor"
+          "ssh_username": "zhulduz"
         }, {
-          "hostname": "54.193.87.205",
+          "$$hashKey": "object:68",
+          "hostname": "127.0.0.1",
+          "id": "5ddb57fc-54a7-7ccf-cb09-90358fb1b146",
           "port": 22,
-          "ssh_username": "111. ubuntu"
+          "ssh_username": "zhulduz"
         }, {
-          "hostname": "55.193.87.205",
+          "$$hashKey": "object:68",
+          "hostname": "127.0.0.1",
+          "id": "2b0a199a-755a-743d-16d5-da1efdbb3dab",
           "port": 22,
-          "ssh_username": "112. ubuntu"
+          "ssh_username": "zhulduz"
         }, {
-          "hostname": "56.193.87.205",
+          "$$hashKey": "object:68",
+          "hostname": "127.0.0.1",
+          "id": "5ddb57fc-54a7-7ccf-cb09-90358fb1b146",
           "port": 22,
-          "ssh_username": "113. ubuntu"
+          "ssh_username": "zhulduz"
         }, {
-          "hostname": "57.193.87.205",
+          "$$hashKey": "object:68",
+          "hostname": "127.0.0.1",
+          "id": "7fdb50cc-54f2-6439-e048-0f39d2221120",
           "port": 22,
-          "ssh_username": "114. ubuntu"
-        }, {
-          "hostname": "58.193.87.205",
-          "port": 22,
-          "ssh_username": "115. ubuntu"
-        }, {
-          "hostname": "59.193.87.205",
-          "port": 22,
-          "ssh_username": "116. ubuntu"
-        }, {
-          "hostname": "58.193.87.205",
-          "port": 22,
-          "ssh_username": "117. ubuntu"
-        }, {
-          "hostname": "59.193.87.205",
-          "port": 22,
-          "ssh_username": "118. ubuntu"
+          "ssh_username": "zhulduz"
         }
       ];
       this.scope.connections = [

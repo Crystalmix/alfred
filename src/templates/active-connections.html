@@ -1,6 +1,6 @@
 <div id="fixed" when-scrolled="loadMore()">
     <ul class="list-group">
-        <li ng-repeat="(key,connection) in subConnections = (connections | filterConnections:query:from:offset:this)"
+        <li ng-repeat="(key,connection) in subConnections = (connections | filterConnections:query:from:offset:this) track by connection.id"
             id="{{key}}"
             ng-click="select(connection, key)"
             connection-item="connection"

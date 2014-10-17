@@ -69,4 +69,4 @@ module.exports = (grunt) ->
 
     grunt.registerTask 'default', ['ngTemplateCache', 'concat:dist', 'coffee', 'concat:addTemplates', 'clean']
     grunt.registerTask 'demo', ['coffee:dev']
-    grunt.registerTask 'test', ['karma']
+    grunt.registerTask 'test', ['default','karma']

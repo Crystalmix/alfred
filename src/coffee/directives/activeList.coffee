@@ -61,7 +61,7 @@ alfredDirective.directive "activeList",  () ->
             #
             #@param connection    json-object
             $scope.isHistory = (connection) ->
-                if connection.id?
+                if connection.label?
                     return no
                 return yes
 
