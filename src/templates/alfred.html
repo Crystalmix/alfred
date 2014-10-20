@@ -15,7 +15,7 @@
                         <span>Hosts</span>
                         <a type="button" ng-click="addConnection()"><span
                                 class="add glyphicon glyphicon-plus"></span></a>
-                        <i class="pull-right" ng-show="isLeftActive">
+                        <i class="pull-right" ng-if="isLeftActive">
                             <a type="button"><span class="glyphicon glyphicon-arrow-left"></span></a>
                         </i>
                     </div>
@@ -44,7 +44,7 @@
                 <div id="right" ng-class="{ active: isRightActive }">
                     <div class="header">
                         <span>History</span>
-                        <i class="pull-right" ng-show="isRightActive">
+                        <i class="pull-right" ng-if="isRightActive">
                             <a type="button"><span class="glyphicon glyphicon-arrow-right"></span></a>
                         </i>
                     </div>
