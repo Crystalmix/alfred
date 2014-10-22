@@ -85,7 +85,7 @@ alfredDirective.directive "activeList",  () ->
 
             # Template icons
             scope.enterText = '↩'
-            scope.cmdSystemHotkey = if scope.cmdSystemHotkey is "command" then "⌘" else "Ctrl"
+            scope.cmdSystemHotkey = if scope.cmdSystemHotkey is "⌘" then "⌘" else "Ctrl"
 
             scope.$watch "selectedIndex", (key) ->
                 alfredCtrl.setSelectedIndex(key)

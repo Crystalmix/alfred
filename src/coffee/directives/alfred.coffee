@@ -71,8 +71,9 @@ alfredDirective.directive "alfred", ["quickConnectParse", (quickConnectParse) ->
 
             # Binds hotkeys cmd+[1-scope.amount]
             bindHotkeysCmd = () ->
+                hotkey = detectCtrlOrCmd()
                 for i in [1..$scope.amount]
-                    jwerty.key "⌘+#{i}", (($event)->
+                    jwerty.key "#{hotkey}+#{i}", (($event)->
                         $scope.$broadcast "enter", parseInt(String.fromCharCode($event.keyCode), 10) - 1
                         return no
                     ), $element
@@ -80,7 +81,7 @@ alfredDirective.directive "alfred", ["quickConnectParse", (quickConnectParse) ->
             # Detects operating system in order to use correct hotkey
             detectCtrlOrCmd = () ->
                 isMac = navigator.userAgent.toLowerCase().indexOf('mac') isnt -1
-                hotKey = if isMac then 'command' else 'ctrl'
+                hotKey = if isMac then "⌘" else "ctrl"
                 hotKey
 
             ###

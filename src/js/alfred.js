@@ -135,10 +135,11 @@
             };
           })(this)), $element);
           bindHotkeysCmd = function() {
-            var i, _i, _ref, _results;
+            var hotkey, i, _i, _ref, _results;
+            hotkey = detectCtrlOrCmd();
             _results = [];
             for (i = _i = 1, _ref = $scope.amount; 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
-              _results.push(jwerty.key("⌘+" + i, (function($event) {
+              _results.push(jwerty.key("" + hotkey + "+" + i, (function($event) {
                 $scope.$broadcast("enter", parseInt(String.fromCharCode($event.keyCode), 10) - 1);
                 return false;
               }), $element));
@@ -148,7 +149,7 @@
           detectCtrlOrCmd = function() {
             var hotKey, isMac;
             isMac = navigator.userAgent.toLowerCase().indexOf('mac') !== -1;
-            hotKey = isMac ? 'command' : 'ctrl';
+            hotKey = isMac ? "⌘" : "ctrl";
             return hotKey;
           };
 
@@ -492,7 +493,7 @@
         scope.alfredController = alfredCtrl;
         scope.prevquery = null;
         scope.enterText = '↩';
-        scope.cmdSystemHotkey = scope.cmdSystemHotkey === "command" ? "⌘" : "Ctrl";
+        scope.cmdSystemHotkey = scope.cmdSystemHotkey === "⌘" ? "⌘" : "Ctrl";
         scope.$watch("selectedIndex", function(key) {
           return alfredCtrl.setSelectedIndex(key);
         });
