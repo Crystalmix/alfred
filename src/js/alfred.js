@@ -67,7 +67,7 @@
    */
 
   alfredDirective.directive("alfred", [
-    "quickConnectParse", function(quickConnectParse) {
+    "quickConnectParse", "$timeout", function(quickConnectParse, $timeout) {
       return {
         restrict: "E",
         replace: true,
@@ -248,7 +248,7 @@
           }
           scope.$on("setFocus", function(event, uid) {
             if (uid === scope.uid) {
-              return setTimeout(scope.setFocusAtInput, 0);
+              return $timeout(scope.setFocusAtInput);
             }
           });
           scope.setFocusAtInput = function() {
@@ -257,7 +257,7 @@
           };
           scope.$watch($input, (function(_this) {
             return function() {
-              return $input.focus();
+              return $timeout(scope.setFocusAtInput);
             };
           })(this));
           scope.$watch("isTable", function() {

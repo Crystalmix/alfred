@@ -2,7 +2,7 @@
 ###
     The alfred directive indicates input field, determines display table or list
 ###
-alfredDirective.directive "alfred", ["quickConnectParse", (quickConnectParse) ->
+alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConnectParse, $timeout) ->
         restrict: "E"
         replace: yes
         templateUrl: "src/templates/alfred.html"
@@ -181,14 +181,14 @@ alfredDirective.directive "alfred", ["quickConnectParse", (quickConnectParse) ->
 
             scope.$on "setFocus", (event, uid) ->
                 if uid is scope.uid
-                    setTimeout scope.setFocusAtInput, 0
+                    $timeout scope.setFocusAtInput
 
             scope.setFocusAtInput = () ->
                 do $input.focus
                 return no
 
             scope.$watch $input, () =>
-                do $input.focus
+                $timeout scope.setFocusAtInput
 
             scope.$watch "isTable", () ->
                 do initializeParameters
