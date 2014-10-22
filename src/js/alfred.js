@@ -262,6 +262,12 @@
           scope.$watch("isTable", function() {
             return initializeParameters();
           });
+          scope.$watch("connections", function() {
+            return makeRestLists();
+          });
+          scope.$watch("histories", function() {
+            return makeRestLists();
+          });
           checkQuery = function() {
             if (scope.query) {
               scope.isTable = false;
@@ -468,10 +474,10 @@
           }
         };
         $scope.isHistory = function(connection) {
-          if (connection.label != null) {
-            return false;
+          if (connection.is_history) {
+            return true;
           }
-          return true;
+          return false;
         };
         this.select = function(key) {
           $scope.setSelectedConnection(key);

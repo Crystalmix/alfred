@@ -192,6 +192,12 @@ alfredDirective.directive "alfred", ["quickConnectParse", (quickConnectParse) ->
             scope.$watch "isTable", () ->
                 do initializeParameters
 
+            scope.$watch "connections", () ->
+                do makeRestLists
+
+            scope.$watch "histories", () ->
+                do makeRestLists
+
             # Checks query in order to switch/switch off table state
             checkQuery = () ->
                 if scope.query
