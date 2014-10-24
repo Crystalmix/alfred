@@ -53,10 +53,12 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
 
             jwerty.key '↑', (->
                 $scope.$broadcast "arrow", "up"
+                return no
             ), $element
 
             jwerty.key '↓', (->
                 $scope.$broadcast "arrow", "down"
+                return no
             ), $element
 
 

@@ -118,10 +118,12 @@
             return false;
           }), $element);
           jwerty.key('↑', (function() {
-            return $scope.$broadcast("arrow", "up");
+            $scope.$broadcast("arrow", "up");
+            return false;
           }), $element);
           jwerty.key('↓', (function() {
-            return $scope.$broadcast("arrow", "down");
+            $scope.$broadcast("arrow", "down");
+            return false;
           }), $element);
           jwerty.key('↩', ((function(_this) {
             return function() {
