@@ -245,13 +245,13 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
 
 
             scope.keydown = () ->
-                setTimeout (->
+                $timeout (->
                     do checkQuery
                     if scope.query and scope.query.indexOf("ssh") is 0
                         scope.$broadcast "quickConnect" , scope.query   # If it is quick connect we should add element with parameters to the list
                     else
                         scope.$broadcast "quickConnect" , null
-                ), 50
+                )
 
             do initializeParameters
             do initializeTableParameters

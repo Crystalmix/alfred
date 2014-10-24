@@ -314,14 +314,14 @@
             }
           };
           scope.keydown = function() {
-            return setTimeout((function() {
+            return $timeout((function() {
               checkQuery();
               if (scope.query && scope.query.indexOf("ssh") === 0) {
                 return scope.$broadcast("quickConnect", scope.query);
               } else {
                 return scope.$broadcast("quickConnect", null);
               }
-            }), 50);
+            }));
           };
           initializeParameters();
           initializeTableParameters();
@@ -653,7 +653,32 @@
           scope.prevquery = scope.query;
         }
         filterFilter = $filter("filter");
-        scope.filteredConnections = filterFilter(scope.connections, scope.query);
+        scope.filteredConnections = filterFilter(scope.connections, function(value, index) {
+          var isMatchHostname, isMatchLabel, isMatchUsername;
+          if (!scope.query) {
+            return value;
+          } else {
+            isMatchLabel = function(value) {
+              if (value.label) {
+                return value.label.indexOf(scope.query) !== -1;
+              }
+              return false;
+            };
+            isMatchHostname = function(value) {
+              if (value.hostname) {
+                return value.hostname.indexOf(scope.query) !== -1;
+              }
+              return false;
+            };
+            isMatchUsername = function(value) {
+              if (value.ssh_username) {
+                return value.ssh_username.indexOf(scope.query) !== -1;
+              }
+              return false;
+            };
+            return isMatchLabel(value) || isMatchHostname(value) || isMatchUsername(value);
+          }
+        });
         scope.changeSlider();
         return scope.filteredConnections.slice(arg1, arg2);
       };

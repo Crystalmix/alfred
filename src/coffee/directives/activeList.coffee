@@ -121,8 +121,6 @@ alfredDirective.directive "activeList",  () ->
                     scope.setSelectedConnection(key)
                     connection = scope.subConnections[key]
                     scope.select connection, key
-
-
             )
 
             # Listens to parent events 'quickConnect'
