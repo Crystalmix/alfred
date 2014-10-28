@@ -207,6 +207,8 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
                     scope.isTable = no
                 else
                     scope.isTable = yes
+                console.log scope.query
+                console.log scope.isTable
                 do scope.$apply
 
             initializeParameters = () ->
@@ -246,14 +248,15 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
                             scope.restOfHistories   = new Array(scope.amount - minLength)
 
 
-            scope.keydown = () ->
+            scope.keydown = (event) ->
+                console.log event
                 $timeout (->
                     do checkQuery
                     if scope.query and scope.query.indexOf("ssh") is 0
                         scope.$broadcast "quickConnect" , scope.query   # If it is quick connect we should add element with parameters to the list
                     else
                         scope.$broadcast "quickConnect" , null
-                )
+                ), 50
 
             do initializeParameters
             do initializeTableParameters

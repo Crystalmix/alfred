@@ -277,6 +277,8 @@
             } else {
               scope.isTable = true;
             }
+            console.log(scope.query);
+            console.log(scope.isTable);
             return scope.$apply();
           };
           initializeParameters = function() {
@@ -315,7 +317,8 @@
               }
             }
           };
-          scope.keydown = function() {
+          scope.keydown = function(event) {
+            console.log(event);
             return $timeout((function() {
               checkQuery();
               if (scope.query && scope.query.indexOf("ssh") === 0) {
@@ -323,7 +326,7 @@
               } else {
                 return scope.$broadcast("quickConnect", null);
               }
-            }));
+            }), 50);
           };
           initializeParameters();
           initializeTableParameters();
