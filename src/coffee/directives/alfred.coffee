@@ -207,8 +207,6 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
                     scope.isTable = no
                 else
                     scope.isTable = yes
-                console.log scope.query
-                console.log scope.isTable
                 do scope.$apply
 
             initializeParameters = () ->
@@ -249,7 +247,6 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
 
 
             scope.keydown = (event) ->
-                console.log event
                 $timeout (->
                     do checkQuery
                     if scope.query and scope.query.indexOf("ssh") is 0
