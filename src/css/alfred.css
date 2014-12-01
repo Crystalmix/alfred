@@ -67,6 +67,8 @@
   margin-bottom: -1px;
   background-color: #fff;
   border: 1px solid #ddd;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .alfred-widget .list-group {
   padding-left: 0;
