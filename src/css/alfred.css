@@ -1,6 +1,7 @@
 .alfred-widget .table {
   width: 100%;
   margin: 0;
+  display: inline-flex;
 }
 .alfred-widget .menu {
   list-style: none;
