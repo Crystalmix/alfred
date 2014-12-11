@@ -190,7 +190,9 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
                 return no
 
             scope.$watch $input, () =>
-                $timeout scope.setFocusAtInput
+                $timeout (->
+                    do scope.setFocusAtInput
+                ), 200
 
             scope.$watch "isTable", () ->
                 do initializeParameters

@@ -259,7 +259,9 @@
           };
           scope.$watch($input, (function(_this) {
             return function() {
-              return $timeout(scope.setFocusAtInput);
+              return $timeout((function() {
+                return scope.setFocusAtInput();
+              }), 200);
             };
           })(this));
           scope.$watch("isTable", function() {
