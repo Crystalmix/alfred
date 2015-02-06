@@ -213,6 +213,18 @@
           status: "SYNCHRONIZED",
           updated_at: "2015-02-06 02:03:38"
         }, {
+          id: 157,
+          label: "Production",
+          local_id: 2,
+          parent_group: null,
+          resource_uri: "/api/v2/terminal/group/157/",
+          ssh_config: null,
+          status: "SYNCHRONIZED",
+          updated_at: "2015-02-06 02:03:38"
+        }
+      ];
+      this.scope.childgroups = [
+        {
           id: 177,
           label: "Database",
           local_id: 3,
@@ -230,15 +242,6 @@
             resource_uri: "/api/v2/terminal/group/157/",
             local_id: 2
           }
-        }, {
-          id: 157,
-          label: "Production",
-          local_id: 2,
-          parent_group: null,
-          resource_uri: "/api/v2/terminal/group/157/",
-          ssh_config: null,
-          status: "SYNCHRONIZED",
-          updated_at: "2015-02-06 02:03:38"
         }
       ];
       this.scope.tags = [];

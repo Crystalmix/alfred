@@ -1,100 +1,117 @@
 <div id="{{uid}}" class="alfred-widget" ng-click="setFocusAtInput()">
     <div class="alfred">
-        <input type="text"
-               id="alfred-input"
-               class="form-control input-lg input"
-               ng-model="query"
-               ng-keydown="keydown($event)"
-               placeholder="{{placeholder}}"/>
-
-
-        <div ng-if="connections.length || histories.length">
-
-            <!--Here there is group template-->
+        <md-toolbar>
             <div>
-                <ul>
-                    <li ng-repeat="group in groups">
-                        {{group.label}}
-                    </li>
-                </ul>
+                <input type="text"
+                       id="alfred-input"
+                       class="form-control input-lg input"
+                       ng-model="query"
+                       ng-keydown="keydown($event)"
+                       placeholder="{{placeholder}}"/>
+                <i class="mdi mdi-menu history-menu" ng-click="changeActiveList()"></i>
+
+                <!--Here there is group template-->
+                <div ng-if="isLeftActive">
+                    <ul>
+                        <li ng-repeat="group in groups">
+                            {{group.label}}
+                        </li>
+                    </ul>
+                </div>
+
+                <div ng-if="isLeftActive">
+                    <ul>
+                        <li ng-repeat="group in childgroups">
+                            {{group.label}}
+                        </li>
+                    </ul>
+                </div>
+                <!--End Here there is group template-->
             </div>
-            <!--End Here there is group template-->
 
 
-            <div ng-if="isTable" class="table">
-                <div id="left" ng-class="{ active: isLeftActive }" ng-if="isLeftActive">
-                    <!--<div class="header">-->
-                    <!--<span>Hosts</span>-->
-                    <!--<a type="button" ng-click="addConnection()"><span-->
-                    <!--class="add glyphicon glyphicon-plus"></span></a>-->
-                    <!--<i class="pull-right" ng-if="isLeftActive">-->
-                    <!--<a type="button"><span class="glyphicon glyphicon-arrow-left"></span></a>-->
-                    <!--</i>-->
-                    <!--</div>-->
+        </md-toolbar>
 
-                    <div class="left-list" ng-if="isLeftActive">
-                        <active-list connections="connections"
+
+        <md-content>
+
+            <div ng-if="connections.length || histories.length">
+
+                <div ng-if="isTable" class="table">
+                    <div id="left" ng-class="{ active: isLeftActive }" ng-if="isLeftActive">
+                        <!--<div class="header">-->
+                        <!--<span>Hosts</span>-->
+                        <!--<a type="button" ng-click="addConnection()"><span-->
+                        <!--class="add glyphicon glyphicon-plus"></span></a>-->
+                        <!--<i class="pull-right" ng-if="isLeftActive">-->
+                        <!--<a type="button"><span class="glyphicon glyphicon-arrow-left"></span></a>-->
+                        <!--</i>-->
+                        <!--</div>-->
+
+                        <div class="left-list" ng-if="isLeftActive">
+                            <active-list connections="connections"
+                                         amount="amount"
+                                         height-cell="heightCell"
+                                         query="query"
+                                         from="fromConnection"
+                                         selected-index="selectedIndex"
+                                         rest="restOfConnections"
+                                         cmd-system-hotkey="cmdSystemHotkey">
+                            </active-list>
+                        </div>
+                        <div class="left-list" ng-if="isRightActive">
+                            <inactive-list connections="connections"
+                                           amount="amount"
+                                           height-cell="heightCell"
+                                           from="fromConnection"
+                                           rest="restOfConnections">
+                            </inactive-list>
+                        </div>
+                    </div>
+
+                    <div id="right" ng-class="{ active: isRightActive }" ng-if="isRightActive">
+                        <!--<div class="header">-->
+                        <!--<span>History</span>-->
+                        <!--<i class="pull-right" ng-if="isRightActive">-->
+                        <!--<a type="button"><span class="glyphicon glyphicon-arrow-right"></span></a>-->
+                        <!--</i>-->
+                        <!--</div>-->
+                        <div class="left-list" ng-if="isLeftActive">
+                            <inactive-list connections="histories"
+                                           amount="amount"
+                                           height-cell="heightCell"
+                                           from="fromHistory"
+                                           rest="restOfHistories">
+                            </inactive-list>
+                        </div>
+                        <div class="left-list" ng-if="isRightActive">
+                            <active-list connections="histories"
+                                         amount="amount"
+                                         height-cell="heightCell"
+                                         query="query"
+                                         from="fromHistory"
+                                         selected-index="selectedIndex"
+                                         rest="restOfHistories"
+                                         cmd-system-hotkey="cmdSystemHotkey">
+                            </active-list>
+                        </div>
+                    </div>
+                </div>
+
+                <div ng-if="!isTable">
+                    <div class="main-list">
+                        <active-list connections="entities"
                                      amount="amount"
                                      height-cell="heightCell"
                                      query="query"
                                      from="fromConnection"
                                      selected-index="selectedIndex"
-                                     rest="restOfConnections"
-                                     cmd-system-hotkey="cmdSystemHotkey">
-                        </active-list>
-                    </div>
-                    <div class="left-list" ng-if="isRightActive">
-                        <inactive-list connections="connections"
-                                       amount="amount"
-                                       height-cell="heightCell"
-                                       from="fromConnection"
-                                       rest="restOfConnections">
-                        </inactive-list>
-                    </div>
-                </div>
-
-                <div id="right" ng-class="{ active: isRightActive }" ng-if="isRightActive">
-                    <!--<div class="header">-->
-                    <!--<span>History</span>-->
-                    <!--<i class="pull-right" ng-if="isRightActive">-->
-                    <!--<a type="button"><span class="glyphicon glyphicon-arrow-right"></span></a>-->
-                    <!--</i>-->
-                    <!--</div>-->
-                    <div class="left-list" ng-if="isLeftActive">
-                        <inactive-list connections="histories"
-                                       amount="amount"
-                                       height-cell="heightCell"
-                                       from="fromHistory"
-                                       rest="restOfHistories">
-                        </inactive-list>
-                    </div>
-                    <div class="left-list" ng-if="isRightActive">
-                        <active-list connections="histories"
-                                     amount="amount"
-                                     height-cell="heightCell"
-                                     query="query"
-                                     from="fromHistory"
-                                     selected-index="selectedIndex"
-                                     rest="restOfHistories"
                                      cmd-system-hotkey="cmdSystemHotkey">
                         </active-list>
                     </div>
                 </div>
-            </div>
 
-            <div ng-if="!isTable">
-                <div class="main-list">
-                    <active-list connections="entities"
-                                 amount="amount"
-                                 height-cell="heightCell"
-                                 query="query"
-                                 from="fromConnection"
-                                 selected-index="selectedIndex"
-                                 cmd-system-hotkey="cmdSystemHotkey">
-                    </active-list>
-                </div>
             </div>
-
-        </div>
+        </md-content>
     </div>
 </div>

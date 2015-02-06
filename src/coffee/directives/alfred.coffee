@@ -11,6 +11,7 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
             connections:        "="
             histories:          "="
             groups:             "="
+            childgroups:        "="
             tags:               "="
             amount:             "="
             heightCell:         "="
@@ -23,7 +24,6 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
             onRemoveCallback:   "&"
 
         controller: ($scope, $element) ->
-            console.log $scope.groups
             $scope.query         = null
             $scope.entities      = $scope.connections.concat $scope.histories
             $scope.selectedIndex = 0
