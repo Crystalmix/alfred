@@ -78,12 +78,10 @@
   float: right;
 }
 .alfred-widget #right {
-  width: 50%;
-  float: right;
+  width: 100%;
 }
 .alfred-widget #left {
-  width: 50%;
-  float: left;
+  width: 100%;
 }
 .alfred-widget .header {
   font-weight: bold;

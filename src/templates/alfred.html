@@ -7,18 +7,30 @@
                ng-keydown="keydown($event)"
                placeholder="{{placeholder}}"/>
 
+
         <div ng-if="connections.length || histories.length">
 
+            <!--Here there is group template-->
+            <div>
+                <ul>
+                    <li ng-repeat="group in groups">
+                        {{group.label}}
+                    </li>
+                </ul>
+            </div>
+            <!--End Here there is group template-->
+
+
             <div ng-if="isTable" class="table">
-                <div id="left" ng-class="{ active: isLeftActive }">
-                    <div class="header">
-                        <span>Hosts</span>
-                        <a type="button" ng-click="addConnection()"><span
-                                class="add glyphicon glyphicon-plus"></span></a>
-                        <i class="pull-right" ng-if="isLeftActive">
-                            <a type="button"><span class="glyphicon glyphicon-arrow-left"></span></a>
-                        </i>
-                    </div>
+                <div id="left" ng-class="{ active: isLeftActive }" ng-if="isLeftActive">
+                    <!--<div class="header">-->
+                    <!--<span>Hosts</span>-->
+                    <!--<a type="button" ng-click="addConnection()"><span-->
+                    <!--class="add glyphicon glyphicon-plus"></span></a>-->
+                    <!--<i class="pull-right" ng-if="isLeftActive">-->
+                    <!--<a type="button"><span class="glyphicon glyphicon-arrow-left"></span></a>-->
+                    <!--</i>-->
+                    <!--</div>-->
 
                     <div class="left-list" ng-if="isLeftActive">
                         <active-list connections="connections"
@@ -41,13 +53,13 @@
                     </div>
                 </div>
 
-                <div id="right" ng-class="{ active: isRightActive }">
-                    <div class="header">
-                        <span>History</span>
-                        <i class="pull-right" ng-if="isRightActive">
-                            <a type="button"><span class="glyphicon glyphicon-arrow-right"></span></a>
-                        </i>
-                    </div>
+                <div id="right" ng-class="{ active: isRightActive }" ng-if="isRightActive">
+                    <!--<div class="header">-->
+                    <!--<span>History</span>-->
+                    <!--<i class="pull-right" ng-if="isRightActive">-->
+                    <!--<a type="button"><span class="glyphicon glyphicon-arrow-right"></span></a>-->
+                    <!--</i>-->
+                    <!--</div>-->
                     <div class="left-list" ng-if="isLeftActive">
                         <inactive-list connections="histories"
                                        amount="amount"

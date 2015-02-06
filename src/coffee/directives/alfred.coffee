@@ -10,9 +10,12 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
             uid:                "="
             connections:        "="
             histories:          "="
+            groups:             "="
+            tags:               "="
             amount:             "="
             heightCell:         "="
             placeholder:        "="
+            template:           "="
             onEnterCallback:    "&"
             onAddCallback:      "&"
             onEditCallback:     "&"
@@ -20,6 +23,7 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
             onRemoveCallback:   "&"
 
         controller: ($scope, $element) ->
+            console.log $scope.groups
             $scope.query         = null
             $scope.entities      = $scope.connections.concat $scope.histories
             $scope.selectedIndex = 0

@@ -31,7 +31,7 @@ class AlfredController
         @scope.placeholder = "ssh user@hostname -p port"
 
         @scope.query = null
-        @scope.histories = [
+        @scope.activities = [
             {
                 "$$hashKey": "object:68",
                 "hostname": "127.0.0.1",
@@ -69,12 +69,12 @@ class AlfredController
             }
 
         ]
-        @scope.connections = [
+        @scope.hosts = [
             {
                 "color_scheme": null,
                 "hostname": "dev.crystalnix.com",
                 "id": 3444,
-                "label": "0. digital",
+                "label": "digital",
                 "port": 22,
                 "resource_uri": "/api/v1/terminal/connection/3444/",
                 "ssh_key": null,
@@ -91,14 +91,14 @@ class AlfredController
                 "resource_uri": "/api/v1/terminal/connection/3445/",
                 "ssh_key": null,
                 "ssh_password": "",
-                "ssh_username": "1. ubuntu",
+                "ssh_username": "ubuntu",
                 "updated_at": "2014-06-06T07:18:41"
             },
             {
                 "color_scheme": null,
                 "hostname": "54.193.87.205",
                 "id": 3447,
-                "label": "2. dev.crystalnix.com",
+                "label": "dev.crystalnix.com",
                 "port": 22,
                 "resource_uri": "/api/v1/terminal/connection/3447/",
                 "ssh_key": null,
@@ -110,7 +110,7 @@ class AlfredController
                 "color_scheme": null,
                 "hostname": "dev.crystalnix.com",
                 "id": 3448,
-                "label": "3. test",
+                "label": "test",
                 "port": 22,
                 "resource_uri": "/api/v1/terminal/connection/3448/",
                 "ssh_key": null,
@@ -122,7 +122,7 @@ class AlfredController
                 "color_scheme": null,
                 "hostname": "dev.crystalnix.com",
                 "id": 3559,
-                "label": "4. dev.sa",
+                "label": "dev.sa",
                 "port": 22,
                 "resource_uri": "/api/v1/terminal/connection/3559/",
                 "ssh_key": null,
@@ -139,14 +139,14 @@ class AlfredController
                 "resource_uri": "/api/v1/terminal/connection/3560/",
                 "ssh_key": null,
                 "ssh_password": "",
-                "ssh_username": "5. zhulduz",
+                "ssh_username": "zhulduz",
                 "updated_at": "2014-06-20T05:24:50"
             },
             {
                 "color_scheme": null,
                 "hostname": "dev.4crystalnix.com",
                 "id": 4444,
-                "label": "6. digital",
+                "label": "digital",
                 "port": 22,
                 "resource_uri": "/api/v1/terminal/connection/3444/",
                 "ssh_key": null,
@@ -163,14 +163,14 @@ class AlfredController
                 "resource_uri": "/api/v1/terminal/connection/3445/",
                 "ssh_key": null,
                 "ssh_password": "",
-                "ssh_username": "7. 4ubuntu",
+                "ssh_username": "4ubuntu",
                 "updated_at": "2014-06-06T07:18:41"
             },
             {
                 "color_scheme": null,
                 "hostname": "454.193.87.205",
                 "id": 4447,
-                "label": "8. dev.crystalnix.com",
+                "label": "dev.crystalnix.com",
                 "port": 22,
                 "resource_uri": "/api/v1/terminal/connection/3447/",
                 "ssh_key": null,
@@ -182,7 +182,7 @@ class AlfredController
                 "color_scheme": null,
                 "hostname": "dev.8crystalnix.com",
                 "id": 4448,
-                "label": "9. test",
+                "label": "test",
                 "port": 22,
                 "resource_uri": "/api/v1/terminal/connection/3448/",
                 "ssh_key": null,
@@ -194,7 +194,7 @@ class AlfredController
                 "color_scheme": null,
                 "hostname": "dev.crystalnix.com",
                 "id": 4559,
-                "label": "10. dev.sa",
+                "label": "dev.sa",
                 "port": 22,
                 "resource_uri": "/api/v1/terminal/connection/3559/",
                 "ssh_key": null,
@@ -211,15 +211,60 @@ class AlfredController
                 "resource_uri": "/api/v1/terminal/connection/3560/",
                 "ssh_key": null,
                 "ssh_password": "",
-                "ssh_username": "11. zhulduz",
+                "ssh_username": "zhulduz",
                 "updated_at": "2014-06-20T05:24:50"
             }
         ]
-        @modifiedConnection connection for connection in @scope.connections
+        @scope.groups = [
+            {
+                id: 156
+                label: "Company A"
+                local_id: 1
+                parent_group: null
+                resource_uri: "/api/v2/terminal/group/156/"
+                ssh_config: null
+                status: "SYNCHRONIZED"
+                updated_at: "2015-02-06 02:03:38"
+            },
+            {
+                id: 177
+                label: "Database"
+                local_id: 3
+                parent_group:
+                    {
+                        id: 157
+                        resource_uri: "/api/v2/terminal/group/157/"
+                        local_id: 2
+                    }
+            },
+            {
+                id: 178
+                label: "Nodes"
+                local_id: 4
+                parent_group:
+                    {
+                        id: 157
+                        resource_uri: "/api/v2/terminal/group/157/"
+                        local_id: 2
+                    }
+            },
+            {
+                id: 157
+                label: "Production"
+                local_id: 2
+                parent_group: null
+                resource_uri: "/api/v2/terminal/group/157/"
+                ssh_config: null
+                status: "SYNCHRONIZED"
+                updated_at: "2015-02-06 02:03:38"
+            }
+        ]
+        @scope.tags = []
+        @modifiedConnection hosts for hosts in @scope.hosts
 
-    modifiedConnection: (connection) ->
-        if not connection.label
-            connection.label = "#{connection.ssh_username}@#{connection.hostname}"
+    modifiedConnection: (hosts) ->
+        if not hosts.label
+            hosts.label = "#{hosts.ssh_username}@#{hosts.hostname}"
 
 
 angular.module('alfredApp').controller 'AlfredController', AlfredController
