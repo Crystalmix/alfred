@@ -91,6 +91,7 @@
 
 .alfred-widget i {
     float: right;
+    height: 20px;
 }
 
 .alfred-widget #right {
@@ -190,4 +191,15 @@
     margin: 10px 0;
 }
 
+.shadow-box {
+    box-shadow: 0px 2px 5px 0 rgba(0, 0, 0, 0.26);
+}
+
+.md-tile-content span {
+    width: 100%;
+}
+
+button.history-menu.md-button.md-default-theme:hover {
+    background-color: transparent;
+}
 
