@@ -47,7 +47,7 @@
     width: 96%;
     height: 46px;
     padding: 6px 12px;
-    font-size: 14px;
+    font-size: inherit;
     line-height: 1.42857143;
     color: white;
     background-color: rgb(56, 163, 248);
@@ -170,3 +170,24 @@
     width: 100%;
     padding: 10px;
 }
+
+.children-group, .parent-group {
+    display: -webkit-box;
+    width: 65%;
+}
+ 
+.children-group li, .parent-group li {
+    margin-right: 22px
+}
+
+.children-group .md-button {
+    background-color: rgb(56, 163, 248);
+    text-transform: none;
+}
+
+.children-group ul, .parent-group ul {
+    padding: 0;
+    margin: 10px 0;
+}
+
+

@@ -13,7 +13,7 @@
                 </md-button>
 
                 <!--Here there is group template-->
-                <div ng-if="isLeftActive">
+                <div ng-if="isLeftActive" class="parent-group">
                     <ul>
                         <li ng-repeat="group in groups">
                             {{group.label}}
@@ -21,10 +21,10 @@
                     </ul>
                 </div>
 
-                <div ng-if="isLeftActive">
+                <div ng-if="isLeftActive" class="children-group">
                     <ul>
                         <li ng-repeat="group in childgroups">
-                            {{group.label}}
+                            <md-button class="md-primar">{{group.label}}</md-button>
                         </li>
                     </ul>
                 </div>
