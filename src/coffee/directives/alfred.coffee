@@ -32,6 +32,12 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
                 $scope.selectedIndex = index
                 $scope.$broadcast "setSelectedIndex", index
 
+            $scope.changeActiveList = () ->
+                if $scope.isTable is yes and $scope.connections.length and $scope.histories.length
+                    $scope.isLeftActive  = not $scope.isLeftActive
+                    $scope.isRightActive = not $scope.isRightActive
+                return no
+
             jwerty.key '→', (->
                 if $scope.isTable and $scope.histories.length
                     $scope.isLeftActive  = no

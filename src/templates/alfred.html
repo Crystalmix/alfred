@@ -1,14 +1,16 @@
 <div id="{{uid}}" class="alfred-widget" ng-click="setFocusAtInput()">
     <div class="alfred">
         <md-toolbar>
-            <div>
+            <div class="tollbar-container">
                 <input type="text"
                        id="alfred-input"
                        class="form-control input-lg input"
                        ng-model="query"
                        ng-keydown="keydown($event)"
                        placeholder="{{placeholder}}"/>
-                <i class="mdi mdi-menu history-menu" ng-click="changeActiveList()"></i>
+                <md-button class="history-menu">
+                    <i class="mdi mdi-menu" ng-click="changeActiveList()"></i>
+                </md-button>
 
                 <!--Here there is group template-->
                 <div ng-if="isLeftActive">
@@ -28,8 +30,6 @@
                 </div>
                 <!--End Here there is group template-->
             </div>
-
-
         </md-toolbar>
 
 

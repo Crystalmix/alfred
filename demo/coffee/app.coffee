@@ -6,7 +6,7 @@ angular.module( 'alfredApp', [
       'alfredDirective',
       'ngMaterial'
 ]).
-config(['$stateProvider', '$urlRouterProvider', ($stateProvider, $urlRouterProvider) ->
+config(['$stateProvider', '$urlRouterProvider', '$mdThemingProvider', ($stateProvider, $urlRouterProvider, $mdThemingProvider) ->
 
     $urlRouterProvider.otherwise '/view1'
 
@@ -16,5 +16,8 @@ config(['$stateProvider', '$urlRouterProvider', ($stateProvider, $urlRouterProvi
             templateUrl: 'partials/mainView.html'
             controller: 'AlfredController'
         })
+
+    $mdThemingProvider.theme('default')
+        .primaryPalette("blue")
     return;
 ])
