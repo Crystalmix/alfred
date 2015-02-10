@@ -19,5 +19,5 @@ config(['$stateProvider', '$urlRouterProvider', '$mdThemingProvider', ($statePro
 
     $mdThemingProvider.theme('default')
         .primaryPalette("blue")
-    return;
+    return
 ])

@@ -35,8 +35,9 @@
   }
 
   .alfred {
-    width: 70%;
+    width: 80%;
     margin: 0 auto;
+    min-width: 230px;
   }
 
   .table-data {
@@ -80,6 +81,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     float: left;
+    list-style-type: none;
   }
   .list-group {
     padding-left: 0;
@@ -157,40 +159,49 @@
     width: 100%;
     padding: 10px;
   }
-    .children-group {
-        display: -webkit-box;
-        width: 65%;
-        ul {
-            padding: 0;       
-            margin: 10px 0;        
-        }        
-        li {
-            margin-right:22px;        
-        }
-        .md-button {
-            background-color: rgb(56, 163, 248);
-            text-transform: none;
-        }
+  .children-group {
+    display: -webkit-box;
+    width: 65%;
+    ul {
+      padding: 0;
+      margin: 10px 0;
     }
-    .parent-group {
-        display: -webkit-box;
-        width: 65%;
-        ul {
-            padding: 0;   
-            margin: 10px 0;    
-        }        
-        li {
-            margin-right:22px;        
-        }
+    li {
+      margin-right: 22px;
     }
-    .shadow-box {
-        box-shadow: 0px 2px 5px 0 rgba(0, 0, 0, 0.26);
+    .md-button {
+      background-color: rgb(56, 163, 248);
+      text-transform: none;
     }
-    .md-tile-content span {
-        width: 100%;
+  }
+  .parent-group {
+    display: -webkit-box;
+    width: 65%;
+    ul {
+      padding: 0;
+      margin: 10px 0;
     }
-    button.history-menu.md-button.md-default-theme:hover {
-        background-color: transparent;
+    li {
+      margin-right: 22px;
     }
+  }
+  .shadow-box {
+    box-shadow: 0px 2px 5px 0 rgba(0, 0, 0, 0.26);
+  }
+  .md-tile-content span {
+    width: 100%;
+  }
+  button.history-menu.md-button.md-default-theme:hover {
+    background-color: transparent;
+  }
+  .parent-group-list:before {
+    background: no-repeat url("//material-design.storage.googleapis.com/images/separator.svg") right center;
+    background-size: contain;
+    content: '';
+    float: left;
+    height: 25px;
+    margin: 0 22px 0 0;
+    width: .4em;
+  }
 
 }

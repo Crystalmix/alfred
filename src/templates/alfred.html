@@ -15,7 +15,10 @@
                 <!--Here there is group template-->
                 <div ng-if="isLeftActive" class="parent-group">
                     <ul>
-                        <li ng-repeat="group in groups">
+                        <li>
+                           ALL HOSTS
+                        </li>
+                        <li ng-repeat="group in groups" class="parent-group-list">
                             {{group.label}}
                         </li>
                     </ul>
