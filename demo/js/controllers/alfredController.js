@@ -242,6 +242,15 @@
             resource_uri: "/api/v2/terminal/group/157/",
             local_id: 2
           }
+        }, {
+          id: 179,
+          label: "Loadbalancers",
+          local_id: 4,
+          parent_group: {
+            id: 156,
+            resource_uri: "/api/v2/terminal/group/157/",
+            local_id: 2
+          }
         }
       ];
       this.scope.tags = [];
