@@ -13,23 +13,37 @@
                 </md-button>
 
                 <!--Here there is group template-->
-                <div ng-if="isLeftActive" class="parent-group">
-                    <ul>
-                        <li>
-                           ALL HOSTS
-                        </li>
-                        <li ng-repeat="group in groups" class="parent-group-list">
-                            {{group.label}}
-                        </li>
-                    </ul>
+                <div ng-if="isLeftActive" class="head-groups">
+                    <div class="parent-group">
+                        <ul>
+                            <li>
+                               ALL HOSTS
+                            </li>
+                            <li ng-repeat="group in groups" class="parent-group-list">
+                                {{group.label}}
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="tags">
+                        <ul>
+                            <li ng-repeat="tag in tags">
+                                <md-button><i class="mdi mdi-tag"></i> {{tag.label}}</md-button>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
 
-                <div ng-if="isLeftActive" class="children-group">
-                    <ul>
-                        <li ng-repeat="group in childgroups">
-                            <md-button class="md-primar">{{group.label}}</md-button>
-                        </li>
-                    </ul>
+                <div ng-if="isLeftActive" class="bottom-group">
+                    <div class="children-group">
+                        <ul>
+                            <li ng-repeat="group in childgroups">
+                                <md-button>{{group.label}}</md-button>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="add-new-group">
+                        <md-button>+</md-button>
+                    </div>
                 </div>
                 <!--End Here there is group template-->
             </div>

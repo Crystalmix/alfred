@@ -272,7 +272,16 @@ class AlfredController
                     }
             }
         ]
-        @scope.tags = []
+        @scope.tags = [
+            {
+              id: 1,
+              label: "ubuntu"
+            },
+            {
+              id: 1,
+              label: "django"
+            }
+        ]
         @modifiedConnection hosts for hosts in @scope.hosts
 
     modifiedConnection: (hosts) ->

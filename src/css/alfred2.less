@@ -159,35 +159,45 @@
     width: 100%;
     padding: 10px;
   }
-  .children-group {
-    display: -webkit-box;
-    width: 65%;
-    ul {
-      padding: 0;
-      margin: 10px 0;
-    }
-    li {
-      margin-right: 22px;
-    }
-    .md-button {
-      background-color: rgb(56, 163, 248);
-      text-transform: none;
-      padding: 4px 20px;
-      font-weight: normal;
-      margin-top: 10px;
-    }
-  }
-  .parent-group {
-    display: -webkit-box;
-    width: 65%;
-    ul {
-      padding: 0;
-      margin: 10px 0;
-    }
-    li {
-      margin-right: 22px;
+  .bottom-group {
+    display: -webkit-inline-box;
+    width: 100%;
+    .children-group {
+      display: -webkit-box;
+      width: 65%;
+      ul {
+        padding: 0;
+        margin: 10px 0;
+      }
+      li {
+        margin-right: 22px;
+      }
+      .md-button {
+        background-color: rgb(56, 163, 248);
+        text-transform: none;
+        padding: 4px 20px;
+        font-weight: normal;
+        margin-top: 10px;
+      }
     }
   }
+
+  .head-groups {
+    display: -webkit-inline-box;
+    width: 100%;
+    .parent-group {
+      display: -webkit-box;
+      width: 65%;
+      ul {
+        padding: 0;
+        margin: 10px 0;
+      }
+      li {
+        margin-right: 22px;
+      }
+    }
+  }
+
   .shadow-box {
     box-shadow: 0px 2px 5px 0 rgba(0, 0, 0, 0.26);
   }
@@ -206,5 +216,34 @@
     margin: 0 22px 0 0;
     width: .4em;
   }
-
+  .head-groups .tags {
+    width: 35%;
+  }
+  .tags ul {
+    padding: 0;
+    margin: 4px 0;
+    background-color:rgb(56, 163, 248);
+    margin: 10px 8px 0 0;
+    float: right;
+    i {
+        float: none;
+        color: white;
+    }
+  }
+  .tags button {
+    text-transform: none;
+    font-weight: normal;
+  }
+  .add-new-group {
+    width: 35%;
+    text-align: right;
+    padding: 20px 0 0 0;
+    button {
+      background-color: rgb(56, 163, 248);
+      padding: 4px 10px;
+    }
+  }
+  .parent-group ul {
+    margin: 20px 0 0 0;
+  }
 }

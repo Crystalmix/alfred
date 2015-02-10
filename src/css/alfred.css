@@ -178,7 +178,7 @@
     display: -webkit-box;
     width: 65%;
 }
- 
+
 .children-group li, .parent-group li {
     margin-right: 22px
 }
@@ -216,4 +216,47 @@ button.history-menu.md-button.md-default-theme:hover {
     height: 25px;
     margin: 0 22px 0 0;
     width: .4em;
+}
+
+.head-groups, .bottom-group {
+    display: -webkit-inline-box;
+    width: 100%;
+}
+
+.head-groups .tags {
+    width: 35%;
+}
+
+.tags ul {
+    padding: 0;
+    margin: 4px 0;
+    float: right;
+}
+.tags li {
+    float: right;
+}
+.tags button {
+    text-transform: none;
+    font-weight: normal;
+    background-color:rgb(56, 163, 248);
+    margin: 10px 0px 0 8px;
+}
+
+.tags button i {
+    float: none;
+    color: white;
+}
+
+.add-new-group {
+    width: 35%;
+    text-align: right;
+    padding: 20px 0 0 0;
+}
+
+.add-new-group button {
+    background-color: rgb(56, 163, 248);
+    padding: 4px 10px;
+}
+.parent-group ul {
+    margin: 20px 0 0 0;
 }

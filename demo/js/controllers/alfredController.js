@@ -253,7 +253,15 @@
           }
         }
       ];
-      this.scope.tags = [];
+      this.scope.tags = [
+        {
+          id: 1,
+          label: "ubuntu"
+        }, {
+          id: 1,
+          label: "django"
+        }
+      ];
       _ref = this.scope.hosts;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         hosts = _ref[_i];
