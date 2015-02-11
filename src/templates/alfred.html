@@ -2,12 +2,19 @@
     <div class="alfred">
         <md-toolbar>
             <div class="tollbar-container">
-                <input type="text"
-                       id="alfred-input"
+                <md-input-container class="alfred-input">
+                    <label>{{placeholder}}</label>
+                    <input type="text"
                        class="form-control input-lg input"
                        ng-model="query"
-                       ng-keydown="keydown($event)"
-                       placeholder="{{placeholder}}"/>
+                       ng-keydown="keydown($event)"/>
+                </md-input-container>
+                <!--<input type="text"-->
+                       <!--id="alfred-input"-->
+                       <!--class="form-control input-lg input"-->
+                       <!--ng-model="query"-->
+                       <!--ng-keydown="keydown($event)"-->
+                       <!--placeholder="{{placeholder}}"/>-->
                 <md-button class="history-menu">
                     <i class="mdi mdi-menu" ng-click="changeActiveList()"></i>
                 </md-button>
@@ -17,7 +24,7 @@
                     <div class="parent-group">
                         <ul>
                             <li>
-                               ALL HOSTS
+                                ALL HOSTS
                             </li>
                             <li ng-repeat="group in groups" class="parent-group-list">
                                 {{group.label}}
