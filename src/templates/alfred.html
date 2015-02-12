@@ -3,13 +3,21 @@
         <md-toolbar>
             <div class="tollbar-container">
                 <div class="head-toolbar">
-                    <md-input-container class="alfred-input">
-                        <label>{{placeholder}}</label>
+                    <div class="alfred-input">
+                    <lx-text-field label={{placeholder}} fixed-label="true">
                         <input type="text"
-                               class="form-control input-lg input"
                                ng-model="query"
-                               ng-keydown="keydown($event)"/>
-                    </md-input-container>
+                               ng-keydown="keydown($event)">
+                    </lx-text-field>
+                        </div>
+
+                    <!--<md-input-container class="alfred-input">-->
+                        <!--<label>{{placeholder}}</label>-->
+                        <!--<input type="text"-->
+                               <!--class="form-control input-lg input"-->
+                               <!--ng-model="query"-->
+                               <!--ng-keydown="keydown($event)"/>-->
+                    <!--</md-input-container>-->
                     <!--<input type="text"-->
                     <!--id="alfred-input"-->
                     <!--class="form-control input-lg input"-->
@@ -24,8 +32,10 @@
 
                         <lx-dropdown-menu>
                             <ul>
-                                <li ng-if="isLeftActive" ><a class="dropdown-link" ng-click="changeActiveList()">Go to activities</a></li>
-                                <li ng-if="isRightActive" ><a class="dropdown-link" ng-click="changeActiveList()">Go to hosts</a></li>
+                                <li ng-if="isLeftActive"><a class="dropdown-link" ng-click="changeActiveList()">Go to
+                                    activities</a></li>
+                                <li ng-if="isRightActive"><a class="dropdown-link" ng-click="changeActiveList()">Go to
+                                    hosts</a></li>
                                 <li><a class="dropdown-link">Add new group</a></li>
                                 <li><a class="dropdown-link">Add new host</a></li>
                             </ul>
