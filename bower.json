@@ -17,6 +17,7 @@
     "optparse": "~1.0.5",
     "jwerty": "~0.3.2",
     "angular-material": "~0.7.1",
-    "mdi": "~0.8.82-alpha"
+    "mdi": "~0.8.82-alpha",
+    "lumx": "~0.3.8"
   }
 }
