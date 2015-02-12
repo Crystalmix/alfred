@@ -4,7 +4,8 @@ angular.module( 'alfredApp', [
       'ui.router',
       'httpServices',
       'alfredDirective',
-      'ngMaterial'
+      'ngMaterial',
+      'lumx'
 ]).
 config(['$stateProvider', '$urlRouterProvider', '$mdThemingProvider', ($stateProvider, $urlRouterProvider, $mdThemingProvider) ->
 

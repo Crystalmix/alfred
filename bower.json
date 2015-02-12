@@ -18,6 +18,7 @@
     "jwerty": "~0.3.2",
     "angular-material": "~0.7.1",
     "mdi": "~0.8.82-alpha",
-    "lumx": "~0.3.8"
+    "lumx": "~0.3.8",
+    "velocity": "~1.2.1"
   }
 }

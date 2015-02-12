@@ -1,6 +1,6 @@
 (function() {
   'use strict';
-  angular.module('alfredApp', ['ui.router', 'httpServices', 'alfredDirective', 'ngMaterial']).config([
+  angular.module('alfredApp', ['ui.router', 'httpServices', 'alfredDirective', 'ngMaterial', 'lumx']).config([
     '$stateProvider', '$urlRouterProvider', '$mdThemingProvider', function($stateProvider, $urlRouterProvider, $mdThemingProvider) {
       $urlRouterProvider.otherwise('/view1');
       $stateProvider.state('view1', {

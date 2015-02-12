@@ -158,8 +158,11 @@
     margin-left: 5px;
 }
 
-.alfred-widget .history-menu {
+.alfred-widget .menu-toolbar {
     width: 4%;
+}
+.alfred-widget .history-menu {
+    width: 100%;
     padding: 0;
     height: 46px;
     float: right;
@@ -167,6 +170,7 @@
 
 .alfred-widget .history-menu i {
     color: rgb(33,150,243);
+    width: 22px;
 }
 
 .tollbar-container {
@@ -269,4 +273,10 @@ md-toolbar {
 .alfred-input {
     width: 96%;
     float: left;
+
+}
+
+.head-toolbar {
+    display: block;
+    width: 100%;
 }
