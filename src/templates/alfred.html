@@ -4,19 +4,19 @@
             <div class="tollbar-container">
                 <div class="head-toolbar">
                     <div class="alfred-input">
-                    <lx-text-field label={{placeholder}} fixed-label="true">
-                        <input type="text"
-                               ng-model="query"
-                               ng-keydown="keydown($event)">
-                    </lx-text-field>
-                        </div>
+                        <lx-text-field label={{placeholder}} fixed-label="true">
+                            <input type="text"
+                                   ng-model="query"
+                                   ng-keydown="keydown($event)">
+                        </lx-text-field>
+                    </div>
 
                     <!--<md-input-container class="alfred-input">-->
-                        <!--<label>{{placeholder}}</label>-->
-                        <!--<input type="text"-->
-                               <!--class="form-control input-lg input"-->
-                               <!--ng-model="query"-->
-                               <!--ng-keydown="keydown($event)"/>-->
+                    <!--<label>{{placeholder}}</label>-->
+                    <!--<input type="text"-->
+                    <!--class="form-control input-lg input"-->
+                    <!--ng-model="query"-->
+                    <!--ng-keydown="keydown($event)"/>-->
                     <!--</md-input-container>-->
                     <!--<input type="text"-->
                     <!--id="alfred-input"-->
@@ -48,17 +48,32 @@
                     <div class="parent-group">
                         <ul>
                             <li>
-                                ALL HOSTS
+                                <a><i class="mdi mdi-folder"></i></a>
                             </li>
                             <li ng-repeat="group in groups" class="parent-group-list">
+                                <i class="mdi mdi-chevron-right"></i>
                                 {{group.label}}
                             </li>
                         </ul>
                     </div>
                     <div class="tags">
-                        <ul>
+                        <lx-dropdown class="tag-toolbar" position="right" ng-if="tags.length==0">
+                            <button class="btn btn--m btn--icon" lx-ripple lx-dropdown-toggle>
+                                <i class="mdi mdi-tag"></i>
+                            </button>
+
+                            <lx-dropdown-menu>
+                                <ul>
+                                    <li ng-repeat="tag in tags">
+                                        <a class="dropdown-link">{{tag.label}}</a>
+                                    </li>
+                                </ul>
+                            </lx-dropdown-menu>
+                        </lx-dropdown>
+
+                        <ul ng-if="tags.length!=0">
                             <li ng-repeat="tag in tags">
-                                <md-button><i class="mdi mdi-tag"></i> {{tag.label}}</md-button>
+                                <md-button>{{tag.label}}</md-button>
                             </li>
                         </ul>
                     </div>
