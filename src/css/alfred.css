@@ -80,12 +80,13 @@
 }
 
 .alfred-widget li {
-    overflow: hidden;
-    text-overflow: ellipsis;
     float: left;
     list-style-type: none;
 }
 
+.alfred-widget li .btn {
+    color: #616161;
+}
 .alfred-widget .list-group {
     padding-left: 0;
     margin-bottom: 0;
