@@ -1,17 +1,18 @@
-
-<!--Here we should pass Backbone.groups instead of arrays of json-->
-<alfred uid="uid"
-        connections="hosts"
-        histories="activities"
-        groups="groups"
-        childgroups="childgroups"
-        tags="tags"
-        amount="6"
-        height-cell="45"
-        placeholder="placeholder"
-        on-enter-callback="enterConnection(connection)"
-        on-add-callback="addConnection()"
-        on-edit-callback="editConnection(connection)"
-        on-upload-callback="uploadConnection(connection)"
-        on-remove-callback="removeConnection(connection)">
-</alfred>
+<div ng-if="showAlfred">
+    <!--Here we should pass Backbone.groups instead of arrays of json-->
+    <alfred uid="uid"
+            connections="hosts"
+            histories="activities"
+            groups="groups"
+            childgroups="childgroups"
+            tags="tags"
+            amount="6"
+            height-cell="45"
+            placeholder="placeholder"
+            on-enter-callback="enterConnection(connection)"
+            on-add-callback="addConnection()"
+            on-edit-callback="editConnection(connection)"
+            on-upload-callback="uploadConnection(connection)"
+            on-remove-callback="removeConnection(connection)">
+    </alfred>
+</div>

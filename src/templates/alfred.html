@@ -50,7 +50,7 @@
                             <li>
                                 <a><i class="mdi mdi-folder"></i></a>
                             </li>
-                            <li ng-repeat="group in groups" class="parent-group-list">
+                            <li ng-repeat="group in path_groups" class="parent-group-list">
                                 <i class="mdi mdi-chevron-right"></i>
                                 {{group.label}}
                             </li>
@@ -82,7 +82,7 @@
                 <div ng-if="isLeftActive" class="bottom-group">
                     <div class="children-group">
                         <ul>
-                            <li ng-repeat="group in childgroups">
+                            <li ng-repeat="group in children_group">
                                 <!--<md-button class="md-raised">Button</md-button>-->
                                 <button class="btn btn--l btn--white btn--raised" lx-ripple>{{group.label}}</button>
                             </li>

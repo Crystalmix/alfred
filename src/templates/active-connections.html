@@ -9,6 +9,7 @@
                 ng-class="{ active: (key === selectedIndex) }"
                 ng-style="setHeight()">
             <md-item-content class="md-tile-content">
+                {{connection.get_ssh_identity()}}
                 <span ng-if="connection.label">
                     {{connection.label}}
                     <i class="active actions" ng-if="(key === selectedIndex)">
@@ -24,7 +25,8 @@
                     <i ng-if="!(key === selectedIndex)">{{cmdSystemHotkey}}{{key+1}}</i>
                 </span>
                 <span ng-if="!connection.label">
-                    {{connection.ssh_username}}@{{connection.hostname}}
+
+                    {{connection.username}}@{{connection.address}}
                     <i class="active actions" ng-if="(key === selectedIndex)">
                         <div class="enter-block">
                             <i ng-if="!isHistory(connection)" class="glyphicon glyphicon-pencil"
