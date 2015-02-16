@@ -18,12 +18,9 @@
 
                         <lx-dropdown-menu>
                             <ul>
-                                <li ng-if="isLeftActive"><a class="dropdown-link" ng-click="changeActiveList()">Go to
-                                    activities</a></li>
-                                <li ng-if="isRightActive"><a class="dropdown-link" ng-click="changeActiveList()">Go to
-                                    hosts</a></li>
-                                <li><a class="dropdown-link">Add new group</a></li>
-                                <li><a class="dropdown-link">Add new host</a></li>
+                                <li><a class="dropdown-link">New group</a></li>
+                                <li ng-if="isLeftActive"><a class="dropdown-link" ng-click="changeActiveList()">History</a></li>
+                                <li ng-if="isRightActive"><a class="dropdown-link" ng-click="changeActiveList()">Hosts</a></li>
                             </ul>
                         </lx-dropdown-menu>
                     </lx-dropdown>

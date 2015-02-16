@@ -1,4 +1,3 @@
-
 coffeePath = "src/coffee"
 
 module.exports = (grunt) ->
@@ -23,7 +22,7 @@ module.exports = (grunt) ->
                     "#{coffeePath}/directives/connectionItem.coffee",
                     "#{coffeePath}/directives/whenScrolled.coffee",
                     "#{coffeePath}/filteres/filterConnections.coffee"
-                    ],
+                ],
                 dest: "#{coffeePath}/alfred.coffee",
 
             addTemplates:
@@ -50,8 +49,14 @@ module.exports = (grunt) ->
                 module: "alfredDirective"
             views:
                 files: [
-                    'templates/template.js': ['src/templates/alfred.html', 'src/templates/active-connections.html', 'src/templates/inactive-connections.html']
+                    'templates/template.js': ['src/templates/alfred.html', 'src/templates/active-connections.html',
+                                              'src/templates/inactive-connections.html']
                 ]
+
+        less:
+            development:
+                files:
+                    "src/css/alfred.css": "src/css/alfred.less"
 
         karma:
             unit:
@@ -66,7 +71,8 @@ module.exports = (grunt) ->
     grunt.loadNpmTasks 'grunt-contrib-concat'
     grunt.loadNpmTasks 'grunt-contrib-clean'
     grunt.loadNpmTasks 'grunt-hustler'
+    grunt.loadNpmTasks 'grunt-contrib-less'
 
-    grunt.registerTask 'default', ['ngTemplateCache', 'concat:dist', 'coffee', 'concat:addTemplates', 'clean']
+    grunt.registerTask 'default', ['ngTemplateCache', 'concat:dist', 'coffee', 'concat:addTemplates', 'clean', 'less']
     grunt.registerTask 'demo', ['coffee:dev']
-    grunt.registerTask 'test', ['default','karma']
+    grunt.registerTask 'test', ['default', 'karma']
