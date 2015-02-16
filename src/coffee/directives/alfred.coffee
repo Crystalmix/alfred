@@ -7,7 +7,7 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
     templateUrl: "src/templates/alfred.html"
     scope:
         uid: "="
-        connections: "="
+        hosts: "="
         histories: "="
         groups: "="
         tags: "="
@@ -26,13 +26,11 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
         $scope.selectedIndex = 0
         $scope.current_group = null
 
-        # Prepares entities for template
-        transformationData = () ->
-            $scope.tags = $scope.tags.toJSON {do_not_encrypt: no}
-            $scope.path_groups = if $scope.current_group then $scope.current_group.get_parent_groups($scope.current_group.get('local_id')) else []
+        getGroups = () ->
+            $scope.path_groups = if $scope.current_group then $scope.groups.get_parent_groups($scope.current_group.get('local_id')) else []
             do $scope.path_groups.reverse
 
-            $scope.children_group = if $scope.current_group then _.rest($scope.current_group.get_all_children($scope.current_group.get('local_id'))) else $scope.groups.get_root()
+            $scope.children_group = if $scope.current_group then _.rest($scope.groups.get_all_children($scope.current_group.get('local_id'))) else $scope.groups.get_root()
 
             _.each $scope.children_group, (val, key) ->
                 $scope.children_group[key] = _.clone val.toJSON {do_not_encrypt: no}
@@ -41,19 +39,37 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
                 $scope.path_groups[key] = _.clone val.toJSON {do_not_encrypt: no}
 
 
-            # Overrides connections: add new fields
-            $scope.connections = _.clone $scope.connections
-            _.each $scope.connections.models, (val, key) ->
+        getConnections = () ->
+            # Overrides connections: filter by group and add new fields
+            $scope.connections = _.clone $scope.hosts.models
+            $scope.connections = $scope.hosts.filter_by_group $scope.current_group.get('local_id') if $scope.current_group
+
+            _.each $scope.connections, (val, key) ->
                 val.set {username : val.get_ssh_identity().get("username")}
                 val.set {password : val.get_ssh_identity().get("password")}
                 val.set {key : val.get_ssh_identity().get("key")}
+                $scope.connections[key] = val.toJSON do_not_encrypt: no
 
-            $scope.connections = $scope.connections.toJSON {do_not_encrypt: no}
+
+        # Prepares entities for template
+        transformationData = () ->
+            # Gets clone tags
+            $scope.copy_tags = $scope.tags.toJSON {do_not_encrypt: no}
+            # Prepares all groups
+            do getGroups
+            # Prepares all hosts
+            do getConnections
+
+
+        $scope.filterByGroup = (local_id) ->
+            $scope.current_group = if local_id then $scope.groups.get(local_id)  else null
+            $timeout (-> do transformationData)
 
 
         $scope.setSelectedConnection = (index) ->
             $scope.selectedIndex = index
             $scope.$broadcast "setSelectedIndex", index
+
 
         $scope.changeActiveList = () ->
             if $scope.isTable is yes and $scope.connections.length and $scope.histories.length
@@ -249,7 +265,6 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
             scope.isTable = yes
             scope.isLeftActive = if scope.connections.length then yes else no
             scope.isRightActive = if scope.connections.length then no else yes
-
 
         scope.keydown = (event) ->
             $timeout (->

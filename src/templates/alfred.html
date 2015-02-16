@@ -11,20 +11,6 @@
                         </lx-text-field>
                     </div>
 
-                    <!--<md-input-container class="alfred-input">-->
-                    <!--<label>{{placeholder}}</label>-->
-                    <!--<input type="text"-->
-                    <!--class="form-control input-lg input"-->
-                    <!--ng-model="query"-->
-                    <!--ng-keydown="keydown($event)"/>-->
-                    <!--</md-input-container>-->
-                    <!--<input type="text"-->
-                    <!--id="alfred-input"-->
-                    <!--class="form-control input-lg input"-->
-                    <!--ng-model="query"-->
-                    <!--ng-keydown="keydown($event)"-->
-                    <!--placeholder="{{placeholder}}"/>-->
-
                     <lx-dropdown class="menu-toolbar" position="right" width="200">
                         <button class="btn btn--m btn--icon history-menu" lx-ripple lx-dropdown-toggle>
                             <i class="mdi mdi-menu"></i>
@@ -48,11 +34,13 @@
                     <div class="parent-group">
                         <ul>
                             <li>
-                                <a><i class="mdi mdi-folder"></i></a>
+                                <a ng-click="filterByGroup(null)"><i class="mdi mdi-folder"></i></a>
                             </li>
                             <li ng-repeat="group in path_groups" class="parent-group-list">
-                                <i class="mdi mdi-chevron-right"></i>
-                                {{group.label}}
+                                <a ng-click="filterByGroup(group.local_id)">
+                                    <i class="mdi mdi-chevron-right"></i>
+                                    {{group.label}}
+                                </a>
                             </li>
                         </ul>
                     </div>
@@ -72,7 +60,7 @@
                         </lx-dropdown>
 
                         <ul ng-if="tags.length!=0">
-                            <li ng-repeat="tag in tags">
+                            <li ng-repeat="tag in copy_tags">
                                 <md-button>{{tag.label}}</md-button>
                             </li>
                         </ul>
@@ -83,8 +71,7 @@
                     <div class="children-group">
                         <ul>
                             <li ng-repeat="group in children_group">
-                                <!--<md-button class="md-raised">Button</md-button>-->
-                                <button class="btn btn--l btn--white btn--raised" lx-ripple>{{group.label}}</button>
+                                <button class="btn btn--l btn--white btn--raised" lx-ripple ng-click="filterByGroup(group.local_id)">{{group.label}}</button>
                             </li>
                         </ul>
                     </div>
@@ -100,15 +87,6 @@
 
                 <div ng-if="isTable" class="table">
                     <div id="left" ng-class="{ active: isLeftActive }" ng-if="isLeftActive">
-                        <!--<div class="header">-->
-                        <!--<span>Hosts</span>-->
-                        <!--<a type="button" ng-click="addConnection()"><span-->
-                        <!--class="add glyphicon glyphicon-plus"></span></a>-->
-                        <!--<i class="pull-right" ng-if="isLeftActive">-->
-                        <!--<a type="button"><span class="glyphicon glyphicon-arrow-left"></span></a>-->
-                        <!--</i>-->
-                        <!--</div>-->
-
                         <div class="left-list" ng-if="isLeftActive">
                             <active-list connections="connections"
                                          amount="amount"
@@ -131,12 +109,6 @@
                     </div>
 
                     <div id="right" ng-class="{ active: isRightActive }" ng-if="isRightActive">
-                        <!--<div class="header">-->
-                        <!--<span>History</span>-->
-                        <!--<i class="pull-right" ng-if="isRightActive">-->
-                        <!--<a type="button"><span class="glyphicon glyphicon-arrow-right"></span></a>-->
-                        <!--</i>-->
-                        <!--</div>-->
                         <div class="left-list" ng-if="isLeftActive">
                             <inactive-list connections="histories"
                                            amount="amount"
