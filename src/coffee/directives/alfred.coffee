@@ -29,7 +29,6 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
         # Prepares entities for template
         transformationData = () ->
             $scope.tags = $scope.tags.toJSON {do_not_encrypt: no}
-            $scope.connections = $scope.connections.toJSON {do_not_encrypt: no}
             $scope.path_groups = if $scope.current_group then $scope.current_group.get_parent_groups($scope.current_group.get('local_id')) else []
             do $scope.path_groups.reverse
 
@@ -41,11 +40,15 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
             _.each $scope.path_groups, (val, key) ->
                 $scope.path_groups[key] = _.clone val.toJSON {do_not_encrypt: no}
 
-#            $scope.hosts = _.each $scope.hosts.models, (val, key) ->
-#                host = val
-#                $scope.hosts[key] = _.clone val.toJSON {do_not_encrypt: no}
-#                $scope.hosts[key]["username"] = host.get_ssh_identity().get("username")
-#            $scope.connections = $scope.hosts
+
+            # Overrides connections: add new fields
+            $scope.connections = _.clone $scope.connections
+            _.each $scope.connections.models, (val, key) ->
+                val.set {username : val.get_ssh_identity().get("username")}
+                val.set {password : val.get_ssh_identity().get("password")}
+                val.set {key : val.get_ssh_identity().get("key")}
+
+            $scope.connections = $scope.connections.toJSON {do_not_encrypt: no}
 
 
         $scope.setSelectedConnection = (index) ->

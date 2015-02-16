@@ -34,7 +34,6 @@ class AlfredController
         @scope.activities = []
         @scope.hosts = []
         @scope.groups = []
-        @scope.childgroups = []
         @scope.tags = []
 
         sa = new SA("https://serverauditor.com")
@@ -45,7 +44,7 @@ class AlfredController
             @scope.hosts = sa.hosts
             @scope.groups = sa.groups
             @scope.tags = sa.tags
-            @scope.histories = sa.histories
+            @scope.activities = sa.activities
             @scope.showAlfred = yes
             do @scope.$apply
         )

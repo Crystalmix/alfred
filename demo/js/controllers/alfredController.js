@@ -37,7 +37,6 @@
       this.scope.activities = [];
       this.scope.hosts = [];
       this.scope.groups = [];
-      this.scope.childgroups = [];
       this.scope.tags = [];
       sa = new SA("https://serverauditor.com");
       sa.init().done((function(_this) {
@@ -50,7 +49,7 @@
           _this.scope.hosts = sa.hosts;
           _this.scope.groups = sa.groups;
           _this.scope.tags = sa.tags;
-          _this.scope.histories = sa.histories;
+          _this.scope.activities = sa.activities;
           _this.scope.showAlfred = true;
           return _this.scope.$apply();
         };

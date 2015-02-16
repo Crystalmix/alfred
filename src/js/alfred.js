@@ -97,9 +97,6 @@
             $scope.tags = $scope.tags.toJSON({
               do_not_encrypt: false
             });
-            $scope.connections = $scope.connections.toJSON({
-              do_not_encrypt: false
-            });
             $scope.path_groups = $scope.current_group ? $scope.current_group.get_parent_groups($scope.current_group.get('local_id')) : [];
             $scope.path_groups.reverse();
             $scope.children_group = $scope.current_group ? _.rest($scope.current_group.get_all_children($scope.current_group.get('local_id'))) : $scope.groups.get_root();
@@ -108,10 +105,25 @@
                 do_not_encrypt: false
               }));
             });
-            return _.each($scope.path_groups, function(val, key) {
+            _.each($scope.path_groups, function(val, key) {
               return $scope.path_groups[key] = _.clone(val.toJSON({
                 do_not_encrypt: false
               }));
+            });
+            $scope.connections = _.clone($scope.connections);
+            _.each($scope.connections.models, function(val, key) {
+              val.set({
+                username: val.get_ssh_identity().get("username")
+              });
+              val.set({
+                password: val.get_ssh_identity().get("password")
+              });
+              return val.set({
+                key: val.get_ssh_identity().get("key")
+              });
+            });
+            return $scope.connections = $scope.connections.toJSON({
+              do_not_encrypt: false
             });
           };
           $scope.setSelectedConnection = function(index) {
