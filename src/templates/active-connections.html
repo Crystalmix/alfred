@@ -1,4 +1,4 @@
-<div id="fixed" when-scrolled="loadMore()">
+<div id="fixed" when-scrolled="loadMore()" ng-mouseover="toggleScroll()">
     <md-list>
         <md-item
                 ng-repeat="(key,connection) in subConnections = (connections | filterConnections:query:from:offset:this) track by key"
@@ -8,37 +8,58 @@
                 key="{{key}}"
                 ng-class="{ active: (key === selectedIndex) }"
                 ng-style="setHeight()">
-            <md-item-content class="md-tile-content">
-                {{connection.get_ssh_identity()}}
-                <span ng-if="connection.label">
-                    {{connection.label}}
+            <md-item-content>
+                <div class="md-tile-left host-icon">
+                    <img src="/src/img/Host-icon_disable_light.png"/>
+                </div>
+                <div class="md-tile-content">
+                    <h4 ng-if="connection.label">{{connection.label}}</h4>
+                    <h4 ng-if="!connection.label">{{connection.username}}@{{connection.address}}</h4>
+                </div>
+                <div class="md-tile-right">
                     <i class="active actions" ng-if="(key === selectedIndex)">
                         <div class="enter-block">
-                            <i ng-if="!isHistory(connection)" class="glyphicon glyphicon-pencil"
+                            <i ng-if="!isHistory(connection)" class="mdi mdi-pencil"
                                ng-click="edit($event, connection)"></i>
-                            <i ng-if="isHistory(connection)" class="glyphicon glyphicon-upload"
+                            <i class="mdi mdi-delete"
                                ng-click="upload($event, connection)"></i>
                             <i class="glyphicon glyphicon-trash" ng-click="remove($event, connection)"></i>
                         </div>
                         <i>{{enterText}}</i>
                     </i>
                     <i ng-if="!(key === selectedIndex)">{{cmdSystemHotkey}}{{key+1}}</i>
-                </span>
-                <span ng-if="!connection.label">
+                </div>
 
-                    {{connection.username}}@{{connection.address}}
-                    <i class="active actions" ng-if="(key === selectedIndex)">
-                        <div class="enter-block">
-                            <i ng-if="!isHistory(connection)" class="glyphicon glyphicon-pencil"
-                               ng-click="edit($event, connection)"></i>
-                            <i ng-if="isHistory(connection)" class="glyphicon glyphicon-upload"
-                               ng-click="upload($event, connection)"></i>
-                            <i class="glyphicon glyphicon-trash" ng-click="remove($event, connection)"></i>
-                        </div>
-                        <i>{{enterText}}</i>
-                    </i>
-                    <i ng-if="!(key === selectedIndex)">{{cmdSystemHotkey}}{{key+1}}</i>
-                </span>
+
+                <!--<span ng-if="connection.label">-->
+                <!--{{connection.label}}-->
+                <!--<i class="active actions" ng-if="(key === selectedIndex)">-->
+                <!--<div class="enter-block">-->
+                <!--<i ng-if="!isHistory(connection)" class="glyphicon glyphicon-pencil"-->
+                <!--ng-click="edit($event, connection)"></i>-->
+                <!--<i ng-if="isHistory(connection)" class="glyphicon glyphicon-upload"-->
+                <!--ng-click="upload($event, connection)"></i>-->
+                <!--<i class="glyphicon glyphicon-trash" ng-click="remove($event, connection)"></i>-->
+                <!--</div>-->
+                <!--<i>{{enterText}}</i>-->
+                <!--</i>-->
+                <!--<i ng-if="!(key === selectedIndex)">{{cmdSystemHotkey}}{{key+1}}</i>-->
+                <!--</span>-->
+                <!--<span ng-if="!connection.label">-->
+
+                <!--{{connection.username}}@{{connection.address}}-->
+                <!--<i class="active actions" ng-if="(key === selectedIndex)">-->
+                <!--<div class="enter-block">-->
+                <!--<i ng-if="!isHistory(connection)" class="glyphicon glyphicon-pencil"-->
+                <!--ng-click="edit($event, connection)"></i>-->
+                <!--<i ng-if="isHistory(connection)" class="glyphicon glyphicon-upload"-->
+                <!--ng-click="upload($event, connection)"></i>-->
+                <!--<i class="glyphicon glyphicon-trash" ng-click="remove($event, connection)"></i>-->
+                <!--</div>-->
+                <!--<i>{{enterText}}</i>-->
+                <!--</i>-->
+                <!--<i ng-if="!(key === selectedIndex)">{{cmdSystemHotkey}}{{key+1}}</i>-->
+                <!--</span>-->
 
             </md-item-content>
             <md-divider inset></md-divider>
@@ -46,51 +67,52 @@
     </md-list>
 
     <!--<ul class="list-group">-->
-        <!--<li ng-repeat="(key,connection) in subConnections = (connections | filterConnections:query:from:offset:this) track by key"-->
-            <!--id="{{key}}"-->
-            <!--ng-click="select(connection, key)"-->
-            <!--connection-item="connection"-->
-            <!--key="{{key}}"-->
-            <!--ng-class="{ active: (key === selectedIndex) }"-->
-            <!--ng-style="setHeight()">-->
-            <!--<span ng-if="connection.label">-->
-                <!--{{connection.label}}-->
-                <!--<i class="active actions" ng-if="(key === selectedIndex)">-->
-                    <!--<div class="enter-block">-->
-                        <!--<i ng-if="!isHistory(connection)" class="glyphicon glyphicon-pencil"-->
-                           <!--ng-click="edit($event, connection)"></i>-->
-                        <!--<i ng-if="isHistory(connection)" class="glyphicon glyphicon-upload"-->
-                           <!--ng-click="upload($event, connection)"></i>-->
-                        <!--<i class="glyphicon glyphicon-trash" ng-click="remove($event, connection)"></i>-->
-                    <!--</div>-->
-                    <!--<i>{{enterText}}</i>-->
-                <!--</i>-->
-                <!--<i ng-if="!(key === selectedIndex)">{{cmdSystemHotkey}}{{key+1}}</i>-->
-            <!--</span>-->
-            <!--<span ng-if="!connection.label">-->
-                <!--{{connection.ssh_username}}@{{connection.hostname}}-->
-                <!--<i class="active actions" ng-if="(key === selectedIndex)">-->
-                    <!--<div class="enter-block">-->
-                        <!--<i ng-if="!isHistory(connection)" class="glyphicon glyphicon-pencil"-->
-                           <!--ng-click="edit($event, connection)"></i>-->
-                        <!--<i ng-if="isHistory(connection)" class="glyphicon glyphicon-upload"-->
-                           <!--ng-click="upload($event, connection)"></i>-->
-                        <!--<i class="glyphicon glyphicon-trash" ng-click="remove($event, connection)"></i>-->
-                    <!--</div>-->
-                    <!--<i>{{enterText}}</i>-->
-                <!--</i>-->
-                <!--<i ng-if="!(key === selectedIndex)">{{cmdSystemHotkey}}{{key+1}}</i>-->
-            <!--</span>-->
-        <!--</li>-->
-        <!--<li ng-repeat="i in rest track by $index"-->
-            <!--ng-style="setHeight()"-->
-            <!--class="empty-cell">-->
-        <!--</li>-->
-        <!--<li ng-if="quickConnectionsParams" ng-bind="quickConnectionsParams"></li>-->
-        <!--<li ng-if="!subConnections.length && !quickConnectionsParams">Nothing</li>-->
+    <!--<li ng-repeat="(key,connection) in subConnections = (connections | filterConnections:query:from:offset:this) track by key"-->
+    <!--id="{{key}}"-->
+    <!--ng-click="select(connection, key)"-->
+    <!--connection-item="connection"-->
+    <!--key="{{key}}"-->
+    <!--ng-class="{ active: (key === selectedIndex) }"-->
+    <!--ng-style="setHeight()">-->
+    <!--<span ng-if="connection.label">-->
+    <!--{{connection.label}}-->
+    <!--<i class="active actions" ng-if="(key === selectedIndex)">-->
+    <!--<div class="enter-block">-->
+    <!--<i ng-if="!isHistory(connection)" class="glyphicon glyphicon-pencil"-->
+    <!--ng-click="edit($event, connection)"></i>-->
+    <!--<i ng-if="isHistory(connection)" class="glyphicon glyphicon-upload"-->
+    <!--ng-click="upload($event, connection)"></i>-->
+    <!--<i class="glyphicon glyphicon-trash" ng-click="remove($event, connection)"></i>-->
+    <!--</div>-->
+    <!--<i>{{enterText}}</i>-->
+    <!--</i>-->
+    <!--<i ng-if="!(key === selectedIndex)">{{cmdSystemHotkey}}{{key+1}}</i>-->
+    <!--</span>-->
+    <!--<span ng-if="!connection.label">-->
+    <!--{{connection.ssh_username}}@{{connection.hostname}}-->
+    <!--<i class="active actions" ng-if="(key === selectedIndex)">-->
+    <!--<div class="enter-block">-->
+    <!--<i ng-if="!isHistory(connection)" class="glyphicon glyphicon-pencil"-->
+    <!--ng-click="edit($event, connection)"></i>-->
+    <!--<i ng-if="isHistory(connection)" class="glyphicon glyphicon-upload"-->
+    <!--ng-click="upload($event, connection)"></i>-->
+    <!--<i class="glyphicon glyphicon-trash" ng-click="remove($event, connection)"></i>-->
+    <!--</div>-->
+    <!--<i>{{enterText}}</i>-->
+    <!--</i>-->
+    <!--<i ng-if="!(key === selectedIndex)">{{cmdSystemHotkey}}{{key+1}}</i>-->
+    <!--</span>-->
+    <!--</li>-->
+    <!--<li ng-repeat="i in rest track by $index"-->
+    <!--ng-style="setHeight()"-->
+    <!--class="empty-cell">-->
+    <!--</li>-->
+    <!--<li ng-if="quickConnectionsParams" ng-bind="quickConnectionsParams"></li>-->
+    <!--<li ng-if="!subConnections.length && !quickConnectionsParams">Nothing</li>-->
     <!--</ul>-->
 </div>
 <div class="scroller" ng-if="filteredConnections.length > amount">
     <div class="sizer" ng-style="setSizerHeight()"></div>
     <div class="slider" ng-style="setSliderHeight()"></div>
+</div>
 </div>

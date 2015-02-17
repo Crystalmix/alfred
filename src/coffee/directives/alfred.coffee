@@ -77,6 +77,7 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
                 $scope.isRightActive = not $scope.isRightActive
             return no
 
+
         jwerty.key '→', (->
             if $scope.isTable and $scope.histories.length
                 $scope.isLeftActive = no

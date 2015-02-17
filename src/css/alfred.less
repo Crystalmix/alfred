@@ -50,17 +50,7 @@
             color: white;
         }
     }
-    li {
-        float: left;
-        list-style-type: none;
-        .btn {
-            color: #616161;
-        }
-    }
-    .list-group {
-        padding-left: 0;
-        margin-bottom: 0;
-    }
+
     #right {
         width: 100%;
     }
@@ -83,7 +73,7 @@
         height: 100%;
         width: 4px;
         background-color: #ffffff;
-        border: 1px solid #42b6ca;
+        border: 1px solid #2196f3;
         border-radius: 3px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.175);
         -webkit-box-sizing: border-box;
@@ -91,7 +81,7 @@
         box-sizing: border-box;
         top: 0;
         .slider {
-            background-color: #428bca;
+            background-color: #2196f3;
             -webkit-box-sizing: border-box;
             -moz-box-sizing: border-box;
             box-sizing: border-box;
@@ -109,148 +99,169 @@
             margin-left: 5px;
         }
     }
-    .menu-toolbar {
-        width: 4%;
-    }
-    .history-menu {
-        width: 100%;
-        padding: 0;
-        height: 46px;
-        float: right;
-        i {
-            color: #2196f3;
-            width: 22px;
-        }
-    }
-
-    ::-webkit-input-placeholder {
-        color: white;
-    }
 
     .tollbar-container {
         width: 100%;
         padding: 10px;
     }
 
-    .children-group, .parent-group {
-        display: -webkit-box;
-        width: 65%;
-    }
-
-    .children-group li {
-        margin-right: 22px;
-    }
-
-    .children-group .md-button {
-        background-color: #38a3f8;
-        text-transform: none;
-        padding: 4px 20px;
-        font-weight: normal;
-        margin-top: 10px;
-    }
-
-    .children-group ul {
-        padding: 0;
-        margin: 10px 0;
-    }
-
-    .parent-group li {
-        margin-right: 22px;
-        margin-right: 6px;
-    }
-
-    .parent-group ul {
-        padding: 0;
-        margin: 10px 0;
-        margin: 20px 0 0 0;
-    }
-
-    .shadow-box {
+    .content-box {
+        overflow: hidden;
         box-shadow: 0px 2px 5px 0 rgba(0, 0, 0, 0.26);
+
+        .md-tile-right {
+            padding-right: 14px;
+        }
+
+        .host-icon {
+            margin-left: 10px;
+        }
     }
 
     .md-tile-content span {
         width: 100%;
     }
 
-    button.history-menu.md-button.md-default-theme:hover {
-        background-color: transparent;
-    }
+    //    .add-new-group {
+    //        width: 35%;
+    //        text-align: right;
+    //        padding: 20px 0 0 0;
+    //        button {
+    //            background-color: #38a3f8;
+    //            padding: 4px 10px;
+    //        }
+    //    }
 
-    .head-groups, .bottom-group {
-        display: -webkit-inline-box;
-        width: 100%;
-    }
-
-    .head-groups .tags {
-        width: 35%;
-    }
-
-    .tags ul {
-        padding: 0;
-        margin: 4px 0;
-        float: right;
-    }
-
-    .tags li {
-        float: right;
-    }
-
-    .tags button {
-        text-transform: none;
-        font-weight: normal;
-        background-color: #38a3f8;
-        margin: 10px 0px 0 8px;
-        i {
-            float: none;
-            color: white;
-        }
-    }
-
-    .add-new-group {
-        width: 35%;
-        text-align: right;
-        padding: 20px 0 0 0;
-        button {
-            background-color: #38a3f8;
-            padding: 4px 10px;
-        }
-    }
-
-    md-toolbar {
+    md-toolbar.alfred-toolbar {
         font-size: 16px;
         background-color: white !important;
         color: #616161 !important;
     }
+    .alfred-toolbar {
 
-    .alfred-input {
-        width: 96%;
-        float: left;
-    }
+        .alfred-input {
+            width: 96%;
+            float: left;
+        }
 
-    .head-toolbar {
-        display: block;
-        width: 100%;
-    }
+        .head-toolbar {
+            display: block;
+            width: 100%;
+        }
+        .head-groups, .bottom-group {
+            display: -webkit-inline-box;
+            width: 100%;
+        }
 
-    i.mdi.mdi-chevron-right {
-        float: none;
-    }
+        .head-groups .tags {
+            width: 35%;
+        }
+        .children-group, .parent-group {
+            display: -webkit-box;
+            width: 65%;
+        }
 
-    i.mdi.mdi-folder {
-        font-size: 20px;
-    }
+        .children-group li {
+            margin-right: 22px;
+        }
 
-    .tag-toolbar {
-        margin: 0px 0;
-        float: right;
-        vertical-align: middle;
-        padding: 13px 0 0 0;
-        width: 35px;
-        font-size: 20px;
-    }
+        .children-group .md-button {
+            background-color: #38a3f8;
+            text-transform: none;
+            padding: 4px 20px;
+            font-weight: normal;
+            margin-top: 10px;
+        }
 
-    li:last-child {
-        font-weight: 600;
+        .children-group ul {
+            padding: 0;
+            margin: 10px 0;
+        }
+
+        .parent-group li {
+            margin-right: 22px;
+            margin-right: 6px;
+        }
+
+        .parent-group ul {
+            padding: 0;
+            margin: 10px 0;
+            margin: 20px 0 0 0;
+        }
+
+        i.mdi.mdi-chevron-right {
+            float: none;
+        }
+
+        i.mdi.mdi-folder {
+            font-size: 20px;
+        }
+
+        .tag-toolbar {
+            margin: 0px 0;
+            float: right;
+            vertical-align: middle;
+            padding: 13px 0 0 0;
+            width: 35px;
+            font-size: 20px;
+        }
+
+        li:last-child {
+            font-weight: 600;
+        }
+
+        .menu-toolbar {
+            width: 4%;
+        }
+        .history-menu {
+            width: 100%;
+            padding: 0;
+            height: 46px;
+            float: right;
+            i {
+                color: #2196f3;
+                width: 22px;
+            }
+        }
+
+        ::-webkit-input-placeholder {
+            color: white;
+        }
+
+        li {
+            float: left;
+            list-style-type: none;
+            .btn {
+                color: #616161;
+            }
+        }
+        .list-group {
+            padding-left: 0;
+            margin-bottom: 0;
+        }
+        button.history-menu.md-button.md-default-theme:hover {
+            background-color: transparent;
+        }
+
+        .tags ul {
+            padding: 0;
+            margin: 4px 0;
+            float: right;
+        }
+
+        .tags li {
+            float: right;
+        }
+
+        .tags button {
+            text-transform: none;
+            font-weight: normal;
+            background-color: #38a3f8;
+            margin: 10px 0px 0 8px;
+            i {
+                float: none;
+                color: white;
+            }
+        }
     }
 }

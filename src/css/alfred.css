@@ -51,17 +51,6 @@
 .alfred-widget li.active i {
   color: white;
 }
-.alfred-widget li {
-  float: left;
-  list-style-type: none;
-}
-.alfred-widget li .btn {
-  color: #616161;
-}
-.alfred-widget .list-group {
-  padding-left: 0;
-  margin-bottom: 0;
-}
 .alfred-widget #right {
   width: 100%;
 }
@@ -84,7 +73,7 @@
   height: 100%;
   width: 4px;
   background-color: #ffffff;
-  border: 1px solid #42b6ca;
+  border: 1px solid #2196f3;
   border-radius: 3px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.175);
   -webkit-box-sizing: border-box;
@@ -93,7 +82,7 @@
   top: 0;
 }
 .alfred-widget .scroller .slider {
-  background-color: #428bca;
+  background-color: #2196f3;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
@@ -110,118 +99,79 @@
 .alfred-widget .enter-block i {
   margin-left: 5px;
 }
-.alfred-widget .menu-toolbar {
-  width: 4%;
-}
-.alfred-widget .history-menu {
-  width: 100%;
-  padding: 0;
-  height: 46px;
-  float: right;
-}
-.alfred-widget .history-menu i {
-  color: #2196f3;
-  width: 22px;
-}
-.alfred-widget ::-webkit-input-placeholder {
-  color: white;
-}
 .alfred-widget .tollbar-container {
   width: 100%;
   padding: 10px;
 }
-.alfred-widget .children-group,
-.alfred-widget .parent-group {
+.alfred-widget .content-box {
+  overflow: hidden;
+  box-shadow: 0px 2px 5px 0 rgba(0, 0, 0, 0.26);
+}
+.alfred-widget .content-box .md-tile-right {
+  padding-right: 14px;
+}
+.alfred-widget .content-box .host-icon {
+  margin-left: 10px;
+}
+.alfred-widget .md-tile-content span {
+  width: 100%;
+}
+.alfred-widget md-toolbar.alfred-toolbar {
+  font-size: 16px;
+  background-color: white !important;
+  color: #616161 !important;
+}
+.alfred-widget .alfred-toolbar .alfred-input {
+  width: 96%;
+  float: left;
+}
+.alfred-widget .alfred-toolbar .head-toolbar {
+  display: block;
+  width: 100%;
+}
+.alfred-widget .alfred-toolbar .head-groups,
+.alfred-widget .alfred-toolbar .bottom-group {
+  display: -webkit-inline-box;
+  width: 100%;
+}
+.alfred-widget .alfred-toolbar .head-groups .tags {
+  width: 35%;
+}
+.alfred-widget .alfred-toolbar .children-group,
+.alfred-widget .alfred-toolbar .parent-group {
   display: -webkit-box;
   width: 65%;
 }
-.alfred-widget .children-group li {
+.alfred-widget .alfred-toolbar .children-group li {
   margin-right: 22px;
 }
-.alfred-widget .children-group .md-button {
+.alfred-widget .alfred-toolbar .children-group .md-button {
   background-color: #38a3f8;
   text-transform: none;
   padding: 4px 20px;
   font-weight: normal;
   margin-top: 10px;
 }
-.alfred-widget .children-group ul {
+.alfred-widget .alfred-toolbar .children-group ul {
   padding: 0;
   margin: 10px 0;
 }
-.alfred-widget .parent-group li {
+.alfred-widget .alfred-toolbar .parent-group li {
   margin-right: 22px;
   margin-right: 6px;
 }
-.alfred-widget .parent-group ul {
+.alfred-widget .alfred-toolbar .parent-group ul {
   padding: 0;
   margin: 10px 0;
   margin: 20px 0 0 0;
 }
-.alfred-widget .shadow-box {
-  box-shadow: 0px 2px 5px 0 rgba(0, 0, 0, 0.26);
-}
-.alfred-widget .md-tile-content span {
-  width: 100%;
-}
-.alfred-widget button.history-menu.md-button.md-default-theme:hover {
-  background-color: transparent;
-}
-.alfred-widget .head-groups,
-.alfred-widget .bottom-group {
-  display: -webkit-inline-box;
-  width: 100%;
-}
-.alfred-widget .head-groups .tags {
-  width: 35%;
-}
-.alfred-widget .tags ul {
-  padding: 0;
-  margin: 4px 0;
-  float: right;
-}
-.alfred-widget .tags li {
-  float: right;
-}
-.alfred-widget .tags button {
-  text-transform: none;
-  font-weight: normal;
-  background-color: #38a3f8;
-  margin: 10px 0px 0 8px;
-}
-.alfred-widget .tags button i {
-  float: none;
-  color: white;
-}
-.alfred-widget .add-new-group {
-  width: 35%;
-  text-align: right;
-  padding: 20px 0 0 0;
-}
-.alfred-widget .add-new-group button {
-  background-color: #38a3f8;
-  padding: 4px 10px;
-}
-.alfred-widget md-toolbar {
-  font-size: 16px;
-  background-color: white !important;
-  color: #616161 !important;
-}
-.alfred-widget .alfred-input {
-  width: 96%;
-  float: left;
-}
-.alfred-widget .head-toolbar {
-  display: block;
-  width: 100%;
-}
-.alfred-widget i.mdi.mdi-chevron-right {
+.alfred-widget .alfred-toolbar i.mdi.mdi-chevron-right {
   float: none;
 }
-.alfred-widget i.mdi.mdi-folder {
+.alfred-widget .alfred-toolbar i.mdi.mdi-folder {
   font-size: 20px;
 }
-.alfred-widget .tag-toolbar {
+.alfred-widget .alfred-toolbar .tag-toolbar {
   margin: 0px 0;
   float: right;
   vertical-align: middle;
@@ -229,6 +179,54 @@
   width: 35px;
   font-size: 20px;
 }
-.alfred-widget li:last-child {
+.alfred-widget .alfred-toolbar li:last-child {
   font-weight: 600;
+}
+.alfred-widget .alfred-toolbar .menu-toolbar {
+  width: 4%;
+}
+.alfred-widget .alfred-toolbar .history-menu {
+  width: 100%;
+  padding: 0;
+  height: 46px;
+  float: right;
+}
+.alfred-widget .alfred-toolbar .history-menu i {
+  color: #2196f3;
+  width: 22px;
+}
+.alfred-widget .alfred-toolbar ::-webkit-input-placeholder {
+  color: white;
+}
+.alfred-widget .alfred-toolbar li {
+  float: left;
+  list-style-type: none;
+}
+.alfred-widget .alfred-toolbar li .btn {
+  color: #616161;
+}
+.alfred-widget .alfred-toolbar .list-group {
+  padding-left: 0;
+  margin-bottom: 0;
+}
+.alfred-widget .alfred-toolbar button.history-menu.md-button.md-default-theme:hover {
+  background-color: transparent;
+}
+.alfred-widget .alfred-toolbar .tags ul {
+  padding: 0;
+  margin: 4px 0;
+  float: right;
+}
+.alfred-widget .alfred-toolbar .tags li {
+  float: right;
+}
+.alfred-widget .alfred-toolbar .tags button {
+  text-transform: none;
+  font-weight: normal;
+  background-color: #38a3f8;
+  margin: 10px 0px 0 8px;
+}
+.alfred-widget .alfred-toolbar .tags button i {
+  float: none;
+  color: white;
 }
