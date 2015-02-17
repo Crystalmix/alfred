@@ -121,6 +121,11 @@
   background-color: white !important;
   color: #616161 !important;
 }
+.alfred-widget .add-buttom {
+  position: absolute;
+  bottom: 10px;
+  right: 100px;
+}
 .alfred-widget .alfred-toolbar .alfred-input {
   width: 96%;
   float: left;
