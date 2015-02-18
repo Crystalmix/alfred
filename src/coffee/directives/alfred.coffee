@@ -73,7 +73,7 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
 
 
         $scope.changeActiveList = () ->
-            if $scope.isTable is yes and $scope.connections.length and $scope.histories.length
+            if $scope.connections.length and $scope.histories.length
                 $scope.isLeftActive = not $scope.isLeftActive
                 $scope.isRightActive = not $scope.isRightActive
             return no
@@ -88,23 +88,23 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
                 $scope.chosen_tags = _.union $scope.chosen_tags, tag
 
         jwerty.key '→', (->
-            if $scope.isTable and $scope.histories.length
+            if $scope.scope.is_interrupt_arrow_commands is no and $scope.histories.length
                 $scope.isLeftActive = no
                 $scope.isRightActive = yes
-            else unless $scope.isTable is no
+            else if $scope.scope.is_interrupt_arrow_commands is yes
                 return yes
         ), $element
 
         jwerty.key '←', (->
-            if $scope.isTable and $scope.connections.length
+            if $scope.scope.is_interrupt_arrow_commands is no and $scope.connections.length
                 $scope.isLeftActive = yes
                 $scope.isRightActive = no
-            else unless $scope.isTable is no
+            else if $scope.scope.is_interrupt_arrow_commands is yes
                 return yes
         ), $element
 
         jwerty.key '⇥', (->
-            if $scope.isTable is yes and $scope.connections.length and $scope.histories.length
+            if $scope.scope.is_interrupt_arrow_commands is no and $scope.connections.length and $scope.histories.length
                 $scope.isLeftActive = not $scope.isLeftActive
                 $scope.isRightActive = not $scope.isRightActive
             return no
@@ -164,11 +164,10 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
 
         # Saves paramaters: fromConnection, fromHistories
         @changeFromProperty = (from) ->
-            if $scope.isTable
-                if $scope.isLeftActive
-                    $scope.fromConnection = from
-                else
-                    $scope.fromHistory = from
+            if $scope.isLeftActive
+                $scope.fromConnection = from
+            else
+                $scope.fromHistory = from
 
         # Changes active list on hotkeys
         @changeActiveList = () ->
@@ -215,6 +214,7 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
 
     link: (scope, element, attrs) ->
         $input = element.find '#alfred-input'
+        scope.is_interrupt_arrow_commands = no
 
         # If not define attrs, we should trigger jQuery events
         if not angular.isDefined(attrs.onEnterCallback)
@@ -255,15 +255,13 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
                 do scope.setFocusAtInput
             ), 200
 
-        scope.$watch "isTable", () ->
-            do initializeParameters
 
         # Checks query in order to switch/switch off table state
         checkQuery = () ->
             if scope.query
-                scope.isTable = no
+                scope.scope.is_interrupt_arrow_commands = yes
             else
-                scope.isTable = yes
+                scope.scope.is_interrupt_arrow_commands = no
             do scope.$apply
 
         initializeParameters = () ->
@@ -272,7 +270,6 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
             scope.selectedIndex = 0
 
         initializeTableParameters = () ->
-            scope.isTable = yes
             scope.isLeftActive = if scope.connections.length then yes else no
             scope.isRightActive = if scope.connections.length then no else yes
 

@@ -147,7 +147,7 @@
             return $scope.$broadcast("setSelectedIndex", index);
           };
           $scope.changeActiveList = function() {
-            if ($scope.isTable === true && $scope.connections.length && $scope.histories.length) {
+            if ($scope.connections.length && $scope.histories.length) {
               $scope.isLeftActive = !$scope.isLeftActive;
               $scope.isRightActive = !$scope.isRightActive;
             }
@@ -164,23 +164,23 @@
             }
           };
           jwerty.key('→', (function() {
-            if ($scope.isTable && $scope.histories.length) {
+            if ($scope.scope.is_interrupt_arrow_commands === false && $scope.histories.length) {
               $scope.isLeftActive = false;
               return $scope.isRightActive = true;
-            } else if ($scope.isTable !== false) {
+            } else if ($scope.scope.is_interrupt_arrow_commands === true) {
               return true;
             }
           }), $element);
           jwerty.key('←', (function() {
-            if ($scope.isTable && $scope.connections.length) {
+            if ($scope.scope.is_interrupt_arrow_commands === false && $scope.connections.length) {
               $scope.isLeftActive = true;
               return $scope.isRightActive = false;
-            } else if ($scope.isTable !== false) {
+            } else if ($scope.scope.is_interrupt_arrow_commands === true) {
               return true;
             }
           }), $element);
           jwerty.key('⇥', (function() {
-            if ($scope.isTable === true && $scope.connections.length && $scope.histories.length) {
+            if ($scope.scope.is_interrupt_arrow_commands === false && $scope.connections.length && $scope.histories.length) {
               $scope.isLeftActive = !$scope.isLeftActive;
               $scope.isRightActive = !$scope.isRightActive;
             }
@@ -238,12 +238,10 @@
             }
           };
           this.changeFromProperty = function(from) {
-            if ($scope.isTable) {
-              if ($scope.isLeftActive) {
-                return $scope.fromConnection = from;
-              } else {
-                return $scope.fromHistory = from;
-              }
+            if ($scope.isLeftActive) {
+              return $scope.fromConnection = from;
+            } else {
+              return $scope.fromHistory = from;
             }
           };
           this.changeActiveList = function() {
@@ -288,6 +286,7 @@
         link: function(scope, element, attrs) {
           var $input, checkQuery, initializeParameters, initializeTableParameters;
           $input = element.find('#alfred-input');
+          scope.is_interrupt_arrow_commands = false;
           if (!angular.isDefined(attrs.onEnterCallback)) {
             scope.onEnterCallback = function(connection) {
               $input.trigger("onEnterCallback", connection.connection);
@@ -334,14 +333,11 @@
               }), 200);
             };
           })(this));
-          scope.$watch("isTable", function() {
-            return initializeParameters();
-          });
           checkQuery = function() {
             if (scope.query) {
-              scope.isTable = false;
+              scope.scope.is_interrupt_arrow_commands = true;
             } else {
-              scope.isTable = true;
+              scope.scope.is_interrupt_arrow_commands = false;
             }
             return scope.$apply();
           };
@@ -351,7 +347,6 @@
             return scope.selectedIndex = 0;
           };
           initializeTableParameters = function() {
-            scope.isTable = true;
             scope.isLeftActive = scope.connections.length ? true : false;
             return scope.isRightActive = scope.connections.length ? false : true;
           };
@@ -729,7 +724,7 @@
 }).call(this);
 
 angular.module('alfredDirective').run(['$templateCache', function ($templateCache) {
-	$templateCache.put('src/templates/alfred.html', '<div id="{{uid}}" class="alfred-widget" ng-click="setFocusAtInput()"> <div class="alfred"> <md-toolbar class="alfred-toolbar"> <div class="tollbar-container"> <div class="head-toolbar"> <div class="alfred-input"> <lx-text-field label={{placeholder}} fixed-label="true"> <input type="text" ng-model="query" ng-keydown="keydown($event)"> </lx-text-field> </div> <lx-dropdown class="menu-toolbar" position="right" width="200"> <button class="btn btn--m btn--icon history-menu" lx-ripple lx-dropdown-toggle> <i class="mdi mdi-menu"></i> </button> <lx-dropdown-menu> <ul> <li><a class="dropdown-link">New group</a></li> <li ng-if="isLeftActive"><a class="dropdown-link" ng-click="changeActiveList()">History</a></li> <li ng-if="isRightActive"><a class="dropdown-link" ng-click="changeActiveList()">Hosts</a></li> </ul> </lx-dropdown-menu> </lx-dropdown> </div> <div ng-if="isLeftActive" class="head-groups"> <div class="parent-group"> <ul> <li> <a ng-click="filterByGroup(null)"><i class="mdi mdi-folder"></i></a> </li> <li ng-repeat="group in path_groups" class="parent-group-list"> <a ng-click="filterByGroup(group.local_id)"> <i class="mdi mdi-chevron-right"></i> {{group.label}} </a> </li> </ul> </div> <div class="tags"> <lx-dropdown class="tag-toolbar" position="right"> <button class="btn btn--m btn--icon" lx-ripple lx-dropdown-toggle> <i class="mdi mdi-tag"></i> </button> <lx-dropdown-menu> <ul class="tag-list"> <li class="list-row list-row--has-primary" ng-repeat="tag in copy_tags"> <div class="list-primary-tile"> <i ng-if="isCheckTag(tag)" class="mdi mdi-check"></i> </div> <div class="list-content-tile"> <a class="dropdown-link" ng-click="selectTag(tag)">{{tag.label}}</a> </div> </li> </ul> </lx-dropdown-menu> </lx-dropdown> <ul> <li ng-repeat="tag in chosen_tags"> <md-button>{{tag.label}}</md-button> </li> </ul> </div> </div> <div ng-if="isLeftActive" class="bottom-group"> <div class="children-group"> <ul> <li ng-repeat="group in children_group"> <button class="btn btn--l btn--white btn--raised" lx-ripple ng-click="filterByGroup(group.local_id)">{{group.label}} </button> </li> </ul> </div> </div> </div> </md-toolbar> <md-content class="content-box"> <md-button class="add-buttom md-fab md-primary" aria-label="Use Android" ng-click="addConnection()">+ </md-button> <div ng-if="connections.length || histories.length"> <div ng-if="isTable" class="table"> <div id="left" ng-class="{ active: isLeftActive }" ng-if="isLeftActive"> <div class="left-list" ng-if="isLeftActive"> <active-list connections="connections" amount="amount" height-cell="heightCell" query="query" from="fromConnection" selected-index="selectedIndex" rest="restOfConnections" cmd-system-hotkey="cmdSystemHotkey"> </active-list> </div> <div class="left-list" ng-if="isRightActive"> <inactive-list connections="connections" amount="amount" height-cell="heightCell" from="fromConnection" rest="restOfConnections"> </inactive-list> </div> </div> <div id="right" ng-class="{ active: isRightActive }" ng-if="isRightActive"> <div class="left-list" ng-if="isLeftActive"> <inactive-list connections="histories" amount="amount" height-cell="heightCell" from="fromHistory" rest="restOfHistories"> </inactive-list> </div> <div class="left-list" ng-if="isRightActive"> <active-list connections="histories" amount="amount" height-cell="heightCell" query="query" from="fromHistory" selected-index="selectedIndex" rest="restOfHistories" cmd-system-hotkey="cmdSystemHotkey"> </active-list> </div> </div> </div> <div ng-if="!isTable"> <div class="main-list"> <active-list connections="entities" amount="amount" height-cell="heightCell" query="query" from="fromConnection" selected-index="selectedIndex" cmd-system-hotkey="cmdSystemHotkey"> </active-list> </div> </div> </div> </md-content> </div> </div> ');
-	$templateCache.put('src/templates/active-connections.html', '<div id="fixed" when-scrolled="loadMore()" ng-mouseover="toggleScroll()"> <md-list> <md-item ng-repeat="(key,connection) in subConnections=(connections | filterConnections:query:from:offset:this) track by key" id="{{key}}" ng-click="select(connection, key)" connection-item="connection" key="{{key}}" ng-class="{ active: (key===selectedIndex) }" ng-style="setHeight()"> <md-item-content> <div class="md-tile-left host-icon"> <img src="/src/img/Host-icon_disable_light.png"/> </div> <div class="md-tile-content"> <h4 ng-if="connection.label">{{connection.label}}</h4> <h4 ng-if="!connection.label">{{connection.username}}@{{connection.address}}</h4> </div> <div class="md-tile-right"> <i class="active actions" ng-if="(key===selectedIndex)"> <div class="enter-block"> <i ng-if="!isHistory(connection)" class="mdi mdi-pencil" ng-click="edit($event, connection)"></i> <i class="mdi mdi-delete" ng-click="upload($event, connection)"></i> <i class="glyphicon glyphicon-trash" ng-click="remove($event, connection)"></i> </div> <i>{{enterText}}</i> </i> <i ng-if="!(key===selectedIndex)">{{cmdSystemHotkey}}{{key+1}}</i> </div> <!--{{connection.label}}--> <!--<div class="enter-block">--> <!--ng-click="edit($event, connection)"></i>--> <!--ng-click="upload($event, connection)"></i>--> <!--</div>--> <!--</i>--> <!--</span>--> <!--{{connection.username}}@{{connection.address}}--> <!--<div class="enter-block">--> <!--ng-click="edit($event, connection)"></i>--> <!--ng-click="upload($event, connection)"></i>--> <!--</div>--> <!--</i>--> <!--</span>--> </md-item-content> <md-divider inset></md-divider> </md-item> </md-list> <!--<li ng-repeat="(key,connection) in subConnections=(connections | filterConnections:query:from:offset:this) track by key"--> <!--ng-click="select(connection, key)"--> <!--key="{{key}}"--> <!--ng-style="setHeight()">--> <!--{{connection.label}}--> <!--<div class="enter-block">--> <!--ng-click="edit($event, connection)"></i>--> <!--ng-click="upload($event, connection)"></i>--> <!--</div>--> <!--</i>--> <!--</span>--> <!--{{connection.ssh_username}}@{{connection.hostname}}--> <!--<div class="enter-block">--> <!--ng-click="edit($event, connection)"></i>--> <!--ng-click="upload($event, connection)"></i>--> <!--</div>--> <!--</i>--> <!--</span>--> <!--<li ng-repeat="i in rest track by $index"--> <!--class="empty-cell">--> <!--<li ng-if="quickConnectionsParams" ng-bind="quickConnectionsParams"></li>--> <!--</ul>--> </div> <div class="scroller" ng-if="filteredConnections.length> amount"> <div class="sizer" ng-style="setSizerHeight()"></div> <div class="slider" ng-style="setSliderHeight()"></div> </div> </div> ');
+	$templateCache.put('src/templates/alfred.html', '<div id="{{uid}}" class="alfred-widget" ng-click="setFocusAtInput()"> <div class="alfred"> <md-toolbar class="alfred-toolbar"> <div class="tollbar-container"> <div class="head-toolbar"> <div class="alfred-input"> <lx-text-field label={{placeholder}} fixed-label="true"> <input type="text" ng-model="query" ng-keydown="keydown($event)"> </lx-text-field> </div> <lx-dropdown class="menu-toolbar" position="right" width="200"> <button class="btn btn--m btn--icon history-menu" lx-ripple lx-dropdown-toggle> <i class="mdi mdi-menu"></i> </button> <lx-dropdown-menu> <ul> <li><a class="dropdown-link">New group</a></li> <li ng-if="isLeftActive"><a class="dropdown-link" ng-click="changeActiveList()">History</a></li> <li ng-if="isRightActive"><a class="dropdown-link" ng-click="changeActiveList()">Hosts</a></li> </ul> </lx-dropdown-menu> </lx-dropdown> </div> <div ng-if="isLeftActive" class="head-groups"> <div class="parent-group"> <ul> <li> <a ng-click="filterByGroup(null)"><i class="mdi mdi-folder"></i></a> </li> <li ng-repeat="group in path_groups" class="parent-group-list"> <a ng-click="filterByGroup(group.local_id)"> <i class="mdi mdi-chevron-right"></i> {{group.label}} </a> </li> </ul> </div> <div class="tags"> <lx-dropdown class="tag-toolbar" position="right"> <button class="btn btn--m btn--icon" lx-ripple lx-dropdown-toggle> <i class="mdi mdi-tag"></i> </button> <lx-dropdown-menu> <ul class="tag-list"> <li class="list-row list-row--has-primary" ng-repeat="tag in copy_tags"> <div class="list-primary-tile"> <i ng-if="isCheckTag(tag)" class="mdi mdi-check"></i> </div> <div class="list-content-tile"> <a class="dropdown-link" ng-click="selectTag(tag)">{{tag.label}}</a> </div> </li> </ul> </lx-dropdown-menu> </lx-dropdown> <ul> <li ng-repeat="tag in chosen_tags"> <md-button>{{tag.label}}</md-button> </li> </ul> </div> </div> <div ng-if="isLeftActive" class="bottom-group"> <div class="children-group"> <ul> <li ng-repeat="group in children_group"> <button class="btn btn--l btn--white btn--raised" lx-ripple ng-click="filterByGroup(group.local_id)">{{group.label}} </button> </li> </ul> </div> </div> </div> </md-toolbar> <md-content class="content-box"> <md-button class="add-buttom md-fab md-primary" aria-label="Use Android" ng-click="addConnection()">+ </md-button> <div ng-if="connections.length || histories.length"> <div class="table"> <div id="left" ng-class="{ active: isLeftActive }" ng-if="isLeftActive"> <div class="left-list" ng-if="isLeftActive"> <active-list connections="connections" amount="amount" height-cell="heightCell" query="query" from="fromConnection" selected-index="selectedIndex" rest="restOfConnections" cmd-system-hotkey="cmdSystemHotkey"> </active-list> </div> <div class="left-list" ng-if="isRightActive"> <inactive-list connections="connections" amount="amount" height-cell="heightCell" from="fromConnection" rest="restOfConnections"> </inactive-list> </div> </div> <div id="right" ng-class="{ active: isRightActive }" ng-if="isRightActive"> <div class="left-list" ng-if="isLeftActive"> <inactive-list connections="histories" amount="amount" height-cell="heightCell" from="fromHistory" rest="restOfHistories"> </inactive-list> </div> <div class="left-list" ng-if="isRightActive"> <active-list connections="histories" amount="amount" height-cell="heightCell" query="query" from="fromHistory" selected-index="selectedIndex" rest="restOfHistories" cmd-system-hotkey="cmdSystemHotkey"> </active-list> </div> </div> </div> </div> </md-content> </div> </div> ');
+	$templateCache.put('src/templates/active-connections.html', '<div id="fixed" when-scrolled="loadMore()" ng-mouseover="toggleScroll()"> <md-list> <md-item ng-repeat="(key,connection) in subConnections=(connections | filterConnections:query:from:offset:this) track by key" id="{{key}}" ng-click="select(connection, key)" connection-item="connection" key="{{key}}" ng-class="{ active: (key===selectedIndex) }" ng-style="setHeight()"> <md-item-content> <div class="md-tile-left host-icon"> <img src="/src/img/icons/hosts/Host-icon_disable_light.png"/> </div> <div class="md-tile-content"> <h4 ng-if="connection.label">{{connection.label}}</h4> <h4 ng-if="!connection.label">{{connection.username}}@{{connection.address}}</h4> </div> <div class="md-tile-right"> <i class="active actions" ng-if="(key===selectedIndex)"> <div class="enter-block"> <i ng-if="!isHistory(connection)" class="mdi mdi-pencil" ng-click="edit($event, connection)"></i> <i class="mdi mdi-delete" ng-click="upload($event, connection)"></i> <i class="glyphicon glyphicon-trash" ng-click="remove($event, connection)"></i> </div> <i>{{enterText}}</i> </i> <i ng-if="!(key===selectedIndex)">{{cmdSystemHotkey}}{{key+1}}</i> </div> <!--{{connection.label}}--> <!--<div class="enter-block">--> <!--ng-click="edit($event, connection)"></i>--> <!--ng-click="upload($event, connection)"></i>--> <!--</div>--> <!--</i>--> <!--</span>--> <!--{{connection.username}}@{{connection.address}}--> <!--<div class="enter-block">--> <!--ng-click="edit($event, connection)"></i>--> <!--ng-click="upload($event, connection)"></i>--> <!--</div>--> <!--</i>--> <!--</span>--> </md-item-content> <md-divider inset></md-divider> </md-item> </md-list> <!--<li ng-repeat="(key,connection) in subConnections=(connections | filterConnections:query:from:offset:this) track by key"--> <!--ng-click="select(connection, key)"--> <!--key="{{key}}"--> <!--ng-style="setHeight()">--> <!--{{connection.label}}--> <!--<div class="enter-block">--> <!--ng-click="edit($event, connection)"></i>--> <!--ng-click="upload($event, connection)"></i>--> <!--</div>--> <!--</i>--> <!--</span>--> <!--{{connection.ssh_username}}@{{connection.hostname}}--> <!--<div class="enter-block">--> <!--ng-click="edit($event, connection)"></i>--> <!--ng-click="upload($event, connection)"></i>--> <!--</div>--> <!--</i>--> <!--</span>--> <!--<li ng-repeat="i in rest track by $index"--> <!--class="empty-cell">--> <!--<li ng-if="quickConnectionsParams" ng-bind="quickConnectionsParams"></li>--> <!--</ul>--> </div> <div class="scroller" ng-if="filteredConnections.length> amount"> <div class="sizer" ng-style="setSizerHeight()"></div> <div class="slider" ng-style="setSliderHeight()"></div> </div> </div> ');
 	$templateCache.put('src/templates/inactive-connections.html', '<div id="inactive-list"> <ul class="list-group"> <li ng-repeat="(key,connection) in (connections | filterConnections:null:from:offset:this) track by key" ng-style="setHeight()"> <span ng-if="connection.label"> {{connection.label}} </span> <span ng-if="!connection.label"> {{connection.ssh_username}}@{{connection.hostname}} </span> </li> <li ng-repeat="i in rest track by $index" ng-style="setHeight()" class="empty-cell"> </li> </ul> </div> <div class="scroller" ng-if="connections.length> amount"> <div class="sizer" ng-style="setSizerHeight()"></div> <div class="slider" ng-style="setSliderHeight()"></div> </div>');
 }]);
