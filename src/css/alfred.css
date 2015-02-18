@@ -235,3 +235,9 @@
   float: none;
   color: white;
 }
+.tag-list .list-content-tile {
+  padding: 2px 0;
+}
+.tag-list .list-primary-tile {
+  margin-top: -13px;
+}

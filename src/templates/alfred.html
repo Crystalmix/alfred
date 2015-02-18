@@ -44,22 +44,28 @@
                         </ul>
                     </div>
                     <div class="tags">
-                        <lx-dropdown class="tag-toolbar" position="right" ng-if="tags.length==0">
+                        <lx-dropdown class="tag-toolbar" position="right">
                             <button class="btn btn--m btn--icon" lx-ripple lx-dropdown-toggle>
                                 <i class="mdi mdi-tag"></i>
                             </button>
 
                             <lx-dropdown-menu>
-                                <ul>
-                                    <li ng-repeat="tag in tags">
-                                        <a class="dropdown-link">{{tag.label}}</a>
+                                <ul class="tag-list">
+                                    <li class="list-row list-row--has-primary" ng-repeat="tag in copy_tags">
+                                        <div class="list-primary-tile">
+                                            <i ng-if="isCheckTag(tag)" class="mdi mdi-check"></i>
+                                        </div>
+
+                                        <div class="list-content-tile">
+                                            <a class="dropdown-link" ng-click="selectTag(tag)">{{tag.label}}</a>
+                                        </div>
                                     </li>
                                 </ul>
                             </lx-dropdown-menu>
                         </lx-dropdown>
 
-                        <ul ng-if="tags.length!=0">
-                            <li ng-repeat="tag in copy_tags">
+                        <ul>
+                            <li ng-repeat="tag in chosen_tags">
                                 <md-button>{{tag.label}}</md-button>
                             </li>
                         </ul>
@@ -83,7 +89,8 @@
 
 
         <md-content class="content-box">
-            <md-button class="add-buttom md-fab md-primary" aria-label="Use Android" ng-click="addConnection()">+</md-button>
+            <md-button class="add-buttom md-fab md-primary" aria-label="Use Android" ng-click="addConnection()">+
+            </md-button>
 
             <div ng-if="connections.length || histories.length">
 

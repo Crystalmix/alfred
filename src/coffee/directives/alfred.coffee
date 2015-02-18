@@ -59,6 +59,7 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
             do getGroups
             # Prepares all hosts
             do getConnections
+            $scope.chosen_tags = []
 
 
         $scope.filterByGroup = (local_id) ->
@@ -77,6 +78,14 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
                 $scope.isRightActive = not $scope.isRightActive
             return no
 
+        $scope.isCheckTag = (tag) ->
+            _.contains($scope.chosen_tags, tag)
+
+        $scope.selectTag = (tag) ->
+            if _.contains($scope.chosen_tags, tag)
+                $scope.chosen_tags = _.without $scope.chosen_tags, tag
+            else
+                $scope.chosen_tags = _.union $scope.chosen_tags, tag
 
         jwerty.key '→', (->
             if $scope.isTable and $scope.histories.length
