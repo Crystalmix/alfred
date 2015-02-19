@@ -75,6 +75,11 @@
                 <div ng-if="isLeftActive" class="bottom-group">
                     <div class="children-group">
                         <ul>
+                            <li>
+                                <button class="btn btn--l btn--white btn--raised" lx-ripple
+                                        ng-click="addNewGroup()">+
+                                </button>
+                            </li>
                             <li ng-repeat="group in children_group">
                                 <button class="btn btn--l btn--white btn--raised" lx-ripple
                                         ng-click="filterByGroup(group.local_id)">{{group.label}}
