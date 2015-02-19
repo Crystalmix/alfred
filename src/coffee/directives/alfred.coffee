@@ -277,13 +277,12 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
                 do scope.setFocusAtInput
             ), 200
 
-
         # Checks query in order to switch/switch off table state
         checkQuery = () ->
             if scope.query
-                scope.scope.is_interrupt_arrow_commands = yes
+                scope.is_interrupt_arrow_commands = yes
             else
-                scope.scope.is_interrupt_arrow_commands = no
+                scope.is_interrupt_arrow_commands = no
             do scope.$apply
 
         initializeParameters = () ->

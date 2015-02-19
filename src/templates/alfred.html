@@ -11,21 +11,12 @@
                         </lx-text-field>
                     </div>
 
-                    <lx-dropdown class="menu-toolbar" position="right" width="200">
-                        <button class="btn btn--m btn--icon history-menu" lx-ripple lx-dropdown-toggle>
-                            <i class="mdi mdi-menu"></i>
+                    <div class="menu-toolbar">
+                        <button class="btn btn--m btn--icon history-menu">
+                            <i ng-if="isLeftActive" class="mdi mdi-menu" ng-click="changeActiveList()"></i>
+                            <i ng-if="isRightActive" class="mdi mdi-keyboard-backspace" ng-click="changeActiveList()"></i>
                         </button>
-
-                        <lx-dropdown-menu>
-                            <ul>
-                                <li><a class="dropdown-link">New group</a></li>
-                                <li ng-if="isLeftActive"><a class="dropdown-link"
-                                                            ng-click="changeActiveList()">History</a></li>
-                                <li ng-if="isRightActive"><a class="dropdown-link"
-                                                             ng-click="changeActiveList()">Hosts</a></li>
-                            </ul>
-                        </lx-dropdown-menu>
-                    </lx-dropdown>
+                    </div>
                 </div>
 
                 <!--Here there is group template-->
@@ -93,11 +84,10 @@
         </md-toolbar>
 
 
-        <md-content class="content-box">
+        <md-content ng-if="connections.length || histories.length" class="content-box">
             <md-button class="add-buttom md-fab md-primary" aria-label="Use Android" ng-click="addConnection()">+
             </md-button>
 
-            <div ng-if="connections.length || histories.length">
 
                 <div class="table">
                     <div id="left" ng-class="{ active: isLeftActive }" ng-if="isLeftActive">
@@ -144,7 +134,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+
         </md-content>
     </div>
 </div>

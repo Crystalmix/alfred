@@ -189,6 +189,9 @@
 }
 .alfred-widget .alfred-toolbar .menu-toolbar {
   width: 4%;
+  position: relative;
+  display: inline-block;
+  vertical-align: top;
 }
 .alfred-widget .alfred-toolbar .history-menu {
   width: 100%;
