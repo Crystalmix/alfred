@@ -51,7 +51,7 @@
 
                             <lx-dropdown-menu>
                                 <ul class="tag-list">
-                                    <li class="list-row list-row--has-primary" ng-repeat="tag in copy_tags">
+                                    <li class="list-row list-row--has-primary" ng-repeat="tag in tags">
                                         <div class="list-primary-tile">
                                             <i ng-if="isCheckTag(tag)" class="mdi mdi-check"></i>
                                         </div>
@@ -107,25 +107,25 @@
                                          cmd-system-hotkey="cmdSystemHotkey">
                             </active-list>
                         </div>
-                        <div class="left-list" ng-if="isRightActive">
-                            <inactive-list connections="connections"
-                                           amount="amount"
-                                           height-cell="heightCell"
-                                           from="fromConnection"
-                                           rest="restOfConnections">
-                            </inactive-list>
-                        </div>
+                        <!--<div class="left-list" ng-if="isRightActive">-->
+                            <!--<inactive-list connections="connections"-->
+                                           <!--amount="amount"-->
+                                           <!--height-cell="heightCell"-->
+                                           <!--from="fromConnection"-->
+                                           <!--rest="restOfConnections">-->
+                            <!--</inactive-list>-->
+                        <!--</div>-->
                     </div>
 
                     <div id="right" ng-class="{ active: isRightActive }" ng-if="isRightActive">
-                        <div class="left-list" ng-if="isLeftActive">
-                            <inactive-list connections="histories"
-                                           amount="amount"
-                                           height-cell="heightCell"
-                                           from="fromHistory"
-                                           rest="restOfHistories">
-                            </inactive-list>
-                        </div>
+                        <!--<div class="left-list" ng-if="isLeftActive">-->
+                            <!--<inactive-list connections="histories"-->
+                                           <!--amount="amount"-->
+                                           <!--height-cell="heightCell"-->
+                                           <!--from="fromHistory"-->
+                                           <!--rest="restOfHistories">-->
+                            <!--</inactive-list>-->
+                        <!--</div>-->
                         <div class="left-list" ng-if="isRightActive">
                             <active-list connections="histories"
                                          amount="amount"

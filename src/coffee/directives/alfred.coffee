@@ -10,6 +10,7 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
         hosts: "="
         histories: "="
         groups: "="
+        taghosts: "="
         tags: "="
         amount: "="
         heightCell: "="
@@ -39,10 +40,30 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
                 $scope.path_groups[key] = _.clone val.toJSON {do_not_encrypt: no}
 
 
+        filter_hosts_by_chosen_tags = () ->
+            tag_hosts = []
+            id_of_hosts = []
+            _.each $scope.chosen_tags, (val) ->
+                tag_hosts = _.union tag_hosts, $scope.taghosts.find_by_tag val.get("local_id")
+            tag_hosts = _.uniq tag_hosts
+
+            _.each tag_hosts, (val) ->
+                if val.get(host).local_id
+                    id_of_hosts = _.union id_of_hosts, val.get(host).local_id
+                else if val.get(host).id
+                    id_of_hosts = _.union id_of_hosts, val.get(host).id
+
+            $scope.connections = _.filter $scope.connections, (val) ->
+                if _.contains tag_hosts, val.get("local_id")
+                    return val
+
+
         getConnections = () ->
             # Overrides connections: filter by group and add new fields
             $scope.connections = _.clone $scope.hosts.models
             $scope.connections = $scope.hosts.filter_by_group $scope.current_group.get('local_id') if $scope.current_group
+
+#            do filter_hosts_by_chosen_tags
 
             _.each $scope.connections, (val, key) ->
                 val.set {username : val.get_ssh_identity().get("username")}
@@ -54,7 +75,8 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
         # Prepares entities for template
         transformationData = () ->
             # Gets clone tags
-            $scope.copy_tags = $scope.tags.toJSON {do_not_encrypt: no}
+            $scope.copy_taghosts = do $scope.taghosts.toJSON
+            $scope.tags = do $scope.taghosts.toJSON
             # Prepares all groups
             do getGroups
             # Prepares all hosts

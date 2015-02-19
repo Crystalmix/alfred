@@ -34,6 +34,7 @@ class AlfredController
         @scope.activities = []
         @scope.hosts = []
         @scope.groups = []
+        @scope.taghosts = []
         @scope.tags = []
 
         sa = new SA("https://serverauditor.com")
@@ -43,6 +44,7 @@ class AlfredController
         sa.on(sa.event_names.MERGED_FULL_SYNC, () => # if AUTH_REMOTE_SUCCESS then the synchronization will be started
             @scope.hosts = sa.hosts
             @scope.groups = sa.groups
+            @scope.taghosts = sa.taghosts
             @scope.tags = sa.tags
             @scope.activities = sa.activities
             @scope.showAlfred = yes
