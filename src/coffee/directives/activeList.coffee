@@ -134,6 +134,11 @@ alfredDirective.directive "activeList",  () ->
                 do scope.$apply
             )
 
+            scope.addConnection = ($event) ->
+                do $event.preventDefault
+                do $event.stopPropagation
+                alfredCtrl.addConnection()
+
             scope.edit = ($event, connection) ->
                 do $event.preventDefault
                 do $event.stopPropagation

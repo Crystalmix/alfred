@@ -223,7 +223,7 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
                 $scope.onRemoveCallback({connection: connection})
 
         # Calls callback function on event 'add'
-        $scope.addConnection = () ->
+        @addConnection = () ->
             do $scope.onAddCallback
 
         $scope.cmdSystemHotkey = do detectCtrlOrCmd

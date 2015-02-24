@@ -84,11 +84,7 @@
         </md-toolbar>
 
 
-        <md-content ng-if="connections.length || histories.length" class="content-box">
-            <md-button class="add-buttom md-fab md-primary" aria-label="Use Android" ng-click="addConnection()">+
-            </md-button>
-
-
+        <md-content class="content-box" ng-if="connections.length || histories.length">
                 <div class="table">
                     <div id="left" ng-class="{ active: isLeftActive }" ng-if="isLeftActive">
                         <div class="left-list" ng-if="isLeftActive">
@@ -102,25 +98,9 @@
                                          cmd-system-hotkey="cmdSystemHotkey">
                             </active-list>
                         </div>
-                        <!--<div class="left-list" ng-if="isRightActive">-->
-                            <!--<inactive-list connections="connections"-->
-                                           <!--amount="amount"-->
-                                           <!--height-cell="heightCell"-->
-                                           <!--from="fromConnection"-->
-                                           <!--rest="restOfConnections">-->
-                            <!--</inactive-list>-->
-                        <!--</div>-->
                     </div>
 
                     <div id="right" ng-class="{ active: isRightActive }" ng-if="isRightActive">
-                        <!--<div class="left-list" ng-if="isLeftActive">-->
-                            <!--<inactive-list connections="histories"-->
-                                           <!--amount="amount"-->
-                                           <!--height-cell="heightCell"-->
-                                           <!--from="fromHistory"-->
-                                           <!--rest="restOfHistories">-->
-                            <!--</inactive-list>-->
-                        <!--</div>-->
                         <div class="left-list" ng-if="isRightActive">
                             <active-list connections="histories"
                                          amount="amount"
@@ -134,7 +114,6 @@
                         </div>
                     </div>
                 </div>
-
         </md-content>
     </div>
 </div>

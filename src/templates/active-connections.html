@@ -1,4 +1,5 @@
 <div id="fixed" when-scrolled="loadMore()" ng-mouseover="toggleScroll()">
+
     <md-list>
         <md-item
                 ng-repeat="(key,connection) in subConnections = (connections | filterConnections:query:from:offset:this) track by key"
@@ -12,6 +13,7 @@
                 class="panel panel-default position-fixed"
                 data-target="menu-{{ $index }}"
                 ng-class="{ 'highlight': highlight, 'expanded' : expanded }">
+
             <md-item-content>
                 <div class="md-tile-left host-icon">
                     <img src="/src/img/icons/hosts/Host-icon_disable_light.png"/>
@@ -56,7 +58,7 @@
                             <md-item-content ng-click="select($event, connection, key)">
                                 <div class="md-tile-left">
                                     <i>
-                                    <img src="/src/img/icons/connect.png"/></i>
+                                        <img src="/src/img/icons/connect.png"/></i>
                                 </div>
                                 <div class="md-tile-content">
                                     Connect
@@ -68,6 +70,10 @@
             </md-item-content>
             <md-divider inset></md-divider>
         </md-item>
+
+        <md-button ng-show="subConnections.length" class="add-buttom md-fab md-primary" aria-label="Use Android"
+                   ng-click="addConnection($event)">+
+        </md-button>
     </md-list>
 </div>
 <div class="scroller" ng-if="filteredConnections.length > amount">
@@ -75,4 +81,3 @@
     <div class="slider" ng-style="setSliderHeight()"></div>
 </div>
 </div>
-
