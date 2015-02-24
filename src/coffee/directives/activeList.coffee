@@ -37,7 +37,9 @@ alfredDirective.directive "activeList",  () ->
                 $scope.from = 0
                 $scope.setSelectedConnection 0
 
-            $scope.select = (connection, key) ->
+            $scope.select = ($event, connection, key) ->
+                do $event.preventDefault
+                do $event.stopPropagation
                 $scope.setSelectedConnection key
                 $scope.alfredController.enterCallback connection
 

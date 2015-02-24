@@ -272,6 +272,23 @@
             }
         }
     }
+    .dropdown.position-fixed {
+        position: fixed;
+        z-index: 100;
+    }
+    .host-menu {
+        .md-tile-left {
+            margin-right: 0;
+            min-width: 32px;
+        }
+        .md-tile-content {
+            padding: 10px 16px;
+        }
+    }
+    .open .dropdown-menu {
+        display: block;
+        opacity: 1;
+    }
 }
 
 .tag-list {

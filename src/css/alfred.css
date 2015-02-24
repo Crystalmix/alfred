@@ -238,6 +238,21 @@
   float: none;
   color: white;
 }
+.alfred-widget .dropdown.position-fixed {
+  position: fixed;
+  z-index: 100;
+}
+.alfred-widget .host-menu .md-tile-left {
+  margin-right: 0;
+  min-width: 32px;
+}
+.alfred-widget .host-menu .md-tile-content {
+  padding: 10px 16px;
+}
+.alfred-widget .open .dropdown-menu {
+  display: block;
+  opacity: 1;
+}
 .tag-list .list-content-tile {
   padding: 2px 0;
 }
