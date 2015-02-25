@@ -277,7 +277,7 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
                 do scope.setFocusAtInput
             ), 200
 
-        # Checks query in order to switch/switch off table state
+        # Checks query in order to switch/switch-off table state
         checkQuery = () ->
             if scope.query
                 scope.is_interrupt_arrow_commands = yes
@@ -294,7 +294,7 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
             scope.isLeftActive = if scope.connections.length then yes else no
             scope.isRightActive = if scope.connections.length then no else yes
 
-        scope.keydown = (event) ->
+        scope.keydown = () ->
             $timeout (->
                 do checkQuery
                 if scope.query and scope.query.indexOf("ssh") is 0

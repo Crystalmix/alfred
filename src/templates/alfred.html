@@ -83,7 +83,6 @@
             </div>
         </md-toolbar>
 
-
         <md-content class="content-box" ng-if="connections.length || histories.length">
                 <div class="table">
                     <div id="left" ng-class="{ active: isLeftActive }" ng-if="isLeftActive">
@@ -94,7 +93,6 @@
                                          query="query"
                                          from="fromConnection"
                                          selected-index="selectedIndex"
-                                         rest="restOfConnections"
                                          cmd-system-hotkey="cmdSystemHotkey">
                             </active-list>
                         </div>
@@ -108,7 +106,6 @@
                                          query="query"
                                          from="fromHistory"
                                          selected-index="selectedIndex"
-                                         rest="restOfHistories"
                                          cmd-system-hotkey="cmdSystemHotkey">
                             </active-list>
                         </div>

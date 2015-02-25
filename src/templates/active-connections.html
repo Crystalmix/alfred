@@ -1,5 +1,4 @@
 <div id="fixed" when-scrolled="loadMore()" ng-mouseover="toggleScroll()">
-
     <md-list>
         <md-item
                 ng-repeat="(key,connection) in subConnections = (connections | filterConnections:query:from:offset:this) track by key"
@@ -28,50 +27,16 @@
                     </i>
                     <i ng-if="!(key === selectedIndex)">{{cmdSystemHotkey}}{{key+1}}</i>
                 </div>
-                <div class="dropdown position-fixed" id="menu-{{ $index }}">
-                    <md-list class="dropdown-menu host-menu" role="menu">
-                        <md-item>
-                            <md-item-content ng-if="!isHistory(connection)" ng-click="edit($event, connection)">
-                                <div class="md-tile-left">
-                                    <i class="mdi mdi-pencil"></i>
-                                </div>
-                                <div class="md-tile-content">
-                                    Edit
-                                </div>
-                            </md-item-content>
-                            <md-item-content ng-if="isHistory(connection)" ng-click="upload($event, connection)">
-                                <div class="md-tile-left">
-                                    <i class="mdi mdi-pencil"></i>
-                                </div>
-                                <div class="md-tile-content">
-                                    Edit
-                                </div>
-                            </md-item-content>
-                            <md-item-content ng-click="remove($event, connection)">
-                                <div class="md-tile-left">
-                                    <i class="mdi mdi-delete"></i>
-                                </div>
-                                <div class="md-tile-content">
-                                    Remove
-                                </div>
-                            </md-item-content>
-                            <md-item-content ng-click="select($event, connection, key)">
-                                <div class="md-tile-left">
-                                    <i>
-                                        <img src="/src/img/icons/connect.png"/></i>
-                                </div>
-                                <div class="md-tile-content">
-                                    Connect
-                                </div>
-                            </md-item-content>
-                        </md-item>
-                    </md-list>
-                </div>
+                <!--Includes context menu for each cell-->
+                <div ng-include="'/src/templates/context-menu.html'"></div>
+                <!--End Includes context menu for each cell-->
             </md-item-content>
             <md-divider inset></md-divider>
         </md-item>
 
-        <md-button ng-show="subConnections.length" class="add-buttom md-fab md-primary" aria-label="Use Android"
+        <md-button ng-show="subConnections.length"
+                   class="add-buttom md-fab md-primary"
+                   aria-label="Use Android"
                    ng-click="addConnection($event)">+
         </md-button>
     </md-list>

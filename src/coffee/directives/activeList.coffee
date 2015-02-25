@@ -18,7 +18,6 @@ alfredDirective.directive "activeList",  () ->
             from:            "="
             selectedIndex:   "="
             cmdSystemHotkey: "="
-            rest:            "="
 
         controller: ($scope) ->
             $scope.setHeight = () ->
