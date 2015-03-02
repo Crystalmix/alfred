@@ -132,7 +132,7 @@
           getConnections = function() {
             $scope.connections = _.clone($scope.hosts.models);
             if ($scope.current_group) {
-              $scope.connections = $scope.hosts.filter_by_group($scope.current_group.get('local_id'));
+              $scope.connections = $scope.hosts.filter_by_group($scope.current_group.get('local_id'), true);
             }
             return _.each($scope.connections, function(val, key) {
               val.set({
@@ -200,7 +200,7 @@
             }
           }), $element);
           jwerty.key('⇥', (function() {
-            if ($scope.scope.is_interrupt_arrow_commands === true && $scope.connections.length && $scope.activities.length) {
+            if ($scope.scope.is_interrupt_arrow_commands === false && $scope.connections.length && $scope.activities.length) {
               $scope.isLeftActive = !$scope.isLeftActive;
               $scope.isRightActive = !$scope.isRightActive;
             }

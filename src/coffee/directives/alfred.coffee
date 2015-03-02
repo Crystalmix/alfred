@@ -60,7 +60,7 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
         getConnections = () ->
             # Overrides connections: filter by group and add new fields
             $scope.connections = _.clone $scope.hosts.models
-            $scope.connections = $scope.hosts.filter_by_group $scope.current_group.get('local_id') if $scope.current_group
+            $scope.connections = $scope.hosts.filter_by_group($scope.current_group.get('local_id'), yes)  if $scope.current_group
 
 #            do filter_hosts_by_chosen_tags
 
@@ -125,7 +125,7 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
         ), $element
 
         jwerty.key '⇥', (->
-            if $scope.scope.is_interrupt_arrow_commands is yes and $scope.connections.length and $scope.activities.length
+            if $scope.scope.is_interrupt_arrow_commands is no and $scope.connections.length and $scope.activities.length
                 $scope.isLeftActive = not $scope.isLeftActive
                 $scope.isRightActive = not $scope.isRightActive
             return no
