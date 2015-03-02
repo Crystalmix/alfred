@@ -184,23 +184,23 @@
             }
           };
           jwerty.key('→', (function() {
-            if ($scope.scope.is_interrupt_arrow_commands === false && $scope.activities.length) {
+            if ($scope.scope.is_interrupt_arrow_commands === true && $scope.activities.length) {
               $scope.isLeftActive = false;
               return $scope.isRightActive = true;
-            } else if ($scope.scope.is_interrupt_arrow_commands === true) {
+            } else if ($scope.scope.is_interrupt_arrow_commands === false) {
               return true;
             }
           }), $element);
           jwerty.key('←', (function() {
-            if ($scope.scope.is_interrupt_arrow_commands === false && $scope.connections.length) {
+            if ($scope.scope.is_interrupt_arrow_commands === true && $scope.connections.length) {
               $scope.isLeftActive = true;
               return $scope.isRightActive = false;
-            } else if ($scope.scope.is_interrupt_arrow_commands === true) {
+            } else if ($scope.scope.is_interrupt_arrow_commands === false) {
               return true;
             }
           }), $element);
           jwerty.key('⇥', (function() {
-            if ($scope.scope.is_interrupt_arrow_commands === false && $scope.connections.length && $scope.activities.length) {
+            if ($scope.scope.is_interrupt_arrow_commands === true && $scope.connections.length && $scope.activities.length) {
               $scope.isLeftActive = !$scope.isLeftActive;
               $scope.isRightActive = !$scope.isRightActive;
             }
@@ -306,7 +306,7 @@
         link: function(scope, element, attrs) {
           var $input, checkQuery, initializeParameters, initializeTableParameters;
           $input = element.find('#alfred-input');
-          scope.is_interrupt_arrow_commands = false;
+          scope.is_interrupt_arrow_commands = true;
           if (!angular.isDefined(attrs.onEnterCallback)) {
             scope.onEnterCallback = function(connection) {
               $input.trigger("onEnterCallback", connection.connection);
@@ -355,9 +355,9 @@
           })(this));
           checkQuery = function() {
             if (scope.query) {
-              scope.is_interrupt_arrow_commands = true;
-            } else {
               scope.is_interrupt_arrow_commands = false;
+            } else {
+              scope.is_interrupt_arrow_commands = true;
             }
             return scope.$apply();
           };

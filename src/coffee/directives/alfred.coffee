@@ -109,23 +109,23 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
                 $scope.chosen_tags = _.union $scope.chosen_tags, tag
 
         jwerty.key '→', (->
-            if $scope.scope.is_interrupt_arrow_commands is no and $scope.activities.length
+            if $scope.scope.is_interrupt_arrow_commands is yes and $scope.activities.length
                 $scope.isLeftActive = no
                 $scope.isRightActive = yes
-            else if $scope.scope.is_interrupt_arrow_commands is yes
+            else if $scope.scope.is_interrupt_arrow_commands is no
                 return yes
         ), $element
 
         jwerty.key '←', (->
-            if $scope.scope.is_interrupt_arrow_commands is no and $scope.connections.length
+            if $scope.scope.is_interrupt_arrow_commands is yes and $scope.connections.length
                 $scope.isLeftActive = yes
                 $scope.isRightActive = no
-            else if $scope.scope.is_interrupt_arrow_commands is yes
+            else if $scope.scope.is_interrupt_arrow_commands is no
                 return yes
         ), $element
 
         jwerty.key '⇥', (->
-            if $scope.scope.is_interrupt_arrow_commands is no and $scope.connections.length and $scope.activities.length
+            if $scope.scope.is_interrupt_arrow_commands is yes and $scope.connections.length and $scope.activities.length
                 $scope.isLeftActive = not $scope.isLeftActive
                 $scope.isRightActive = not $scope.isRightActive
             return no
@@ -170,7 +170,7 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
             Methods are api between alfred directive and child directives
         ###
 
-        # Sets seleceted item
+        # Sets selected item
         #
         # @param key    index within [1-scope.amount]
         @setSelectedIndex = (key) ->
@@ -235,7 +235,9 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
 
     link: (scope, element, attrs) ->
         $input = element.find '#alfred-input'
-        scope.is_interrupt_arrow_commands = no
+        # When user doesn't search any information, we should interrupt arrow hotkeys,
+        # otherwise we couldn't override it.
+        scope.is_interrupt_arrow_commands = yes
 
         # If not define attrs, we should trigger jQuery events
         if not angular.isDefined(attrs.onEnterCallback)
@@ -279,9 +281,9 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
         # Checks query in order to switch/switch-off table state
         checkQuery = () ->
             if scope.query
-                scope.is_interrupt_arrow_commands = yes
-            else
                 scope.is_interrupt_arrow_commands = no
+            else
+                scope.is_interrupt_arrow_commands = yes
             do scope.$apply
 
         initializeParameters = () ->
