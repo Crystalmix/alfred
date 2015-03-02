@@ -31,10 +31,11 @@
                 <div ng-include="'/src/templates/context-menu.html'"></div>
                 <!--End Includes context menu for each cell-->
             </md-item-content>
+
             <md-divider inset></md-divider>
         </md-item>
 
-        <md-button ng-show="subConnections.length"
+        <md-button ng-hide="!subConnections.length"
                    class="add-buttom md-fab md-primary"
                    aria-label="Use Android"
                    ng-click="addConnection($event)">+

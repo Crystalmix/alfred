@@ -50,7 +50,6 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
             _.each tag_hosts, (val) ->
                 if val.get(host).local_id
                     id_of_hosts = _.union id_of_hosts, val.get(host).local_id
-                else if val.get(host).id
                     id_of_hosts = _.union id_of_hosts, val.get(host).id
 
             $scope.connections = _.filter $scope.connections, (val) ->
@@ -85,7 +84,7 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
 
 
         $scope.filterByGroup = (local_id) ->
-            $scope.current_group = if local_id then $scope.groups.get(local_id)  else null
+            $scope.current_group = if local_id then $scope.groups.get(local_id) else null
             $timeout (-> do transformationData)
 
 
