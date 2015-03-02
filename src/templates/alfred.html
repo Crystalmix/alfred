@@ -83,7 +83,7 @@
             </div>
         </md-toolbar>
 
-        <md-content class="content-box" ng-if="connections.length || histories.length">
+        <md-content class="content-box" ng-if="connections.length || activities.length">
                 <div class="table">
                     <div id="left" ng-class="{ active: isLeftActive }" ng-if="isLeftActive">
                         <div class="left-list" ng-if="isLeftActive">
@@ -100,7 +100,7 @@
 
                     <div id="right" ng-class="{ active: isRightActive }" ng-if="isRightActive">
                         <div class="left-list" ng-if="isRightActive">
-                            <active-list connections="histories"
+                            <active-list connections="activities"
                                          amount="amount"
                                          height-cell="heightCell"
                                          query="query"

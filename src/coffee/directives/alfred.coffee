@@ -8,7 +8,7 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
     scope:
         uid: "="
         hosts: "="
-        histories: "="
+        activities: "="
         groups: "="
         taghosts: "="
         tags: "="
@@ -94,7 +94,7 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
 
 
         $scope.changeActiveList = () ->
-            if $scope.connections.length and $scope.histories.length
+            if $scope.connections.length and $scope.activities.length
                 $scope.isLeftActive = not $scope.isLeftActive
                 $scope.isRightActive = not $scope.isRightActive
             return no
@@ -109,7 +109,7 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
                 $scope.chosen_tags = _.union $scope.chosen_tags, tag
 
         jwerty.key '→', (->
-            if $scope.scope.is_interrupt_arrow_commands is no and $scope.histories.length
+            if $scope.scope.is_interrupt_arrow_commands is no and $scope.activities.length
                 $scope.isLeftActive = no
                 $scope.isRightActive = yes
             else if $scope.scope.is_interrupt_arrow_commands is yes
@@ -125,7 +125,7 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
         ), $element
 
         jwerty.key '⇥', (->
-            if $scope.scope.is_interrupt_arrow_commands is no and $scope.connections.length and $scope.histories.length
+            if $scope.scope.is_interrupt_arrow_commands is no and $scope.connections.length and $scope.activities.length
                 $scope.isLeftActive = not $scope.isLeftActive
                 $scope.isRightActive = not $scope.isRightActive
             return no
