@@ -389,80 +389,6 @@
 
 
   /*
-      The inactiveList directive simply displays list
-      It has only one event 'mouseenter' which changes active list
-   */
-
-  alfredDirective.directive("inactiveList", function() {
-    return {
-      require: "^alfred",
-      restrict: "AE",
-      templateUrl: "src/templates/inactive-connections.html",
-      scope: {
-        connections: "=",
-        amount: "=",
-        heightCell: "=",
-        from: "=",
-        rest: "="
-      },
-      controller: function($scope) {
-        $scope.setHeight = function() {
-          return {
-            height: $scope.heightCell + 'px'
-          };
-        };
-        $scope.setSizerHeight = function() {
-          return {
-            height: ($scope.from * 100) / $scope.connections.length + '%'
-          };
-        };
-        $scope.setSliderHeight = function() {
-          return {
-            height: ($scope.amount * 100) / $scope.connections.length + '%'
-          };
-        };
-        return $scope.changeOffset = function() {
-          return $scope.offset = $scope.from + $scope.amount;
-        };
-      },
-      link: function(scope, element, attrs, alfredCtrl) {
-        var _normalizeSliderHeight;
-        scope.changeOffset();
-        element.bind("mouseenter", function() {
-          if (scope.connections.length) {
-            return alfredCtrl.changeActiveList();
-          }
-        });
-        scope.changeSlider = function() {
-          var sizer, sizes, slider;
-          slider = (scope.amount * 100) / scope.filteredConnections.length;
-          sizer = (scope.from * 100) / scope.filteredConnections.length;
-          sizes = _normalizeSliderHeight(slider, sizer);
-          scope.slider = sizes.sliderHeight;
-          return scope.sizer = sizes.sizerHeight;
-        };
-        return _normalizeSliderHeight = function(sliderHeight, sizerHeight) {
-          if (sizerHeight > 100 - sliderHeight) {
-            sizerHeight = 100 - sliderHeight;
-          }
-          if (sliderHeight > 100) {
-            sliderHeight = 100;
-          }
-          sliderHeight *= 100;
-          sizerHeight *= 100;
-          sizerHeight = Math.floor(sizerHeight) / 100;
-          sliderHeight = Math.ceil(sliderHeight) / 100;
-          return {
-            sliderHeight: sliderHeight,
-            sizerHeight: sizerHeight
-          };
-        };
-      }
-    };
-  });
-
-
-  /*
       The activeList directive displays active list with all hotkeys handlers
   
       connections         --  array of all json-objects
@@ -689,11 +615,11 @@
       subConnections      --  array of visible json-objects
    */
 
-  alfredDirective.directive('whenScrolled', function() {
+  alfredDirective.directive("whenScrolled", function() {
     return {
-      restrict: 'A',
+      restrict: "A",
       link: function(scope, element) {
-        return element.bind('mousewheel', function(event) {
+        return element.bind("mousewheel", function(event) {
           if (event.originalEvent.wheelDelta < 0) {
             scope.$apply(scope.loadDown);
           } else {
@@ -752,5 +678,4 @@
 angular.module('alfredDirective').run(['$templateCache', function ($templateCache) {
 	$templateCache.put('src/templates/alfred.html', '<div id="{{uid}}" class="alfred-widget" ng-click="setFocusAtInput()"> <div class="alfred"> <md-toolbar class="alfred-toolbar"> <div class="tollbar-container"> <div class="head-toolbar"> <div class="alfred-input"> <lx-text-field label={{placeholder}} fixed-label="true"> <input type="text" ng-model="query" ng-keydown="keydown($event)"> </lx-text-field> </div> <div class="menu-toolbar"> <button class="btn btn--m btn--icon history-menu"> <i ng-if="isLeftActive" class="mdi mdi-menu" ng-click="changeActiveList()"></i> <i ng-if="isRightActive" class="mdi mdi-keyboard-backspace" ng-click="changeActiveList()"></i> </button> </div> </div> <div ng-if="isLeftActive" class="head-groups"> <div class="parent-group"> <ul> <li> <a ng-click="filterByGroup(null)"><img src="/src/img/icons/icons_group.png"></a> </li> <li ng-repeat="group in path_groups" class="parent-group-list"> <a ng-click="filterByGroup(group.local_id)"> <i class="mdi mdi-chevron-right"></i> {{group.label}} </a> </li> </ul> </div> <div class="tags"> <lx-dropdown class="tag-toolbar" position="right"> <button class="btn btn--m btn--icon" lx-ripple lx-dropdown-toggle> <i class="mdi mdi-tag"></i> </button> <lx-dropdown-menu> <ul class="tag-list"> <li class="list-row list-row--has-primary" ng-repeat="tag in tags"> <div class="list-primary-tile"> <i ng-if="isCheckTag(tag)" class="mdi mdi-check"></i> </div> <div class="list-content-tile"> <a class="dropdown-link" ng-click="selectTag(tag)">{{tag.label}}</a> </div> </li> </ul> </lx-dropdown-menu> </lx-dropdown> <ul> <li ng-repeat="tag in chosen_tags"> <md-button>{{tag.label}}</md-button> </li> </ul> </div> </div> <div ng-if="isLeftActive" class="bottom-group"> <div class="children-group"> <ul> <li> <button class="btn btn--l btn--white btn--raised" lx-ripple ng-click="addNewGroup()">+ </button> </li> <li ng-repeat="group in children_group"> <button class="btn btn--l btn--white btn--raised" lx-ripple ng-click="filterByGroup(group.local_id)">{{group.label}} </button> </li> </ul> </div> </div> </div> </md-toolbar> <md-content class="content-box" ng-if="connections.length || activities.length"> <div class="table"> <div id="left" ng-class="{ active: isLeftActive }" ng-if="isLeftActive"> <div class="left-list" ng-if="isLeftActive"> <active-list connections="connections" amount="amount" height-cell="heightCell" query="query" from="fromConnection" selected-index="selectedIndex" cmd-system-hotkey="cmdSystemHotkey"> </active-list> </div> </div> <div id="right" ng-class="{ active: isRightActive }" ng-if="isRightActive"> <div class="left-list" ng-if="isRightActive"> <active-list connections="activities" amount="amount" height-cell="heightCell" query="query" from="fromHistory" selected-index="selectedIndex" cmd-system-hotkey="cmdSystemHotkey"> </active-list> </div> </div> </div> </md-content> </div> </div> ');
 	$templateCache.put('src/templates/active-connections.html', '<div id="fixed" when-scrolled="loadMore()" ng-mouseover="toggleScroll()"> <md-list> <md-item ng-repeat="(key,connection) in subConnections=(connections | filterConnections:query:from:offset:this) track by key" id="{{key}}" ng-click="select($event, connection, key)" connection-item="connection" key="{{key}}" ng-class="{ active: (key===selectedIndex) }" ng-style="setHeight()" context-menu class="panel panel-default position-fixed" data-target="menu-{{ $index }}" ng-class="{ \'highlight\': highlight, \'expanded\' : expanded }"> <md-item-content> <div class="md-tile-left host-icon"> <img src="/src/img/icons/hosts/Host-icon_disable_light.png"/> </div> <div class="md-tile-content"> <h4 ng-if="connection.label">{{connection.label}}</h4> <h4 ng-if="!connection.label">{{connection.username}}@{{connection.address}}</h4> </div> <div class="md-tile-right"> <i class="active actions" ng-if="(key===selectedIndex)"> <i>{{enterText}}</i> </i> <i ng-if="!(key===selectedIndex)">{{cmdSystemHotkey}}{{key+1}}</i> </div> <div ng-include="\'/src/templates/context-menu.html\'"></div> </md-item-content> <md-divider inset></md-divider> </md-item> <md-button ng-hide="!subConnections.length" class="add-buttom md-fab md-primary" aria-label="Use Android" ng-click="addConnection($event)">+ </md-button> </md-list> </div> <div class="scroller" ng-if="filteredConnections.length> amount"> <div class="sizer" ng-style="setSizerHeight()"></div> <div class="slider" ng-style="setSliderHeight()"></div> </div> </div> ');
-	$templateCache.put('src/templates/inactive-connections.html', '<div id="inactive-list"> <ul class="list-group"> <li ng-repeat="(key,connection) in (connections | filterConnections:null:from:offset:this) track by key" ng-style="setHeight()"> <span ng-if="connection.label"> {{connection.label}} </span> <span ng-if="!connection.label"> {{connection.ssh_username}}@{{connection.hostname}} </span> </li> <li ng-repeat="i in rest track by $index" ng-style="setHeight()" class="empty-cell"> </li> </ul> </div> <div class="scroller" ng-if="connections.length> amount"> <div class="sizer" ng-style="setSizerHeight()"></div> <div class="slider" ng-style="setSliderHeight()"></div> </div>');
 }]);
