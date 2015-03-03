@@ -112,6 +112,7 @@
 }
 .alfred-widget .content-box .host-icon {
   margin-left: 10px;
+  margin-right: -35px;
 }
 .alfred-widget .md-tile-content span {
   width: 100%;
