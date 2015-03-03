@@ -42,20 +42,20 @@
 
                             <lx-dropdown-menu>
                                 <ul class="tag-list">
-                                    <li class="list-row list-row--has-primary" ng-repeat="tag in tags">
+                                    <li class="list-row list-row--has-primary" ng-repeat="tag in copy_tags">
                                         <div class="list-primary-tile">
                                             <i ng-if="isCheckTag(tag)" class="mdi mdi-check"></i>
                                         </div>
 
                                         <div class="list-content-tile">
-                                            <a class="dropdown-link" ng-click="selectTag(tag)">{{tag.label}}</a>
+                                            <a class="dropdown-link" ng-click="filterByTag(tag)">{{tag.label}}</a>
                                         </div>
                                     </li>
                                 </ul>
                             </lx-dropdown-menu>
                         </lx-dropdown>
-
                         <ul>
+
                             <li ng-repeat="tag in chosen_tags">
                                 <md-button>{{tag.label}}</md-button>
                             </li>

@@ -94,6 +94,7 @@
           $scope.query = null;
           $scope.selectedIndex = 0;
           $scope.current_group = null;
+          $scope.chosen_tags = [];
           getGroups = function() {
             $scope.path_groups = $scope.current_group ? $scope.groups.get_parent_groups($scope.current_group.get('local_id')) : [];
             $scope.path_groups.reverse();
@@ -110,30 +111,32 @@
             });
           };
           filter_hosts_by_chosen_tags = function() {
-            var id_of_hosts, tag_hosts;
+            var array_id_of_hosts, tag_hosts;
             tag_hosts = [];
-            id_of_hosts = [];
+            array_id_of_hosts = [];
             _.each($scope.chosen_tags, function(val) {
-              return tag_hosts = _.union(tag_hosts, $scope.taghosts.find_by_tag(val.get("local_id")));
+              return tag_hosts = _.union(tag_hosts, $scope.taghosts.find_by_tag(val.local_id));
             });
             tag_hosts = _.uniq(tag_hosts);
             _.each(tag_hosts, function(val) {
-              if (val.get(host).local_id) {
-                id_of_hosts = _.union(id_of_hosts, val.get(host).local_id);
-                return id_of_hosts = _.union(id_of_hosts, val.get(host).id);
+              if (val.get("host").local_id) {
+                return array_id_of_hosts = _.union(array_id_of_hosts, val.get("host").local_id);
               }
             });
-            return $scope.connections = _.filter($scope.connections, function(val) {
-              if (_.contains(tag_hosts, val.get("local_id"))) {
-                return val;
-              }
-            });
+            if (tag_hosts.length) {
+              return $scope.connections = _.filter($scope.connections, function(val) {
+                if (_.contains(array_id_of_hosts, val.get("local_id"))) {
+                  return val;
+                }
+              });
+            }
           };
           getConnections = function() {
             $scope.connections = _.clone($scope.hosts.models);
             if ($scope.current_group) {
               $scope.connections = $scope.hosts.filter_by_group($scope.current_group.get('local_id'), true);
             }
+            filter_hosts_by_chosen_tags();
             return _.each($scope.connections, function(val, key) {
               val.set({
                 username: val.get_ssh_identity().get("username")
@@ -150,11 +153,9 @@
             });
           };
           transformationData = function() {
-            $scope.copy_taghosts = $scope.taghosts.toJSON();
-            $scope.tags = $scope.taghosts.toJSON();
+            $scope.copy_tags = $scope.tags.toJSON();
             getGroups();
-            getConnections();
-            return $scope.chosen_tags = [];
+            return getConnections();
           };
           $scope.filterByGroup = function(local_id) {
             $scope.current_group = local_id ? $scope.groups.get(local_id) : null;
@@ -174,14 +175,26 @@
             return false;
           };
           $scope.isCheckTag = function(tag) {
-            return _.contains($scope.chosen_tags, tag);
-          };
-          $scope.selectTag = function(tag) {
-            if (_.contains($scope.chosen_tags, tag)) {
-              return $scope.chosen_tags = _.without($scope.chosen_tags, tag);
+            var tags;
+            tags = [];
+            tags = _.find($scope.chosen_tags, function(val) {
+              return val.local_id === tag.local_id;
+            });
+            if (tags) {
+              return true;
             } else {
-              return $scope.chosen_tags = _.union($scope.chosen_tags, tag);
+              return false;
             }
+          };
+          $scope.filterByTag = function(tag) {
+            if ($scope.isCheckTag(tag)) {
+              $scope.chosen_tags = _.without($scope.chosen_tags, _.findWhere($scope.chosen_tags, tag.local_id));
+            } else {
+              $scope.chosen_tags = _.union($scope.chosen_tags, tag);
+            }
+            return $timeout((function() {
+              return transformationData();
+            }));
           };
           jwerty.key('→', (function() {
             if ($scope.scope.is_interrupt_arrow_commands === true && $scope.activities.length) {
@@ -676,6 +689,6 @@
 }).call(this);
 
 angular.module('alfredDirective').run(['$templateCache', function ($templateCache) {
-	$templateCache.put('src/templates/alfred.html', '<div id="{{uid}}" class="alfred-widget" ng-click="setFocusAtInput()"> <div class="alfred"> <md-toolbar class="alfred-toolbar"> <div class="tollbar-container"> <div class="head-toolbar"> <div class="alfred-input"> <lx-text-field label={{placeholder}} fixed-label="true"> <input type="text" ng-model="query" ng-keydown="keydown($event)"> </lx-text-field> </div> <div class="menu-toolbar"> <button class="btn btn--m btn--icon history-menu"> <i ng-if="isLeftActive" class="mdi mdi-menu" ng-click="changeActiveList()"></i> <i ng-if="isRightActive" class="mdi mdi-keyboard-backspace" ng-click="changeActiveList()"></i> </button> </div> </div> <div ng-if="isLeftActive" class="head-groups"> <div class="parent-group"> <ul> <li> <a ng-click="filterByGroup(null)"><img src="/src/img/icons/icons_group.png"></a> </li> <li ng-repeat="group in path_groups" class="parent-group-list"> <a ng-click="filterByGroup(group.local_id)"> <i class="mdi mdi-chevron-right"></i> {{group.label}} </a> </li> </ul> </div> <div class="tags"> <lx-dropdown class="tag-toolbar" position="right"> <button class="btn btn--m btn--icon" lx-ripple lx-dropdown-toggle> <i class="mdi mdi-tag"></i> </button> <lx-dropdown-menu> <ul class="tag-list"> <li class="list-row list-row--has-primary" ng-repeat="tag in tags"> <div class="list-primary-tile"> <i ng-if="isCheckTag(tag)" class="mdi mdi-check"></i> </div> <div class="list-content-tile"> <a class="dropdown-link" ng-click="selectTag(tag)">{{tag.label}}</a> </div> </li> </ul> </lx-dropdown-menu> </lx-dropdown> <ul> <li ng-repeat="tag in chosen_tags"> <md-button>{{tag.label}}</md-button> </li> </ul> </div> </div> <div ng-if="isLeftActive" class="bottom-group"> <div class="children-group"> <ul> <li> <button class="btn btn--l btn--white btn--raised" lx-ripple ng-click="addNewGroup()">+ </button> </li> <li ng-repeat="group in children_group"> <button class="btn btn--l btn--white btn--raised" lx-ripple ng-click="filterByGroup(group.local_id)">{{group.label}} </button> </li> </ul> </div> </div> </div> </md-toolbar> <md-content class="content-box" ng-if="connections.length || activities.length"> <div class="table"> <div id="left" ng-class="{ active: isLeftActive }" ng-if="isLeftActive"> <div class="left-list" ng-if="isLeftActive"> <active-list connections="connections" amount="amount" height-cell="heightCell" query="query" from="fromConnection" selected-index="selectedIndex" cmd-system-hotkey="cmdSystemHotkey"> </active-list> </div> </div> <div id="right" ng-class="{ active: isRightActive }" ng-if="isRightActive"> <div class="left-list" ng-if="isRightActive"> <active-list connections="activities" amount="amount" height-cell="heightCell" query="query" from="fromHistory" selected-index="selectedIndex" cmd-system-hotkey="cmdSystemHotkey"> </active-list> </div> </div> </div> </md-content> </div> </div> ');
+	$templateCache.put('src/templates/alfred.html', '<div id="{{uid}}" class="alfred-widget" ng-click="setFocusAtInput()"> <div class="alfred"> <md-toolbar class="alfred-toolbar"> <div class="tollbar-container"> <div class="head-toolbar"> <div class="alfred-input"> <lx-text-field label={{placeholder}} fixed-label="true"> <input type="text" ng-model="query" ng-keydown="keydown($event)"> </lx-text-field> </div> <div class="menu-toolbar"> <button class="btn btn--m btn--icon history-menu"> <i ng-if="isLeftActive" class="mdi mdi-menu" ng-click="changeActiveList()"></i> <i ng-if="isRightActive" class="mdi mdi-keyboard-backspace" ng-click="changeActiveList()"></i> </button> </div> </div> <div ng-if="isLeftActive" class="head-groups"> <div class="parent-group"> <ul> <li> <a ng-click="filterByGroup(null)"><img src="/src/img/icons/icons_group.png"></a> </li> <li ng-repeat="group in path_groups" class="parent-group-list"> <a ng-click="filterByGroup(group.local_id)"> <i class="mdi mdi-chevron-right"></i> {{group.label}} </a> </li> </ul> </div> <div class="tags"> <lx-dropdown class="tag-toolbar" position="right"> <button class="btn btn--m btn--icon" lx-ripple lx-dropdown-toggle> <i class="mdi mdi-tag"></i> </button> <lx-dropdown-menu> <ul class="tag-list"> <li class="list-row list-row--has-primary" ng-repeat="tag in copy_tags"> <div class="list-primary-tile"> <i ng-if="isCheckTag(tag)" class="mdi mdi-check"></i> </div> <div class="list-content-tile"> <a class="dropdown-link" ng-click="filterByTag(tag)">{{tag.label}}</a> </div> </li> </ul> </lx-dropdown-menu> </lx-dropdown> <ul> <li ng-repeat="tag in chosen_tags"> <md-button>{{tag.label}}</md-button> </li> </ul> </div> </div> <div ng-if="isLeftActive" class="bottom-group"> <div class="children-group"> <ul> <li> <button class="btn btn--l btn--white btn--raised" lx-ripple ng-click="addNewGroup()">+ </button> </li> <li ng-repeat="group in children_group"> <button class="btn btn--l btn--white btn--raised" lx-ripple ng-click="filterByGroup(group.local_id)">{{group.label}} </button> </li> </ul> </div> </div> </div> </md-toolbar> <md-content class="content-box" ng-if="connections.length || activities.length"> <div class="table"> <div id="left" ng-class="{ active: isLeftActive }" ng-if="isLeftActive"> <div class="left-list" ng-if="isLeftActive"> <active-list connections="connections" amount="amount" height-cell="heightCell" query="query" from="fromConnection" selected-index="selectedIndex" cmd-system-hotkey="cmdSystemHotkey"> </active-list> </div> </div> <div id="right" ng-class="{ active: isRightActive }" ng-if="isRightActive"> <div class="left-list" ng-if="isRightActive"> <active-list connections="activities" amount="amount" height-cell="heightCell" query="query" from="fromHistory" selected-index="selectedIndex" cmd-system-hotkey="cmdSystemHotkey"> </active-list> </div> </div> </div> </md-content> </div> </div> ');
 	$templateCache.put('src/templates/active-connections.html', '<div id="fixed" when-scrolled="loadMore()" ng-mouseover="toggleScroll()"> <md-list> <md-item ng-repeat="(key,connection) in subConnections=(connections | filterConnections:query:from:offset:this) track by key" id="{{key}}" ng-click="select($event, connection, key)" connection-item="connection" key="{{key}}" ng-class="{ active: (key===selectedIndex) }" ng-style="setHeight()" context-menu class="panel panel-default position-fixed" data-target="menu-{{ $index }}" ng-class="{ \'highlight\': highlight, \'expanded\' : expanded }"> <md-item-content> <div class="md-tile-left host-icon"> <img src="/src/img/icons/hosts/Host-icon_disable_light.png"/> </div> <div class="md-tile-content"> <h4 ng-if="connection.label">{{connection.label}}</h4> <h4 ng-if="!connection.label">{{connection.username}}@{{connection.address}}</h4> </div> <div class="md-tile-right"> <i class="active actions" ng-if="(key===selectedIndex)"> <i>{{enterText}}</i> </i> <i ng-if="!(key===selectedIndex)">{{cmdSystemHotkey}}{{key+1}}</i> </div> <div ng-include="\'/src/templates/context-menu.html\'"></div> </md-item-content> <md-divider inset></md-divider> </md-item> <md-button ng-hide="!subConnections.length" class="add-buttom md-fab md-primary" aria-label="Use Android" ng-click="addConnection($event)">+ </md-button> </md-list> </div> <div class="scroller" ng-if="filteredConnections.length> amount"> <div class="sizer" ng-style="setSizerHeight()"></div> <div class="slider" ng-style="setSliderHeight()"></div> </div> </div> ');
 }]);

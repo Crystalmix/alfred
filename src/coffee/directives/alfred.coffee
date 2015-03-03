@@ -26,6 +26,8 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
         $scope.query = null
         $scope.selectedIndex = 0
         $scope.current_group = null
+        $scope.chosen_tags = []
+
 
         getGroups = () ->
             $scope.path_groups = if $scope.current_group then $scope.groups.get_parent_groups($scope.current_group.get('local_id')) else []
@@ -42,27 +44,30 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
 
         filter_hosts_by_chosen_tags = () ->
             tag_hosts = []
-            id_of_hosts = []
+            array_id_of_hosts = []
+            # Gets all tag_hosts from $scope.chosen_tags
             _.each $scope.chosen_tags, (val) ->
-                tag_hosts = _.union tag_hosts, $scope.taghosts.find_by_tag val.get("local_id")
+                tag_hosts = _.union tag_hosts, $scope.taghosts.find_by_tag val.local_id
             tag_hosts = _.uniq tag_hosts
 
+            # Gets host.local_id from tag_hosts
             _.each tag_hosts, (val) ->
-                if val.get(host).local_id
-                    id_of_hosts = _.union id_of_hosts, val.get(host).local_id
-                    id_of_hosts = _.union id_of_hosts, val.get(host).id
+                if val.get("host").local_id
+                    array_id_of_hosts = _.union array_id_of_hosts, val.get("host").local_id
 
-            $scope.connections = _.filter $scope.connections, (val) ->
-                if _.contains tag_hosts, val.get("local_id")
-                    return val
+            # Merges connections 
+            if tag_hosts.length
+                $scope.connections = _.filter $scope.connections, (val) ->
+                    if _.contains array_id_of_hosts, val.get("local_id")
+                        return val
 
 
         getConnections = () ->
             # Overrides connections: filter by group and add new fields
             $scope.connections = _.clone $scope.hosts.models
-            $scope.connections = $scope.hosts.filter_by_group($scope.current_group.get('local_id'), yes)  if $scope.current_group
+            $scope.connections = $scope.hosts.filter_by_group($scope.current_group.get('local_id'), yes) if $scope.current_group
 
-#            do filter_hosts_by_chosen_tags
+            do filter_hosts_by_chosen_tags
 
             _.each $scope.connections, (val, key) ->
                 val.set {username : val.get_ssh_identity().get("username")}
@@ -74,13 +79,13 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
         # Prepares entities for template
         transformationData = () ->
             # Gets clone tags
-            $scope.copy_taghosts = do $scope.taghosts.toJSON
-            $scope.tags = do $scope.taghosts.toJSON
+            $scope.copy_tags = do $scope.tags.toJSON
+
             # Prepares all groups
             do getGroups
+
             # Prepares all hosts
             do getConnections
-            $scope.chosen_tags = []
 
 
         $scope.filterByGroup = (local_id) ->
@@ -99,14 +104,25 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
                 $scope.isRightActive = not $scope.isRightActive
             return no
 
-        $scope.isCheckTag = (tag) ->
-            _.contains($scope.chosen_tags, tag)
 
-        $scope.selectTag = (tag) ->
-            if _.contains($scope.chosen_tags, tag)
-                $scope.chosen_tags = _.without $scope.chosen_tags, tag
+        $scope.isCheckTag = (tag) ->
+            tags = []
+            tags = _.find($scope.chosen_tags, (val) ->
+                val.local_id is tag.local_id
+            )
+            if tags
+                return yes
+            else
+                return no
+
+
+        $scope.filterByTag = (tag) ->
+            if $scope.isCheckTag tag
+                $scope.chosen_tags = _.without($scope.chosen_tags, _.findWhere($scope.chosen_tags, tag.local_id))
             else
                 $scope.chosen_tags = _.union $scope.chosen_tags, tag
+            $timeout (-> do transformationData)
+
 
         jwerty.key '→', (->
             if $scope.scope.is_interrupt_arrow_commands is yes and $scope.activities.length
@@ -116,6 +132,7 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
                 return yes
         ), $element
 
+
         jwerty.key '←', (->
             if $scope.scope.is_interrupt_arrow_commands is yes and $scope.connections.length
                 $scope.isLeftActive = yes
@@ -124,6 +141,7 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
                 return yes
         ), $element
 
+
         jwerty.key '⇥', (->
             if $scope.scope.is_interrupt_arrow_commands is no and $scope.connections.length and $scope.activities.length
                 $scope.isLeftActive = not $scope.isLeftActive
@@ -131,10 +149,12 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
             return no
         ), $element
 
+
         jwerty.key '↑', (->
             $scope.$broadcast "arrow", "up"
             return no
         ), $element
+
 
         jwerty.key '↓', (->
             $scope.$broadcast "arrow", "down"
