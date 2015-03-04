@@ -79,13 +79,13 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
         # Prepares entities for template
         transformationData = () ->
             # Gets clone tags
-            $scope.copy_tags = do $scope.tags.toJSON
+            $scope.copy_tags = do $scope.tags.toJSON if $scope.tags
 
             # Prepares all groups
-            do getGroups
+            do getGroups if $scope.groups
 
             # Prepares all hosts
-            do getConnections
+            do getConnections if $scope.hosts
 
 
         $scope.filterByGroup = (local_id) ->

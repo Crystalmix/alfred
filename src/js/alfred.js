@@ -153,9 +153,15 @@
             });
           };
           transformationData = function() {
-            $scope.copy_tags = $scope.tags.toJSON();
-            getGroups();
-            return getConnections();
+            if ($scope.tags) {
+              $scope.copy_tags = $scope.tags.toJSON();
+            }
+            if ($scope.groups) {
+              getGroups();
+            }
+            if ($scope.hosts) {
+              return getConnections();
+            }
           };
           $scope.filterByGroup = function(local_id) {
             $scope.current_group = local_id ? $scope.groups.get(local_id) : null;
