@@ -254,6 +254,9 @@
   display: block;
   opacity: 1;
 }
+.alfred-widget li.parent-group-list a {
+  color: #616161 !important;
+}
 .tag-list .list-content-tile {
   padding: 2px 0;
 }
