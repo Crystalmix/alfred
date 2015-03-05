@@ -270,6 +270,12 @@
   height: 30px;
   display: block;
 }
+.alfred-widget .connect-icon {
+  background-image: url("../img/icons/connect.png");
+  width: 16px;
+  height: 16px;
+  display: block;
+}
 .tag-list .list-content-tile {
   padding: 2px 0;
 }
