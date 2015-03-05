@@ -208,7 +208,7 @@
             }));
           };
           jwerty.key('→', (function() {
-            if ($scope.scope.is_interrupt_arrow_commands === true && $scope.activities.length) {
+            if ($scope.is_interrupt_arrow_commands === true && $scope.activities.length) {
               $scope.isLeftActive = false;
               return $scope.isRightActive = true;
             } else if ($scope.scope.is_interrupt_arrow_commands === false) {
@@ -216,7 +216,7 @@
             }
           }), $element);
           jwerty.key('←', (function() {
-            if ($scope.scope.is_interrupt_arrow_commands === true && $scope.connections.length) {
+            if ($scope.is_interrupt_arrow_commands === true && $scope.hosts.length) {
               $scope.isLeftActive = true;
               return $scope.isRightActive = false;
             } else if ($scope.scope.is_interrupt_arrow_commands === false) {
@@ -224,7 +224,7 @@
             }
           }), $element);
           jwerty.key('⇥', (function() {
-            if ($scope.scope.is_interrupt_arrow_commands === false && $scope.connections.length && $scope.activities.length) {
+            if ($scope.is_interrupt_arrow_commands === false && $scope.hosts.length && $scope.activities.length) {
               $scope.isLeftActive = !$scope.isLeftActive;
               $scope.isRightActive = !$scope.isRightActive;
             }
@@ -391,8 +391,8 @@
             return scope.selectedIndex = 0;
           };
           initializeTableParameters = function() {
-            scope.isLeftActive = scope.connections.length ? true : false;
-            return scope.isRightActive = scope.connections.length ? false : true;
+            scope.isLeftActive = scope.hosts.length ? true : false;
+            return scope.isRightActive = scope.hosts.length ? false : true;
           };
           scope.keydown = function() {
             return $timeout((function() {

@@ -127,7 +127,7 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
 
 
         jwerty.key '→', (->
-            if $scope.scope.is_interrupt_arrow_commands is yes and $scope.activities.length
+            if $scope.is_interrupt_arrow_commands is yes and $scope.activities.length
                 $scope.isLeftActive = no
                 $scope.isRightActive = yes
             else if $scope.scope.is_interrupt_arrow_commands is no
@@ -136,7 +136,7 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
 
 
         jwerty.key '←', (->
-            if $scope.scope.is_interrupt_arrow_commands is yes and $scope.connections.length
+            if $scope.is_interrupt_arrow_commands is yes and $scope.hosts.length
                 $scope.isLeftActive = yes
                 $scope.isRightActive = no
             else if $scope.scope.is_interrupt_arrow_commands is no
@@ -145,7 +145,7 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
 
 
         jwerty.key '⇥', (->
-            if $scope.scope.is_interrupt_arrow_commands is no and $scope.connections.length and $scope.activities.length
+            if $scope.is_interrupt_arrow_commands is no and $scope.hosts.length and $scope.activities.length
                 $scope.isLeftActive = not $scope.isLeftActive
                 $scope.isRightActive = not $scope.isRightActive
             return no
@@ -314,8 +314,8 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
             scope.selectedIndex = 0
 
         initializeTableParameters = () ->
-            scope.isLeftActive = if scope.connections.length then yes else no
-            scope.isRightActive = if scope.connections.length then no else yes
+            scope.isLeftActive = if scope.hosts.length then yes else no
+            scope.isRightActive = if scope.hosts.length then no else yes
 
         scope.keydown = () ->
             $timeout (->
