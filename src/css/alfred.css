@@ -263,3 +263,12 @@
 .tag-list .list-primary-tile {
   margin-top: -13px;
 }
+.dropdown-menu {
+  display: block;
+  border: none;
+  left: auto;
+  float: none;
+  min-width: inherit;
+  padding: inherit;
+  margin: inherit;
+}
