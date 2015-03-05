@@ -112,7 +112,14 @@
 }
 .alfred-widget .content-box .host-icon {
   margin-left: 10px;
-  margin-right: -35px;
+  margin-right: -6px;
+  min-width: 25px;
+}
+.alfred-widget .content-box .host-icon .disable {
+  background-image: url("../img/icons/hosts/Host-icon_disable_light.png");
+  width: 25px;
+  height: 24px;
+  display: block;
 }
 .alfred-widget .md-tile-content span {
   width: 100%;
@@ -256,6 +263,12 @@
 }
 .alfred-widget li.parent-group-list a {
   color: #616161 !important;
+}
+.alfred-widget .group-icon {
+  background-image: url("../img/icons/icons_group.png");
+  width: 30px;
+  height: 30px;
+  display: block;
 }
 .tag-list .list-content-tile {
   padding: 2px 0;

@@ -27,7 +27,9 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
         $scope.selectedIndex = 0
         $scope.current_group = null
         $scope.chosen_tags = []
-
+        $scope.image_urls = {
+            groups: "/src/img/icons/icons_group.png"
+        }
 
         getGroups = () ->
             $scope.path_groups = if $scope.current_group then $scope.groups.get_parent_groups($scope.current_group.get('local_id')) else []
