@@ -154,7 +154,9 @@
           };
           transformationData = function() {
             if ($scope.tags) {
-              $scope.copy_tags = $scope.tags.toJSON();
+              $scope.copy_tags = $scope.tags.toJSON({
+                do_not_encrypt: false
+              });
             }
             if ($scope.groups) {
               getGroups();
