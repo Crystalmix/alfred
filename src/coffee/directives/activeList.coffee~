@@ -20,6 +20,8 @@ alfredDirective.directive "activeList",  () ->
             cmdSystemHotkey: "="
 
         controller: ($scope) ->
+            $scope.template =
+                context_menu: "src/templates/context-menu.html"
 
             $scope.setHeight = () ->
                 height: $scope.heightCell + 'px'

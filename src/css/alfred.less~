@@ -308,8 +308,8 @@
     }
     .connect-icon {
         background-image: url("../img/icons/connect.png");
-        width: 16px;
-        height: 16px;
+        width: 30px;
+        height: 30px;
         display: block;
     }
 }
