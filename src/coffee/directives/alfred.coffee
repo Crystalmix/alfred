@@ -44,13 +44,18 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
                 $scope.path_groups[key] = _.clone val.toJSON {do_not_encrypt: no}
 
 
+        _intersection_tag_hosts_by_tags = () ->
+
+
         filter_hosts_by_chosen_tags = () ->
             tag_hosts = []
             array_id_of_hosts = []
-            # Gets all tag_hosts from $scope.chosen_tags
+            array_of_local_id_of_tags = []
+
             _.each $scope.chosen_tags, (val) ->
-                tag_hosts = _.union tag_hosts, $scope.taghosts.find_by_tag val.local_id
-            tag_hosts = _.uniq tag_hosts
+                array_of_local_id_of_tags = _.union array_of_local_id_of_tags, val.local_id
+
+            tag_hosts = $scope.taghosts.intersection_by_tags(array_of_local_id_of_tags)
 
             # Gets host.local_id from tag_hosts
             _.each tag_hosts, (val) ->

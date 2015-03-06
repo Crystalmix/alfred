@@ -90,7 +90,7 @@
           onRemoveCallback: "&"
         },
         controller: function($scope, $element) {
-          var bindHotkeysCmd, detectCtrlOrCmd, filter_hosts_by_chosen_tags, getConnections, getGroups, transformationData;
+          var bindHotkeysCmd, detectCtrlOrCmd, filter_hosts_by_chosen_tags, getConnections, getGroups, transformationData, _intersection_tag_hosts_by_tags;
           $scope.query = null;
           $scope.selectedIndex = 0;
           $scope.current_group = null;
@@ -113,14 +113,16 @@
               }));
             });
           };
+          _intersection_tag_hosts_by_tags = function() {};
           filter_hosts_by_chosen_tags = function() {
-            var array_id_of_hosts, tag_hosts;
+            var array_id_of_hosts, array_of_local_id_of_tags, tag_hosts;
             tag_hosts = [];
             array_id_of_hosts = [];
+            array_of_local_id_of_tags = [];
             _.each($scope.chosen_tags, function(val) {
-              return tag_hosts = _.union(tag_hosts, $scope.taghosts.find_by_tag(val.local_id));
+              return array_of_local_id_of_tags = _.union(array_of_local_id_of_tags, val.local_id);
             });
-            tag_hosts = _.uniq(tag_hosts);
+            tag_hosts = $scope.taghosts.intersection_by_tags(array_of_local_id_of_tags);
             _.each(tag_hosts, function(val) {
               if (val.get("host").local_id) {
                 return array_id_of_hosts = _.union(array_id_of_hosts, val.get("host").local_id);
