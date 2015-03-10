@@ -90,7 +90,7 @@
           onRemoveCallback: "&"
         },
         controller: function($scope, $element) {
-          var bindHotkeysCmd, detectCtrlOrCmd, filter_hosts_by_chosen_tags, getConnections, getGroups, transformationData, _intersection_tag_hosts_by_tags;
+          var bindHotkeysCmd, detectCtrlOrCmd, filter_hosts_by_chosen_tags, getConnections, getGroups, transformationData;
           $scope.query = null;
           $scope.selectedIndex = 0;
           $scope.current_group = null;
@@ -99,9 +99,11 @@
             groups: "/src/img/icons/icons_group.png"
           };
           getGroups = function() {
-            $scope.path_groups = $scope.current_group ? $scope.groups.get_parent_groups($scope.current_group.get('local_id')) : [];
+            var current_group_id;
+            current_group_id = $scope.current_group ? $scope.current_group.get('local_id') : null;
+            $scope.path_groups = current_group_id ? $scope.groups.get_parent_groups(current_group_id) : [];
             $scope.path_groups.reverse();
-            $scope.children_group = $scope.current_group ? _.rest($scope.groups.get_all_children($scope.current_group.get('local_id'))) : $scope.groups.get_root();
+            $scope.children_group = current_group_id ? _.rest($scope.groups.get_all_children(current_group_id)) : $scope.groups.get_root();
             _.each($scope.children_group, function(val, key) {
               return $scope.children_group[key] = _.clone(val.toJSON({
                 do_not_encrypt: false
@@ -113,7 +115,6 @@
               }));
             });
           };
-          _intersection_tag_hosts_by_tags = function() {};
           filter_hosts_by_chosen_tags = function() {
             var array_id_of_hosts, array_of_local_id_of_tags, tag_hosts;
             tag_hosts = [];
@@ -137,9 +138,10 @@
             }
           };
           getConnections = function() {
-            $scope.connections = _.clone($scope.hosts.models);
             if ($scope.current_group) {
               $scope.connections = $scope.hosts.filter_by_group($scope.current_group.get('local_id'), true);
+            } else {
+              $scope.connections = _.clone($scope.hosts.models);
             }
             filter_hosts_by_chosen_tags();
             return _.each($scope.connections, function(val, key) {

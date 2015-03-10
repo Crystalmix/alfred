@@ -32,19 +32,18 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
         }
 
         getGroups = () ->
-            $scope.path_groups = if $scope.current_group then $scope.groups.get_parent_groups($scope.current_group.get('local_id')) else []
+            current_group_id = if $scope.current_group then $scope.current_group.get('local_id') else null
+
+            $scope.path_groups = if current_group_id then $scope.groups.get_parent_groups(current_group_id) else []
             do $scope.path_groups.reverse
 
-            $scope.children_group = if $scope.current_group then _.rest($scope.groups.get_all_children($scope.current_group.get('local_id'))) else $scope.groups.get_root()
+            $scope.children_group = if current_group_id then _.rest($scope.groups.get_all_children(current_group_id)) else $scope.groups.get_root()
 
             _.each $scope.children_group, (val, key) ->
                 $scope.children_group[key] = _.clone val.toJSON {do_not_encrypt: no}
 
             _.each $scope.path_groups, (val, key) ->
                 $scope.path_groups[key] = _.clone val.toJSON {do_not_encrypt: no}
-
-
-        _intersection_tag_hosts_by_tags = () ->
 
 
         filter_hosts_by_chosen_tags = () ->
@@ -70,10 +69,13 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
 
 
         getConnections = () ->
-            # Overrides connections: filter by group and add new fields
-            $scope.connections = _.clone $scope.hosts.models
-            $scope.connections = $scope.hosts.filter_by_group($scope.current_group.get('local_id'), yes) if $scope.current_group
+            # Filters hosts by current_group
+            if $scope.current_group
+                $scope.connections = $scope.hosts.filter_by_group($scope.current_group.get('local_id'), yes)
+            else
+                $scope.connections = _.clone $scope.hosts.models
 
+            # Filters hosts by chosen_tags
             do filter_hosts_by_chosen_tags
 
             _.each $scope.connections, (val, key) ->
