@@ -15,7 +15,6 @@
         "jasmine-jquery": "https://github.com/velesin/jasmine-jquery.git#~2.0.5",
         "optparse": "~1.0.5",
         "jwerty": "~0.3.2",
-        "angular-material": "~0.7.1",
         "mdi": "~0.8.82-alpha",
         "lumx": "~0.3.8",
         "velocity": "~1.2.1",

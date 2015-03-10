@@ -4,10 +4,9 @@ angular.module( 'alfredApp', [
       'ui.router',
       'httpServices',
       'alfredDirective',
-      'ngMaterial',
       'lumx'
 ]).
-config(['$stateProvider', '$urlRouterProvider', '$mdThemingProvider', ($stateProvider, $urlRouterProvider, $mdThemingProvider) ->
+config(['$stateProvider', '$urlRouterProvider', ($stateProvider, $urlRouterProvider) ->
 
     $urlRouterProvider.otherwise '/view1'
 
@@ -18,7 +17,5 @@ config(['$stateProvider', '$urlRouterProvider', '$mdThemingProvider', ($statePro
             controller: 'AlfredController'
         })
 
-    $mdThemingProvider.theme('default')
-        .primaryPalette("blue")
     return
 ])

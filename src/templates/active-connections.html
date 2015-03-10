@@ -1,6 +1,6 @@
 <div id="fixed" when-scrolled="loadMore()" ng-mouseover="toggleScroll()">
-    <md-list>
-        <md-item
+    <ul class="list">
+        <li
                 ng-repeat="(key,connection) in subConnections = (connections | filterConnections:query:from:offset:this) track by key"
                 id="{{key}}"
                 ng-click="select($event, connection, key)"
@@ -9,77 +9,70 @@
                 ng-class="{ active: (key === selectedIndex) }"
                 ng-style="setHeight()"
                 context-menu
-                class="panel panel-default position-fixed"
+                class="panel panel-default position-fixed list-row"
                 data-target="menu-{{ $index }}"
                 ng-class="{ 'highlight': highlight, 'expanded' : expanded }">
 
-            <md-item-content>
-                <div class="md-tile-left host-icon">
-                    <i class="disable"></i>
-                </div>
-                <div class="md-tile-content">
-                    <h4 ng-if="connection.label">{{connection.label}}</h4>
-                    <h4 ng-if="!connection.label">{{connection.username}}@{{connection.address}}</h4>
-                </div>
-                <div class="md-tile-right">
-                    <i class="active actions" ng-if="(key === selectedIndex)">
-                        <i>{{enterText}}</i>
-                    </i>
-                </div>
-                <!--Includes context menu for each cell-->
-                    <div class="dropdown position-fixed" id="menu-{{ $index }}">
-                    <md-list class="dropdown-menu host-menu" role="menu">
-                        <md-item>
-                            <md-item-content ng-if="!isHistory(connection)" ng-click="edit($event, connection)">
-                                <div class="md-tile-left">
-                                    <i class="mdi mdi-pencil"></i>
-                                </div>
-                                <div class="md-tile-content">
-                                    Edit
-                                </div>
-                            </md-item-content>
-                            <md-item-content ng-if="isHistory(connection)" ng-click="upload($event, connection)">
-                                <div class="md-tile-left">
-                                    <i class="mdi mdi-pencil"></i>
-                                </div>
-                                <div class="md-tile-content">
-                                    Edit
-                                </div>
-                            </md-item-content>
-                            <md-item-content ng-click="remove($event, connection)">
-                                <div class="md-tile-left">
-                                    <i class="mdi mdi-delete"></i>
-                                </div>
-                                <div class="md-tile-content">
-                                    Remove
-                                </div>
-                            </md-item-content>
-                            <md-item-content ng-click="select($event, connection, key)">
-                                <div class="md-tile-left">
-                                    <i class="connect-icon"></i>
-                                </div>
-                                <div class="md-tile-content">
-                                    Connect
-                                </div>
-                            </md-item-content>
-                        </md-item>
-                    </md-list>
-                </div>
-                <!--End Includes context menu for each cell-->
-            </md-item-content>
+            <div class="list-row__primary">
+                <i class="icon icon--l host_default_icon"></i>
+            </div>
+            <div class="list-row__content">
+                <span ng-if="connection.label" class="display-block">{{connection.label}}</span>
+                <span ng-if="!connection.label"
+                      class="display-block">{{connection.username}}@{{connection.address}}</span>
+            </div>
+            <!--Includes context menu for each cell-->
+            <div class="dropdown position-fixed" id="menu-{{ $index }}">
+                <ul class="list dropdown-menu host-menu" role="menu">
+                    <li class="list-row" ng-if="!isHistory(connection)" ng-click="edit($event, connection)">
+                        <div class="list-row__primary">
+                            <i class="mdi mdi-pencil"></i>
+                        </div>
+                        <div class="list-row__content">
+                            Edit
+                        </div>
+                    </li>
+                    <li class="list-row" ng-if="isHistory(connection)" ng-click="upload($event, connection)">
+                        <div class="list-row__primary">
+                            <i class="mdi mdi-pencil"></i>
+                        </div>
+                        <div class="list-row__content">
+                            Edit
+                        </div>
+                    </li>
+                    <li class="list-row" ng-click="remove($event, connection)">
+                        <div class="list-row__primary">
+                            <i class="mdi mdi-delete"></i>
+                        </div>
+                        <div class="list-row__content">
+                            Remove
+                        </div>
+                    </li>
+                    <li class="list-row" ng-click="select($event, connection, key)">
+                        <div class="list-row__primary">
+                            <i class="connect-icon"></i>
+                        </div>
+                        <div class="list-row__content">
+                            Connect
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <!--End Includes context menu for each cell-->
 
-            <md-divider inset></md-divider>
-        </md-item>
+        </li>
 
-        <md-button ng-hide="!subConnections.length"
-                   class="add-buttom md-fab md-primary"
-                   aria-label="Use Android"
-                   ng-click="addConnection($event)">+
-        </md-button>
-    </md-list>
+        <button class="btn btn--m btn--blue btn--fab add-buttom" ng-click="addConnection($event)" lx-ripple>
+            <i class="mdi mdi-plus"></i>
+        </button>
+        <!--<md-button ng-hide="!subConnections.length"-->
+                   <!--class="add-buttom md-fab md-primary"-->
+                   <!--aria-label="Use Android"-->
+                   <!--ng-click="addConnection($event)">+-->
+        <!--</md-button>-->
+    </ul>
 </div>
 <div class="scroller" ng-if="filteredConnections.length > amount">
     <div class="sizer" ng-style="setSizerHeight()"></div>
     <div class="slider" ng-style="setSliderHeight()"></div>
-</div>
 </div>

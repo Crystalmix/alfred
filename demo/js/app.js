@@ -1,14 +1,13 @@
 (function() {
   'use strict';
-  angular.module('alfredApp', ['ui.router', 'httpServices', 'alfredDirective', 'ngMaterial', 'lumx']).config([
-    '$stateProvider', '$urlRouterProvider', '$mdThemingProvider', function($stateProvider, $urlRouterProvider, $mdThemingProvider) {
+  angular.module('alfredApp', ['ui.router', 'httpServices', 'alfredDirective', 'lumx']).config([
+    '$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
       $urlRouterProvider.otherwise('/view1');
       $stateProvider.state('view1', {
         url: '/view1',
         templateUrl: 'partials/mainView.html',
         controller: 'AlfredController'
       });
-      $mdThemingProvider.theme('default').primaryPalette("blue");
     }
   ]);
 

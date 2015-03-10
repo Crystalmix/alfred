@@ -84,9 +84,6 @@ alfredDirective.directive "activeList",  () ->
             scope.alfredController = alfredCtrl
             scope.prevquery = null
 
-            # Template icons
-            scope.enterText = '↩'
-
             scope.$watch "selectedIndex", (key) ->
                 alfredCtrl.setSelectedIndex(key)
 

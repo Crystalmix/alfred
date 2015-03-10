@@ -2,6 +2,9 @@
     .left-list, .right-list, .main-list {
         position: relative;
     }
+    .toolbar {
+        height: inherit;
+    }
     .table {
         width: 100%;
         margin: 0;
@@ -34,21 +37,14 @@
         width: 80%;
         margin: 0 auto;
         min-width: 230px;
+        background-color: #fff;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
     }
     .table-data {
         vertical-align: top;
     }
-    i {
-        color: #616161;
-        float: right;
-        height: 20px;
-    }
     li.active {
-        background-color: #428bca;
-        color: white;
-        i {
-            color: white;
-        }
+        background-color: #eee;
     }
 
     #right {
@@ -102,7 +98,6 @@
 
     .tollbar-container {
         width: 100%;
-        padding: 10px;
     }
 
     .content-box {
@@ -113,32 +108,18 @@
             padding-right: 14px;
         }
 
-        .host-icon {
-            margin-left: 10px;
-            margin-right: -6px;
-            min-width: 25px;
-            .disable {
-                background-image: url("../img/icons/hosts/Host-icon_disable_light.png");
-                width: 25px;
-                height: 24px;
-                display: block;
-            }
+        .host_default_icon {
+            background-image: url("../img/icons/hosts/Host-icon_disable_light.png");
+            width: 25px;
+            height: 24px;
+            display: block;
         }
+
     }
 
     .md-tile-content span {
         width: 100%;
     }
-
-    //    .add-new-group {
-    //        width: 35%;
-    //        text-align: right;
-    //        padding: 20px 0 0 0;
-    //        button {
-    //            background-color: #38a3f8;
-    //            padding: 4px 10px;
-    //        }
-    //    }
 
     md-toolbar.alfred-toolbar {
         font-size: 16px;
@@ -146,9 +127,9 @@
         color: #616161 !important;
     }
     .add-buttom {
-        position: absolute;
+        position: absolute !important;
         bottom: 10px;
-        right: 100px;
+        right: 50px;
     }
     .alfred-toolbar {
 
@@ -251,6 +232,11 @@
                 color: #616161;
             }
         }
+
+        .tag {
+            color: #616161;
+        }
+
         .list-group {
             padding-left: 0;
             margin-bottom: 0;
@@ -336,4 +322,8 @@
     min-width: inherit;
     padding: inherit;
     margin: inherit;
+}
+
+.tag-list a {
+    color: #616161;
 }

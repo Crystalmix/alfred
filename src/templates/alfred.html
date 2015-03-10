@@ -1,6 +1,7 @@
-<div id="{{uid}}" class="alfred-widget" ng-click="setFocusAtInput()">
-    <div class="alfred">
-        <md-toolbar class="alfred-toolbar">
+<div id="{{uid}}" class="alfred-widget" flex-container="row" ng-click="setFocusAtInput()">
+    <div class="alfred" flex-item="6">
+
+        <div class="toolbar alfred-toolbar">
             <div class="tollbar-container">
                 <div class="head-toolbar">
                     <div class="alfred-input">
@@ -14,7 +15,8 @@
                     <div class="menu-toolbar">
                         <button class="btn btn--m btn--icon history-menu">
                             <i ng-if="isLeftActive" class="mdi mdi-menu" ng-click="changeActiveList()"></i>
-                            <i ng-if="isRightActive" class="mdi mdi-keyboard-backspace" ng-click="changeActiveList()"></i>
+                            <i ng-if="isRightActive" class="mdi mdi-keyboard-backspace"
+                               ng-click="changeActiveList()"></i>
                         </button>
                     </div>
                 </div>
@@ -37,7 +39,7 @@
                     <div class="tags">
                         <lx-dropdown class="tag-toolbar" position="right">
                             <button class="btn btn--m btn--icon" lx-ripple lx-dropdown-toggle>
-                                <i class="mdi mdi-tag"></i>
+                                <i class="mdi mdi-tag tag"></i>
                             </button>
 
                             <lx-dropdown-menu>
@@ -54,10 +56,10 @@
                                 </ul>
                             </lx-dropdown-menu>
                         </lx-dropdown>
-                        <ul>
 
-                            <li ng-repeat="tag in chosen_tags">
-                                <md-button>{{tag.label}}</md-button>
+                        <ul>
+                            <li class="mb" ng-repeat="tag in chosen_tags">
+                                <button class="btn btn--s btn--blue btn--raised" lx-ripple>{{tag.label}}</button>
                             </li>
                         </ul>
                     </div>
@@ -81,34 +83,35 @@
                 </div>
                 <!--End Here there is group template-->
             </div>
-        </md-toolbar>
+        </div>
 
-        <md-content class="content-box" ng-if="connections.length || activities.length">
-                <div class="table">
-                    <div id="left" ng-class="{ active: isLeftActive }" ng-if="isLeftActive">
-                        <div class="left-list" ng-if="isLeftActive">
-                            <active-list connections="connections"
-                                         amount="amount"
-                                         height-cell="heightCell"
-                                         query="query"
-                                         from="fromConnection"
-                                         selected-index="selectedIndex">
-                            </active-list>
-                        </div>
-                    </div>
-
-                    <div id="right" ng-class="{ active: isRightActive }" ng-if="isRightActive">
-                        <div class="left-list" ng-if="isRightActive">
-                            <active-list connections="activities"
-                                         amount="amount"
-                                         height-cell="heightCell"
-                                         query="query"
-                                         from="fromHistory"
-                                         selected-index="selectedIndex">
-                            </active-list>
-                        </div>
+        <div class="content-box" ng-if="connections.length || activities.length">
+            <div class="table">
+                <div id="left" ng-class="{ active: isLeftActive }" ng-if="isLeftActive">
+                    <div class="left-list" ng-if="isLeftActive">
+                        <active-list connections="connections"
+                                     amount="amount"
+                                     height-cell="heightCell"
+                                     query="query"
+                                     from="fromConnection"
+                                     selected-index="selectedIndex">
+                        </active-list>
                     </div>
                 </div>
-        </md-content>
+
+                <div id="right" ng-class="{ active: isRightActive }" ng-if="isRightActive">
+                    <div class="left-list" ng-if="isRightActive">
+                        <active-list connections="activities"
+                                     amount="amount"
+                                     height-cell="heightCell"
+                                     query="query"
+                                     from="fromHistory"
+                                     selected-index="selectedIndex">
+                        </active-list>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 </div>
