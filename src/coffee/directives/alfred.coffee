@@ -180,21 +180,6 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
         ), $element
 
 
-        # Binds hotkeys cmd+[1-scope.amount]
-        bindHotkeysCmd = () ->
-            hotkey = detectCtrlOrCmd()
-            for i in [1..$scope.amount]
-                jwerty.key "#{hotkey}+#{i}", (($event)->
-                    $scope.$broadcast "enter", parseInt(String.fromCharCode($event.keyCode), 10) - 1
-                    return no
-                ), $element
-
-        # Detects operating system in order to use correct hotkey
-        detectCtrlOrCmd = () ->
-            isMac = navigator.userAgent.toLowerCase().indexOf('mac') isnt -1
-            hotKey = if isMac then "⌘" else "ctrl"
-            hotKey
-
         ###
             Methods are api between alfred directive and child directives
         ###
@@ -254,9 +239,7 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
         @addConnection = () ->
             do $scope.onAddCallback
 
-        $scope.cmdSystemHotkey = do detectCtrlOrCmd
 
-        do bindHotkeysCmd
         do transformationData
 
         return @

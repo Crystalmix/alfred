@@ -17,7 +17,6 @@ alfredDirective.directive "activeList",  () ->
             query:           "="
             from:            "="
             selectedIndex:   "="
-            cmdSystemHotkey: "="
 
         controller: ($scope) ->
 
@@ -87,7 +86,6 @@ alfredDirective.directive "activeList",  () ->
 
             # Template icons
             scope.enterText = '↩'
-            scope.cmdSystemHotkey = if scope.cmdSystemHotkey is "⌘" then "⌘" else "Ctrl"
 
             scope.$watch "selectedIndex", (key) ->
                 alfredCtrl.setSelectedIndex(key)
