@@ -276,6 +276,9 @@
   height: 16px;
   display: block;
 }
+.alfred-widget md-item.active > md-item-content {
+  background: #eee;
+}
 .tag-list .list-content-tile {
   padding: 2px 0;
 }
