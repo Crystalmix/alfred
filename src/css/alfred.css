@@ -272,6 +272,9 @@
 .alfred-widget md-item.active > md-item-content {
   background: #eee;
 }
+.alfred-widget .context-menu .list-row__primary {
+  width: 32px;
+}
 .tag-list .list-content-tile {
   padding: 2px 0;
 }

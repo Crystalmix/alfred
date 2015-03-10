@@ -22,7 +22,7 @@
                       class="display-block">{{connection.username}}@{{connection.address}}</span>
             </div>
             <!--Includes context menu for each cell-->
-            <div class="dropdown position-fixed" id="menu-{{ $index }}">
+            <div class="dropdown position-fixed context-menu" id="menu-{{ $index }}">
                 <ul class="list dropdown-menu host-menu" role="menu">
                     <li class="list-row" ng-if="!isHistory(connection)" ng-click="edit($event, connection)">
                         <div class="list-row__primary">
