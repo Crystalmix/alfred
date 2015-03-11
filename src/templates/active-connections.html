@@ -59,17 +59,12 @@
                 </ul>
             </div>
             <!--End Includes context menu for each cell-->
-
         </li>
 
-        <button class="btn btn--m btn--blue btn--fab add-buttom" ng-click="addConnection($event)" lx-ripple>
+        <button class="btn btn--m btn--blue btn--fab add-buttom" ng-hide="!subConnections.length" ng-click="addConnection($event)" lx-ripple>
             <i class="mdi mdi-plus"></i>
         </button>
-        <!--<md-button ng-hide="!subConnections.length"-->
-                   <!--class="add-buttom md-fab md-primary"-->
-                   <!--aria-label="Use Android"-->
-                   <!--ng-click="addConnection($event)">+-->
-        <!--</md-button>-->
+
     </ul>
 </div>
 <div class="scroller" ng-if="filteredConnections.length > amount">
