@@ -241,11 +241,11 @@ describe('Unit test alfredDirectives: alfred', function() {
                 listener = scopeDirective.listener;
 
 
-                input.on("onEnterCallback", function(event, connection){
+                input.on("onEnterHostCallback", function(event, connection){
                     expect(connection.id).toBe(2);
                     expect(connection.label).toBe('2');
                 });
-                input.on("onEditCallback", function(event, connection){
+                input.on("onEditHostCallback", function(event, connection){
                     expect(connection.id).toBe(2);
                     expect(connection.label).toBe('2');
                 });
@@ -253,7 +253,7 @@ describe('Unit test alfredDirectives: alfred', function() {
                     expect(connection.id).toBe(2);
                     expect(connection.label).toBe('2');
                 });
-                input.on("onAddCallback", function(event, connection){
+                input.on("onAddHostCallback", function(event, connection){
                     expect(connection).not.toBeDefined();
                 });
                 input.on("onUploadCallback", function(event, connection){

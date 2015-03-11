@@ -33,6 +33,9 @@
         return console.log("--- outerController remove connection", connection);
       };
       this.scope.placeholder = "ssh user@hostname -p port";
+      this.scope.addGroup = function() {
+        return console.log("--- outerController add group");
+      };
       this.scope.query = null;
       this.scope.activities = [];
       this.scope.hosts = [];

@@ -37,8 +37,9 @@ alfredDirective.directive "activeList",  () ->
                 $scope.setSelectedConnection 0
 
             $scope.select = ($event, connection, key) ->
-                do $event.preventDefault
-                do $event.stopPropagation
+                if $event
+                    do $event.preventDefault
+                    do $event.stopPropagation
                 $scope.setSelectedConnection key
                 $scope.alfredController.enterCallback connection
 
@@ -117,7 +118,7 @@ alfredDirective.directive "activeList",  () ->
                 if scope.subConnections[key]?
                     scope.setSelectedConnection(key)
                     connection = scope.subConnections[key]
-                    scope.select connection, key
+                    scope.select null, connection, key
             )
 
             # Listens to parent events 'quickConnect'

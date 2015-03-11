@@ -16,20 +16,20 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
         heightCell: "="
         placeholder: "="
         template: "="
-        onEnterCallback: "&"
-        onAddCallback: "&"
-        onEditCallback: "&"
+        onEnterHostCallback: "&"
+        onAddHostCallback: "&"
+        onEditHostCallback: "&"
         onUploadCallback: "&"
         onRemoveCallback: "&"
+        onAddGroupCallback: "&"
+        onEditGroupCallback: "&"
+        onRemoveGroupCallback: "&"
 
     controller: ($scope, $element) ->
         $scope.query = null
         $scope.selectedIndex = 0
         $scope.current_group = null
         $scope.chosen_tags = []
-        $scope.image_urls = {
-            groups: "/src/img/icons/icons_group.png"
-        }
 
         getGroups = () ->
             current_group_id = if $scope.current_group then $scope.current_group.get('local_id') else null
@@ -132,10 +132,12 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
                 $scope.chosen_tags = _.union $scope.chosen_tags, tag
             $timeout (-> do transformationData)
 
+
         $scope.enter = () =>
             if $scope.query and $scope.query.indexOf("ssh") isnt -1
                 connection = quickConnectParse.parse $scope.query
                 @enterCallback connection
+
 
         jwerty.key '→', (->
             if $scope.is_interrupt_arrow_commands is yes and $scope.activities.length
@@ -199,7 +201,7 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
         # @param connection    json-object
         @enterCallback = (connection) ->
             if connection
-                $scope.onEnterCallback({connection: connection})
+                $scope.onEnterHostCallback({connection: connection})
 
         # Saves paramaters: fromConnection, fromHistories
         @changeFromProperty = (from) ->
@@ -223,7 +225,7 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
         # @param connection    json-object
         @edit = (connection) ->
             if connection
-                $scope.onEditCallback({connection: connection})
+                $scope.onEditHostCallback({connection: connection})
 
         # Calls callback function on event 'upload'
         #
@@ -241,7 +243,7 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
 
         # Calls callback function on event 'add'
         @addConnection = () ->
-            do $scope.onAddCallback
+            do $scope.onAddHostCallback
 
         do transformationData
 
@@ -255,19 +257,19 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
         scope.is_interrupt_arrow_commands = yes
 
         # If not define attrs, we should trigger jQuery events
-        if not angular.isDefined(attrs.onEnterCallback)
-            scope.onEnterCallback = (connection) ->
-                $input.trigger "onEnterCallback", connection.connection
+        if not angular.isDefined(attrs.onEnterHostCallback)
+            scope.onEnterHostCallback = (connection) ->
+                $input.trigger "onEnterHostCallback", connection.connection
                 return no
 
-        if not angular.isDefined(attrs.onAddCallback)
-            scope.onAddCallback = () ->
-                $input.trigger "onAddCallback"
+        if not angular.isDefined(attrs.onAddHostCallback)
+            scope.onAddHostCallback = () ->
+                $input.trigger "onAddHostCallback"
                 return no
 
-        if not angular.isDefined(attrs.onEditCallback)
-            scope.onEditCallback = (connection) ->
-                $input.trigger "onEditCallback", connection.connection
+        if not angular.isDefined(attrs.onEditHostCallback)
+            scope.onEditHostCallback = (connection) ->
+                $input.trigger "onEditHostCallback", connection.connection
                 return no
 
         if not angular.isDefined(attrs.onUploadCallback)
@@ -278,6 +280,21 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
         if not angular.isDefined(attrs.onRemoveCallback)
             scope.onRemoveCallback = (connection) ->
                 $input.trigger "onRemoveCallback", connection.connection
+                return no
+
+        if not angular.isDefined(attrs.onAddGroupCallback)
+            scope.onAddGroupCallback = (group) ->
+                $input.trigger "onAddGroupCallback", group
+                return no
+
+        if not angular.isDefined(attrs.onEditGroupCallback)
+            scope.onEditGroupCallback = (group) ->
+                $input.trigger "onEditGroupCallback", group
+                return no
+
+        if not angular.isDefined(attrs.onRemoveGroupCallback)
+            scope.onRemoveGroupCallback = (group) ->
+                $input.trigger "onRemoveGroupCallback", group
                 return no
 
         scope.$on "setFocus", (event, uid) ->

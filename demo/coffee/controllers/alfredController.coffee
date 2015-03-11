@@ -30,6 +30,9 @@ class AlfredController
 
         @scope.placeholder = "ssh user@hostname -p port"
 
+        @scope.addGroup = () ->
+            console.log "--- outerController add group"
+
         @scope.query = null
         @scope.activities = []
         @scope.hosts = []
