@@ -2,9 +2,13 @@
     <div class="alfred" flex-item="6">
         <div class="alfred-box">
             <div class="toolbar alfred-toolbar">
+
+                <!--Toolbar with menu-->
                 <div class="tollbar-container">
-                    <div class="head-toolbar">
-                        <div class="alfred-input">
+
+                    <!--Search field-->
+                    <div flex-container="row">
+                        <div flex-item="10">
                             <lx-text-field label={{placeholder}} fixed-label="true">
                                 <input type="text"
                                        ng-model="query"
@@ -12,14 +16,17 @@
                             </lx-text-field>
                         </div>
 
-                        <div class="menu-toolbar">
-                            <button class="btn btn--m btn--icon history-menu">
-                                <i ng-if="isLeftActive" class="mdi mdi-menu" ng-click="changeActiveList()"></i>
-                                <i ng-if="isRightActive" class="mdi mdi-keyboard-backspace"
-                                   ng-click="changeActiveList()"></i>
+                        <div class="menu-toolbar" flex-item="2">
+                            <button class="btn btn--m btn--blue btn--flat" lx-ripple>
+                                <!--Left-->
+                                <span ng-if="isLeftActive && !connectState" ng-click="changeActiveList()">activities</span>
+                                <span ng-if="isLeftActive && connectState" ng-click="enter()">connect</span>
+
+                                <span><i ng-if="isRightActive" class="mdi mdi-keyboard-backspace" ng-click="changeActiveList()"></i></span>
                             </button>
                         </div>
                     </div>
+                    <!--End Search field-->
 
                     <!--Here there is group template-->
                     <div ng-if="isLeftActive" class="head-groups">
@@ -83,6 +90,8 @@
                     </div>
                     <!--End Here there is group template-->
                 </div>
+                <!--End Toolbar with menu-->
+
             </div>
 
             <div class="content-box" ng-if="connections.length || activities.length">

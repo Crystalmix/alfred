@@ -104,35 +104,19 @@
 .alfred-widget .content-box {
   overflow: hidden;
 }
-.alfred-widget .content-box .md-tile-right {
-  padding-right: 14px;
-}
 .alfred-widget .content-box .host_default_icon {
   background-image: url("../img/icons/hosts/Host-icon_disable_light.png");
   width: 25px;
   height: 24px;
   display: block;
 }
-.alfred-widget .md-tile-content span {
-  width: 100%;
-}
-.alfred-widget md-toolbar.alfred-toolbar {
-  font-size: 16px;
-  background-color: white !important;
-  color: #616161 !important;
-}
 .alfred-widget .add-buttom {
   position: absolute !important;
   bottom: 10px;
   right: 50px;
 }
-.alfred-widget .alfred-toolbar .alfred-input {
-  width: 96%;
-  float: left;
-}
-.alfred-widget .alfred-toolbar .head-toolbar {
-  display: block;
-  width: 100%;
+.alfred-widget .alfred-toolbar .menu-toolbar {
+  text-align: right;
 }
 .alfred-widget .alfred-toolbar .head-groups,
 .alfred-widget .alfred-toolbar .bottom-group {
@@ -149,13 +133,6 @@
 }
 .alfred-widget .alfred-toolbar .children-group li {
   margin-right: 22px;
-}
-.alfred-widget .alfred-toolbar .children-group .md-button {
-  background-color: #38a3f8;
-  text-transform: none;
-  padding: 4px 20px;
-  font-weight: normal;
-  margin-top: 10px;
 }
 .alfred-widget .alfred-toolbar .children-group ul {
   padding: 0;
@@ -187,18 +164,6 @@
 .alfred-widget .alfred-toolbar li:last-child {
   font-weight: 600;
 }
-.alfred-widget .alfred-toolbar .menu-toolbar {
-  width: 4%;
-  position: relative;
-  display: inline-block;
-  vertical-align: top;
-}
-.alfred-widget .alfred-toolbar .history-menu {
-  width: 100%;
-  padding: 0;
-  height: 46px;
-  float: right;
-}
 .alfred-widget .alfred-toolbar .history-menu i {
   color: #2196f3;
   width: 22px;
@@ -219,9 +184,6 @@
 .alfred-widget .alfred-toolbar .list-group {
   padding-left: 0;
   margin-bottom: 0;
-}
-.alfred-widget .alfred-toolbar button.history-menu.md-button.md-default-theme:hover {
-  background-color: transparent;
 }
 .alfred-widget .alfred-toolbar .tags ul {
   padding: 0;
@@ -245,13 +207,6 @@
   position: fixed;
   z-index: 100;
 }
-.alfred-widget .host-menu .md-tile-left {
-  margin-right: 0;
-  min-width: 32px;
-}
-.alfred-widget .host-menu .md-tile-content {
-  padding: 10px 16px;
-}
 .alfred-widget .open .dropdown-menu {
   display: block;
   opacity: 1;
@@ -270,9 +225,6 @@
   width: 16px;
   height: 16px;
   display: block;
-}
-.alfred-widget md-item.active > md-item-content {
-  background: #eee;
 }
 .alfred-widget .context-menu .list-row__primary {
   width: 32px;

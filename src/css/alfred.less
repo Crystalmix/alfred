@@ -105,11 +105,6 @@
 
     .content-box {
         overflow: hidden;
-
-        .md-tile-right {
-            padding-right: 14px;
-        }
-
         .host_default_icon {
             background-image: url("../img/icons/hosts/Host-icon_disable_light.png");
             width: 25px;
@@ -119,15 +114,6 @@
 
     }
 
-    .md-tile-content span {
-        width: 100%;
-    }
-
-    md-toolbar.alfred-toolbar {
-        font-size: 16px;
-        background-color: white !important;
-        color: #616161 !important;
-    }
     .add-buttom {
         position: absolute !important;
         bottom: 10px;
@@ -135,15 +121,10 @@
     }
     .alfred-toolbar {
 
-        .alfred-input {
-            width: 96%;
-            float: left;
+        .menu-toolbar {
+            text-align: right;
         }
 
-        .head-toolbar {
-            display: block;
-            width: 100%;
-        }
         .head-groups, .bottom-group {
             display: -webkit-inline-box;
             width: 100%;
@@ -159,14 +140,6 @@
 
         .children-group li {
             margin-right: 22px;
-        }
-
-        .children-group .md-button {
-            background-color: #38a3f8;
-            text-transform: none;
-            padding: 4px 20px;
-            font-weight: normal;
-            margin-top: 10px;
         }
 
         .children-group ul {
@@ -206,17 +179,7 @@
             font-weight: 600;
         }
 
-        .menu-toolbar {
-            width: 4%;
-            position: relative;
-            display: inline-block;
-            vertical-align: top;
-        }
         .history-menu {
-            width: 100%;
-            padding: 0;
-            height: 46px;
-            float: right;
             i {
                 color: #2196f3;
                 width: 22px;
@@ -242,9 +205,6 @@
         .list-group {
             padding-left: 0;
             margin-bottom: 0;
-        }
-        button.history-menu.md-button.md-default-theme:hover {
-            background-color: transparent;
         }
 
         .tags ul {
@@ -272,37 +232,30 @@
         position: fixed;
         z-index: 100;
     }
-    .host-menu {
-        .md-tile-left {
-            margin-right: 0;
-            min-width: 32px;
-        }
-        .md-tile-content {
-            padding: 10px 16px;
-        }
-    }
+
     .open .dropdown-menu {
         display: block;
         opacity: 1;
     }
+
     li.parent-group-list a {
         color: #616161 !important;
     }
+
     .group-icon {
         background-image: url("../img/icons/icons_group.png");
         width: 30px;
         height: 30px;
         display: block;
     }
+
     .connect-icon {
         background-image: url("../img/icons/connect.png");
         width: 16px;
         height: 16px;
         display: block;
     }
-    md-item.active > md-item-content {
-        background: #eee;
-    }
+
     .context-menu .list-row__primary {
         width: 32px;
     }

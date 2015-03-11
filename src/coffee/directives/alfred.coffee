@@ -132,6 +132,10 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
                 $scope.chosen_tags = _.union $scope.chosen_tags, tag
             $timeout (-> do transformationData)
 
+        $scope.enter = () =>
+            if $scope.query and $scope.query.indexOf("ssh") isnt -1
+                connection = quickConnectParse.parse $scope.query
+                @enterCallback connection
 
         jwerty.key '→', (->
             if $scope.is_interrupt_arrow_commands is yes and $scope.activities.length
@@ -239,7 +243,6 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
         @addConnection = () ->
             do $scope.onAddCallback
 
-
         do transformationData
 
         return @
@@ -296,24 +299,32 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
                 scope.is_interrupt_arrow_commands = no
             else
                 scope.is_interrupt_arrow_commands = yes
+
             do scope.$apply
 
         initializeParameters = () ->
             scope.fromConnection = 0
             scope.fromHistory = 0
             scope.selectedIndex = 0
+            scope.connectState = no
 
         initializeTableParameters = () ->
             scope.isLeftActive = if scope.hosts.length then yes else no
             scope.isRightActive = if scope.hosts.length then no else yes
 
+        changeConnectState = (state) ->
+            scope.connectState = state
+            do scope.$apply
+
         scope.keydown = () ->
             $timeout (->
                 do checkQuery
                 if scope.query and scope.query.indexOf("ssh") is 0
-                    scope.$broadcast "quickConnect", scope.query   # If it is quick connect we should add element with parameters to the list
+                    changeConnectState yes
+#                    scope.$broadcast "quickConnect", scope.query   # If it is quick connect we should add element with parameters to the list
                 else
-                    scope.$broadcast "quickConnect", null
+                    changeConnectState no
+#                    scope.$broadcast "quickConnect", null
             ), 50
 
         do initializeParameters
