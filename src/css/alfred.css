@@ -123,13 +123,9 @@
   display: -webkit-inline-box;
   width: 100%;
 }
-.alfred-widget .alfred-toolbar .head-groups .tags {
-  width: 35%;
-}
 .alfred-widget .alfred-toolbar .children-group,
 .alfred-widget .alfred-toolbar .parent-group {
   display: -webkit-box;
-  width: 65%;
 }
 .alfred-widget .alfred-toolbar .children-group li {
   margin-right: 22px;
@@ -137,6 +133,9 @@
 .alfred-widget .alfred-toolbar .children-group ul {
   padding: 0;
   margin: 10px 0;
+}
+.alfred-widget .alfred-toolbar .children-group .add-new-group {
+  padding: 5px 16px;
 }
 .alfred-widget .alfred-toolbar .parent-group li {
   margin-right: 22px;
