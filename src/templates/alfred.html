@@ -92,6 +92,15 @@
                                                        ng-click="filterByTag(tag)">{{tag.label}}</a>
                                                 </div>
                                             </li>
+                                            <li class="list-row list-row--has-primary">
+                                                <div class="list-primary-tile">
+                                                    <i ng-if="isCheckTag(null)" class="mdi mdi-check"></i>
+                                                </div>
+                                                <div class="list-content-tile">
+                                                    <a class="dropdown-link"
+                                                       ng-click="filterByTag()">deselect all</a>
+                                                </div>
+                                            </li>
                                         </ul>
                                     </lx-dropdown-menu>
                                 </lx-dropdown>

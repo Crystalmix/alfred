@@ -116,7 +116,7 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
 
         $scope.isCheckTag = (tag) ->
             tags = []
-            tags = _.find($scope.chosen_tags, (val) ->
+            tags = if tag then _.find($scope.chosen_tags, (val) ->
                 val.local_id is tag.local_id
             )
             if tags
@@ -126,10 +126,13 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
 
 
         $scope.filterByTag = (tag) ->
-            if $scope.isCheckTag tag
-                $scope.chosen_tags = _.without($scope.chosen_tags, _.findWhere($scope.chosen_tags, tag.local_id))
+            if tag
+                if $scope.isCheckTag tag
+                    $scope.chosen_tags = _.without($scope.chosen_tags, _.findWhere($scope.chosen_tags, tag.local_id))
+                else
+                    $scope.chosen_tags = _.union $scope.chosen_tags, tag
             else
-                $scope.chosen_tags = _.union $scope.chosen_tags, tag
+                $scope.chosen_tags = []
             $timeout (-> do transformationData)
 
 
