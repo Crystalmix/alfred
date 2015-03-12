@@ -145,15 +145,17 @@
             }
             filter_hosts_by_chosen_tags();
             return _.each($scope.connections, function(val, key) {
-              val.set({
-                username: val.get_ssh_identity().get("username")
-              });
-              val.set({
-                password: val.get_ssh_identity().get("password")
-              });
-              val.set({
-                key: val.get_ssh_identity().get("key")
-              });
+              if (val.get_ssh_identity()) {
+                val.set({
+                  username: val.get_ssh_identity().get("username")
+                });
+                val.set({
+                  password: val.get_ssh_identity().get("password")
+                });
+                val.set({
+                  key: val.get_ssh_identity().get("key")
+                });
+              }
               return $scope.connections[key] = val.toJSON({
                 do_not_encrypt: false
               });
