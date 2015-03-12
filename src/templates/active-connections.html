@@ -18,8 +18,10 @@
             </div>
             <div class="list-row__content">
                 <span ng-if="connection.label" class="display-block">{{connection.label}}</span>
-                <span ng-if="!connection.label"
+                <span ng-if="!connection.label && connection.username"
                       class="display-block">{{connection.username}}@{{connection.address}}</span>
+                <span ng-if="!connection.label && !connection.username"
+                      class="display-block">{{connection.address}}</span>
             </div>
             <!--Includes context menu for each cell-->
             <div class="dropdown position-fixed context-menu" id="menu-{{ $index }}">
