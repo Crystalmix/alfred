@@ -47,8 +47,14 @@
 .alfred-widget .table-data {
   vertical-align: top;
 }
-.alfred-widget li.active {
-  background-color: #eee;
+.alfred-widget li.active,
+.alfred-widget li.active .dropdown-menu i {
+  color: #2196F3;
+}
+.alfred-widget li.active .dropdown-menu span,
+.alfred-widget .dropdown-menu span,
+.alfred-widget li {
+  color: #616161;
 }
 .alfred-widget #right {
   width: 100%;
@@ -106,14 +112,19 @@
 }
 .alfred-widget .content-box .host_default_icon {
   background-image: url("../img/icons/hosts/Host-icon_disable_light.png");
-  width: 25px;
-  height: 24px;
+  width: 20px;
+  height: 19px;
   display: block;
 }
 .alfred-widget .add-buttom {
   position: absolute !important;
-  bottom: 10px;
-  right: 50px;
+  bottom: 7px;
+  right: 24px;
+  width: 45px;
+  height: 45px;
+}
+.alfred-widget .list .list-row__primary {
+  width: 36px;
 }
 .alfred-widget .alfred-toolbar .menu-toolbar {
   text-align: right;

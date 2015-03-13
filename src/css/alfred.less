@@ -46,8 +46,11 @@
     .table-data {
         vertical-align: top;
     }
-    li.active {
-        background-color: #eee;
+    li.active, li.active .dropdown-menu i {
+        color: #2196F3;
+    }
+    li.active .dropdown-menu span, .dropdown-menu span, li {
+        color: #616161
     }
 
     #right {
@@ -107,8 +110,8 @@
         overflow: hidden;
         .host_default_icon {
             background-image: url("../img/icons/hosts/Host-icon_disable_light.png");
-            width: 25px;
-            height: 24px;
+            width: 20px;
+            height: 19px;
             display: block;
         }
 
@@ -116,9 +119,16 @@
 
     .add-buttom {
         position: absolute !important;
-        bottom: 10px;
-        right: 50px;
+        bottom: 7px;
+        right: 24px;
+        width: 45px;
+        height: 45px;
     }
+
+    .list .list-row__primary {
+        width: 36px;
+    }
+
     .alfred-toolbar {
 
         .menu-toolbar {
