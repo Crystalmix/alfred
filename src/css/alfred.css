@@ -139,14 +139,14 @@
   display: -webkit-box;
 }
 .alfred-widget .alfred-toolbar .children-group li {
-  margin-right: 22px;
+  margin-right: 15px;
 }
 .alfred-widget .alfred-toolbar .children-group ul {
   padding: 0;
-  margin: 10px 0;
+  margin: 15px 0;
 }
 .alfred-widget .alfred-toolbar .children-group .add-new-group {
-  padding: 5px 16px;
+  border-radius: 0px;
 }
 .alfred-widget .alfred-toolbar .parent-group li {
   margin-right: 22px;
@@ -155,7 +155,7 @@
 .alfred-widget .alfred-toolbar .parent-group ul {
   padding: 0;
   margin: 10px 0;
-  margin: 20px 0 0 0;
+  margin: 15px 0 0 0;
 }
 .alfred-widget .alfred-toolbar i.mdi.mdi-chevron-right {
   float: none;
