@@ -42,7 +42,7 @@
                             <div ng-if="path_groups.length" class="parent-group">
                                 <ul>
                                     <li class="parent-group-list">
-                                        <a ng-click="filterByGroup(null)">show all</a>
+                                        <a ng-click="filterByGroup(null)"><b>all hosts</b></a>
                                     </li>
                                     <li class="parent-group-list" ng-repeat="group in path_groups">
                                         <a ng-click="filterByGroup(group.local_id)">
@@ -62,10 +62,6 @@
                                                 lx-ripple lx-tooltip="Add new group" tooltip-position="bottom">
                                             <i class="group-icon"></i>
                                         </button>
-                                        <!--<button class="btn btn--l btn--white btn--raised add-new-group" ng-click="onAddGroupCallback()"-->
-                                                <!--lx-ripple lx-tooltip="Add new group" tooltip-position="bottom">-->
-                                            <!--<i class="group-icon"></i>-->
-                                        <!--</button>-->
                                     </li>
                                     <li ng-repeat="group in children_group">
                                         <button class="btn btn--l btn--white btn--raised" lx-ripple

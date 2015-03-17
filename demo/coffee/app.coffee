@@ -3,6 +3,7 @@
 angular.module( 'alfredApp', [
       'ui.router',
       'httpServices',
+      'ng-context-menu',
       'alfredDirective',
       'lumx'
 ]).

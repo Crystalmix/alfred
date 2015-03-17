@@ -1,5 +1,5 @@
 'use strict';
 
 
-alfredDirective = angular.module("alfredDirective", ["ng-context-menu"])
+alfredDirective = angular.module("alfredDirective", [])
 
