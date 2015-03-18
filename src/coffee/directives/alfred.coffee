@@ -21,6 +21,7 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
         onEditHostCallback: "&"
         onUploadCallback: "&"
         onRemoveCallback: "&"
+
         onAddGroupCallback: "&"
         onEditGroupCallback: "&"
         onRemoveGroupCallback: "&"
@@ -79,6 +80,7 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
             do filter_hosts_by_chosen_tags
 
             _.each $scope.connections, (val, key) ->
+                #TODO make correct merge configs
                 if val.get_ssh_identity()
                     val.set {username : val.get_ssh_identity().get("username")}
                     val.set {password : val.get_ssh_identity().get("password")}
@@ -98,8 +100,30 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
             do getConnections if $scope.hosts
 
 
+        $scope.isCheckTag = (tag) ->
+            tags = []
+            tags = if tag then _.find($scope.chosen_tags, (val) ->
+                val.local_id is tag.local_id
+            )
+            if tags
+                return yes
+            else
+                return no
+
+
         $scope.filterByGroup = (local_id) ->
             $scope.current_group = if local_id then $scope.groups.get(local_id) else null
+            $timeout (-> do transformationData)
+
+
+        $scope.filterByTag = (tag) ->
+            if tag
+                if $scope.isCheckTag tag
+                    $scope.chosen_tags = _.without($scope.chosen_tags, _.findWhere($scope.chosen_tags, tag.local_id))
+                else
+                    $scope.chosen_tags = _.union $scope.chosen_tags, tag
+            else
+                $scope.chosen_tags = []
             $timeout (-> do transformationData)
 
 
@@ -113,28 +137,6 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
                 $scope.isLeftActive = not $scope.isLeftActive
                 $scope.isRightActive = not $scope.isRightActive
             return no
-
-
-        $scope.isCheckTag = (tag) ->
-            tags = []
-            tags = if tag then _.find($scope.chosen_tags, (val) ->
-                val.local_id is tag.local_id
-            )
-            if tags
-                return yes
-            else
-                return no
-
-
-        $scope.filterByTag = (tag) ->
-            if tag
-                if $scope.isCheckTag tag
-                    $scope.chosen_tags = _.without($scope.chosen_tags, _.findWhere($scope.chosen_tags, tag.local_id))
-                else
-                    $scope.chosen_tags = _.union $scope.chosen_tags, tag
-            else
-                $scope.chosen_tags = []
-            $timeout (-> do transformationData)
 
 
         $scope.enter = () =>

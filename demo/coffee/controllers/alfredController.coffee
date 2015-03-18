@@ -33,6 +33,12 @@ class AlfredController
         @scope.addGroup = () ->
             console.log "--- outerController add group"
 
+        @scope.editGroup = (group) ->
+            console.log "--- outerController edit group", group
+
+        @scope.removeGroup = (group) ->
+            console.log "--- outerController remove group", group
+
         @scope.query = null
         @scope.activities = []
         @scope.hosts = []

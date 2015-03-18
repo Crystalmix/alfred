@@ -148,6 +148,9 @@
 .alfred-widget .alfred-toolbar .children-group .add-new-group {
   border-radius: 0px;
 }
+.alfred-widget .alfred-toolbar .children-group .dropdown li.list-row {
+  font-weight: normal;
+}
 .alfred-widget .alfred-toolbar .parent-group li {
   margin-right: 22px;
   margin-right: 6px;

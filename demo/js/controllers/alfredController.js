@@ -36,6 +36,12 @@
       this.scope.addGroup = function() {
         return console.log("--- outerController add group");
       };
+      this.scope.editGroup = function(group) {
+        return console.log("--- outerController edit group", group);
+      };
+      this.scope.removeGroup = function(group) {
+        return console.log("--- outerController remove group", group);
+      };
       this.scope.query = null;
       this.scope.activities = [];
       this.scope.hosts = [];
