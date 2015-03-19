@@ -233,12 +233,6 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
             if connection
                 $scope.onEditHostCallback({connection: connection})
 
-        # Calls callback function on event 'upload'
-        #
-        # @param connection    json-object
-        @upload = (connection) ->
-            if connection
-                $scope.onUploadCallback({connection: connection})
 
         # Calls callback function on event 'remove'
         #
@@ -277,11 +271,6 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
         if not angular.isDefined(attrs.onEditHostCallback)
             scope.onEditHostCallback = (connection) ->
                 $input.trigger "onEditHostCallback", connection.connection
-                return no
-
-        if not angular.isDefined(attrs.onUploadCallback)
-            scope.onUploadCallback = (connection) ->
-                $input.trigger "onUploadCallback", connection.connection
                 return no
 
         if not angular.isDefined(attrs.onRemoveHostCallback)
@@ -345,10 +334,10 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
                 do checkQuery
                 if scope.query and scope.query.indexOf("ssh") is 0
                     changeConnectState yes
-#                    scope.$broadcast "quickConnect", scope.query   # If it is quick connect we should add element with parameters to the list
+                    scope.$broadcast "quickConnect", scope.query   # If it is quick connect we should add element with parameters to the list
                 else
                     changeConnectState no
-#                    scope.$broadcast "quickConnect", null
+                    scope.$broadcast "quickConnect", null
             ), 50
 
         do initializeParameters

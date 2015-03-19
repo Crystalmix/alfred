@@ -25,7 +25,7 @@ class AlfredController
         @scope.uploadConnection = (connection) ->
             console.log "--- outerController upload connection", connection
 
-        @scope.removeConnection = (connection) ->
+        @scope.removeHost = (connection) ->
             console.log "--- outerController remove connection", connection
 
         @scope.placeholder = "ssh user@hostname -p port"

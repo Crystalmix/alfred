@@ -29,7 +29,7 @@
       this.scope.uploadConnection = function(connection) {
         return console.log("--- outerController upload connection", connection);
       };
-      this.scope.removeConnection = function(connection) {
+      this.scope.removeHost = function(connection) {
         return console.log("--- outerController remove connection", connection);
       };
       this.scope.placeholder = "ssh user@hostname -p port";

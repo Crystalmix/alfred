@@ -7,10 +7,8 @@ alfredDirective.filter "filterConnections", ["$filter", ($filter) ->
                 scope.prevquery = scope.query
             filterFilter = $filter("filter")
 
-#            scope.filteredConnections = filterFilter scope.connections, scope.query
-
             # Custom filter: filter by certain properties
-            scope.filteredConnections = filterFilter scope.connections, (value, index)->
+            scope.filteredConnections = filterFilter scope.connections, (value)->
                 unless scope.query
                     return value
                 else

@@ -36,13 +36,6 @@ alfredDirective.directive "activeList",  () ->
                 $scope.from = 0
                 $scope.setSelectedConnection 0
 
-            $scope.select = ($event, connection, key) ->
-                if $event
-                    do $event.preventDefault
-                    do $event.stopPropagation
-                $scope.setSelectedConnection key
-                $scope.alfredController.enterCallback connection
-
             $scope.setSelectedConnection = (index) ->
                 $scope.selectedIndex = index
 
@@ -140,15 +133,17 @@ alfredDirective.directive "activeList",  () ->
                 do $event.stopPropagation
                 alfredCtrl.edit(connection)
 
-            scope.upload = ($event, connection) ->
-                do $event.preventDefault
-                do $event.stopPropagation
-                alfredCtrl.upload(connection)
-
             scope.remove = ($event, connection) ->
                 do $event.preventDefault
                 do $event.stopPropagation
                 alfredCtrl.remove(connection)
+
+            scope.select = ($event, connection, key) ->
+                if $event
+                    do $event.preventDefault
+                    do $event.stopPropagation
+                scope.setSelectedConnection key
+                alfredCtrl.enterCallback connection
 
             scope.changeSlider = () ->
                 slider = (scope.amount * 100) / scope.filteredConnections.length
