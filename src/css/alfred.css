@@ -234,10 +234,13 @@
   display: block;
 }
 .alfred-widget .connect-icon {
-  background-image: url("../img/icons/connect.png");
+  background-image: url("../img/icons/disable.png");
   width: 16px;
   height: 16px;
   display: block;
+}
+.alfred-widget li.active .dropdown-menu .connect-icon {
+  background-image: url("../img/icons/disable_connect.png");
 }
 .alfred-widget .context-menu .list-row__primary {
   width: 32px;
