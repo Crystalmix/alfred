@@ -1,244 +1,183 @@
 <div id="{{uid}}" class="alfred-widget" flex-container="row" ng-click="setFocusAtInput()">
-<div class="alfred" flex-item="8">
-<div class="alfred-box">
-<div class="toolbar alfred-toolbar">
+    <div class="alfred" flex-item="8">
+        <div class="alfred-box">
+            <!--Toolbar with menu-->
+            <div class="toolbar alfred-toolbar">
+                <div class="tollbar-container">
 
-<!--Toolbar with menu-->
-<div class="tollbar-container">
+                    <!--Search field-->
+                    <div flex-container="row">
+                        <div flex-item="10">
+                            <lx-text-field label={{placeholder}} fixed-label="true">
+                                <input type="text"
+                                       id="alfred-input"
+                                       ng-model="query"
+                                       ng-keydown="keydown($event)">
+                            </lx-text-field>
+                        </div>
 
-<!--Search field-->
-<div flex-container="row">
-    <div flex-item="10">
-        <lx-text-field label={{placeholder}} fixed-label="true">
-            <input type="text"
-                   ng-model="query"
-                   ng-keydown="keydown($event)">
-        </lx-text-field>
-    </div>
-
-    <div class="menu-toolbar" flex-item="2">
-        <button class="btn btn--m btn--blue btn--flat" lx-ripple>
-            <!--Buttons for hosts-->
+                        <div class="menu-toolbar" flex-item="2">
+                            <button class="btn btn--m btn--blue btn--flat" lx-ripple>
+                                <!--Buttons for hosts-->
                                 <span ng-if="isLeftActive && !connectState"
                                       ng-click="changeActiveList()">activities</span>
-            <span ng-if="isLeftActive && connectState" ng-click="enter()">connect</span>
-            <!--End Buttons for hosts-->
+                                <span ng-if="isLeftActive && connectState" ng-click="enter()">connect</span>
+                                <!--End Buttons for hosts-->
 
-            <!--Button for activities-->
+                                <!--Button for activities-->
                                 <span>
                                     <i ng-if="isRightActive" class="mdi mdi-keyboard-backspace"
                                        ng-click="changeActiveList()"></i>
                                 </span>
-            <!--End Button for activities-->
-        </button>
-    </div>
-</div>
-<!--End Search field-->
+                                <!--End Button for activities-->
+                            </button>
+                        </div>
+                    </div>
+                    <!--End Search field-->
 
-<!--Filters by group, tag-->
-<div flex-container="row">
-    <div flex-item="8">
-        <!--Path groups-->
-        <div ng-if="path_groups.length" class="parent-group">
-            <ul>
-                <li class="parent-group-list">
-                    <a ng-click="filterByGroup(null)"><b>all hosts</b></a>
-                </li>
-                <li class="parent-group-list" ng-repeat="group in path_groups">
-                    <a ng-click="filterByGroup(group.local_id)">
-                        <i class="mdi mdi-chevron-right"></i>
-                        {{group.label}}
-                    </a>
-                </li>
-            </ul>
-        </div>
-        <!--End Path groups-->
+                    <!--Filters by group, tag-->
+                    <div flex-container="row">
+                        <div flex-item="8">
+                            <!--Path groups-->
+                            <div ng-if="path_groups.length" class="parent-group">
+                                <ul>
+                                    <li class="parent-group-list">
+                                        <a ng-click="filterByGroup(null)"><b>all hosts</b></a>
+                                    </li>
+                                    <li class="parent-group-list" ng-repeat="group in path_groups">
+                                        <a ng-click="filterByGroup(group.local_id)">
+                                            <i class="mdi mdi-chevron-right"></i>
+                                            {{group.label}}
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <!--End Path groups-->
 
-        <!--Child groups-->
-        <div class="children-group">
-            <ul>
-                <li>
-                    <button class="btn btn--l btn--white btn--icon add-new-group" lx-ripple
-                            ng-click="onAddGroupCallback()"
-                            lx-ripple lx-tooltip="Add new group" tooltip-position="bottom">
-                        <i class="group-icon"></i>
-                    </button>
-                </li>
-                <li ng-repeat="group in children_group"
-                    context-menu class="panel panel-default position-fixed"
-                    data-target="child_group-{{ $index }}"
-                    ng-class="{ 'highlight': highlight, 'expanded' : expanded }">
+                            <!--Child groups-->
+                            <div class="children-group">
+                                <ul>
+                                    <li>
+                                        <button class="btn btn--l btn--white btn--icon add-new-group" lx-ripple
+                                                ng-click="onAddGroupCallback()"
+                                                lx-ripple lx-tooltip="Add new group" tooltip-position="bottom">
+                                            <i class="group-icon"></i>
+                                        </button>
+                                    </li>
+                                    <li ng-repeat="group in children_group"
+                                        context-menu class="panel panel-default position-fixed"
+                                        data-target="child_group-{{ $index }}"
+                                        ng-class="{ 'highlight': highlight, 'expanded' : expanded }">
 
-                    <button class="btn btn--l btn--white btn--raised" lx-ripple
-                            ng-click="filterByGroup(group.local_id)">{{group.label}}
-                    </button>
+                                        <button class="btn btn--l btn--white btn--raised" lx-ripple
+                                                ng-click="filterByGroup(group.local_id)">{{group.label}}
+                                        </button>
 
-                    <div class="dropdown position-fixed" id="child_group-{{ $index }}">
-                        <ul class="list dropdown-menu" role="menu">
-                            <li class="list-row" ng-click="onEditGroupCallback({group:group})">
-                                <div class="list-row__primary">
-                                    <i class="mdi mdi-pencil"></i>
-                                </div>
-                                <div class="list-row__content">
-                                    <span>Edit</span>
-                                </div>
-                            </li>
-                            <li class="list-row" ng-click="onRemoveGroupCallback({group:group})">
-                                <div class="list-row__primary">
-                                    <i class="mdi mdi-delete"></i>
-                                </div>
-                                <div class="list-row__content">
-                                    Remove
-                                </div>
-                            </li>
-                        </ul>
+                                        <div class="dropdown position-fixed" id="child_group-{{ $index }}">
+                                            <ul class="list dropdown-menu" role="menu">
+                                                <li class="list-row" ng-click="onEditGroupCallback({group:group})">
+                                                    <div class="list-row__primary">
+                                                        <i class="mdi mdi-pencil"></i>
+                                                    </div>
+                                                    <div class="list-row__content">
+                                                        <span>Edit</span>
+                                                    </div>
+                                                </li>
+                                                <li class="list-row" ng-click="onRemoveGroupCallback({group:group})">
+                                                    <div class="list-row__primary">
+                                                        <i class="mdi mdi-delete"></i>
+                                                    </div>
+                                                    <div class="list-row__content">
+                                                        Remove
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+
+                                    </li>
+                                </ul>
+                            </div>
+                            <!--End Child groups-->
+                        </div>
+                        <div flex-item="4">
+                            <!--Path tags-->
+                            <div class="tags">
+                                <lx-dropdown class="tag-toolbar" position="right">
+                                    <button class="btn btn--m btn--icon" lx-ripple lx-dropdown-toggle>
+                                        <i class="mdi mdi-tag tag"></i>
+                                    </button>
+
+                                    <lx-dropdown-menu>
+                                        <ul class="tag-list">
+                                            <li class="list-row list-row--has-primary">
+                                                <div class="list-primary-tile">
+                                                    <i ng-if="isCheckTag(null)" class="mdi mdi-check"></i>
+                                                </div>
+                                                <div class="list-content-tile">
+                                                    <a class="dropdown-link"
+                                                       ng-click="filterByTag()"><b>Deselect all</b></a>
+                                                </div>
+                                            </li>
+                                            <li class="list-row list-row--has-primary" ng-repeat="tag in copy_tags">
+                                                <div class="list-primary-tile">
+                                                    <i ng-if="isCheckTag(tag)" class="mdi mdi-check"></i>
+                                                </div>
+
+                                                <div class="list-content-tile">
+                                                    <a class="dropdown-link"
+                                                       ng-click="filterByTag(tag)">{{tag.label}}</a>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </lx-dropdown-menu>
+                                </lx-dropdown>
+
+                                <ul>
+                                    <li class="mb" ng-repeat="tag in chosen_tags">
+                                        <button class="btn btn--s btn--blue btn--raised" lx-ripple>{{tag.label}}
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
+                            <!--End Path tags-->
+                        </div>
+
+                    </div>
+                    <!--Filters by group, tag-->
+
+                    <!--End Here there is group template-->
+                </div>
+            </div>
+            <!--End Toolbar with menu-->
+
+            <div class="content-box" ng-if="connections.length || activities.length">
+                <div class="table">
+                    <div id="left" ng-class="{ active: isLeftActive }" ng-if="isLeftActive">
+                        <div class="left-list" ng-if="isLeftActive">
+                            <active-list connections="connections"
+                                         amount="amount"
+                                         height-cell="heightCell"
+                                         query="query"
+                                         from="fromConnection"
+                                         selected-index="selectedIndex">
+                            </active-list>
+                        </div>
                     </div>
 
-                </li>
-            </ul>
-        </div>
-        <!--End Child groups-->
-    </div>
-    <div flex-item="4">
-        <!--Path tags-->
-        <div class="tags">
-            <lx-dropdown class="tag-toolbar" position="right">
-                <button class="btn btn--m btn--icon" lx-ripple lx-dropdown-toggle>
-                    <i class="mdi mdi-tag tag"></i>
-                </button>
-
-                <lx-dropdown-menu>
-                    <ul class="tag-list">
-                        <li class="list-row list-row--has-primary">
-                            <div class="list-primary-tile">
-                                <i ng-if="isCheckTag(null)" class="mdi mdi-check"></i>
-                            </div>
-                            <div class="list-content-tile">
-                                <a class="dropdown-link"
-                                   ng-click="filterByTag()"><b>Deselect all</b></a>
-                            </div>
-                        </li>
-                        <li class="list-row list-row--has-primary" ng-repeat="tag in copy_tags">
-                            <div class="list-primary-tile">
-                                <i ng-if="isCheckTag(tag)" class="mdi mdi-check"></i>
-                            </div>
-
-                            <div class="list-content-tile">
-                                <a class="dropdown-link"
-                                   ng-click="filterByTag(tag)">{{tag.label}}</a>
-                            </div>
-                        </li>
-                    </ul>
-                </lx-dropdown-menu>
-            </lx-dropdown>
-
-            <ul>
-                <li class="mb" ng-repeat="tag in chosen_tags">
-                    <button class="btn btn--s btn--blue btn--raised" lx-ripple>{{tag.label}}
-                    </button>
-                </li>
-            </ul>
-        </div>
-        <!--End Path tags-->
-    </div>
-
-</div>
-<!--Filters by group, tag-->
-
-
-<!--<div ng-if="isLeftActive" class="head-groups">-->
-<!--<div class="parent-group">-->
-<!--<ul>-->
-<!--<li>-->
-<!--<a ng-click="filterByGroup(null)"><i class="group-icon"></i></a>-->
-<!--</li>-->
-<!--<li ng-repeat="group in path_groups" class="parent-group-list">-->
-<!--<a ng-click="filterByGroup(group.local_id)">-->
-<!--<i class="mdi mdi-chevron-right"></i>-->
-<!--{{group.label}}-->
-<!--</a>-->
-<!--</li>-->
-<!--</ul>-->
-<!--</div>-->
-<!--<div class="tags">-->
-<!--<lx-dropdown class="tag-toolbar" position="right">-->
-<!--<button class="btn btn--m btn--icon" lx-ripple lx-dropdown-toggle>-->
-<!--<i class="mdi mdi-tag tag"></i>-->
-<!--</button>-->
-
-<!--<lx-dropdown-menu>-->
-<!--<ul class="tag-list">-->
-<!--<li class="list-row list-row--has-primary" ng-repeat="tag in copy_tags">-->
-<!--<div class="list-primary-tile">-->
-<!--<i ng-if="isCheckTag(tag)" class="mdi mdi-check"></i>-->
-<!--</div>-->
-
-<!--<div class="list-content-tile">-->
-<!--<a class="dropdown-link" ng-click="filterByTag(tag)">{{tag.label}}</a>-->
-<!--</div>-->
-<!--</li>-->
-<!--</ul>-->
-<!--</lx-dropdown-menu>-->
-<!--</lx-dropdown>-->
-
-<!--<ul>-->
-<!--<li class="mb" ng-repeat="tag in chosen_tags">-->
-<!--<button class="btn btn--s btn--blue btn--raised" lx-ripple>{{tag.label}}</button>-->
-<!--</li>-->
-<!--</ul>-->
-<!--</div>-->
-<!--</div>-->
-
-<!--<div ng-if="isLeftActive" class="bottom-group">-->
-<!--<div class="children-group">-->
-<!--<ul>-->
-<!--<li>-->
-<!--<button class="btn btn--l btn--white btn--raised" lx-ripple-->
-<!--ng-click="addNewGroup()">+-->
-<!--</button>-->
-<!--</li>-->
-<!--<li ng-repeat="group in children_group">-->
-<!--<button class="btn btn--l btn--white btn--raised" lx-ripple-->
-<!--ng-click="filterByGroup(group.local_id)">{{group.label}}-->
-<!--</button>-->
-<!--</li>-->
-<!--</ul>-->
-<!--</div>-->
-<!--</div>-->
-<!--End Here there is group template-->
-</div>
-<!--End Toolbar with menu-->
-
-</div>
-
-<div class="content-box" ng-if="connections.length || activities.length">
-    <div class="table">
-        <div id="left" ng-class="{ active: isLeftActive }" ng-if="isLeftActive">
-            <div class="left-list" ng-if="isLeftActive">
-                <active-list connections="connections"
-                             amount="amount"
-                             height-cell="heightCell"
-                             query="query"
-                             from="fromConnection"
-                             selected-index="selectedIndex">
-                </active-list>
+                    <div id="right" ng-class="{ active: isRightActive }" ng-if="isRightActive">
+                        <div class="left-list" ng-if="isRightActive">
+                            <active-list connections="activities"
+                                         amount="amount"
+                                         height-cell="heightCell"
+                                         query="query"
+                                         from="fromHistory"
+                                         selected-index="selectedIndex">
+                            </active-list>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
 
-        <div id="right" ng-class="{ active: isRightActive }" ng-if="isRightActive">
-            <div class="left-list" ng-if="isRightActive">
-                <active-list connections="activities"
-                             amount="amount"
-                             height-cell="heightCell"
-                             query="query"
-                             from="fromHistory"
-                             selected-index="selectedIndex">
-                </active-list>
-            </div>
         </div>
     </div>
-</div>
-
-</div>
-</div>
 </div>

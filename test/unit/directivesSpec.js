@@ -249,7 +249,7 @@ describe('Unit test alfredDirectives: alfred', function() {
                     expect(connection.id).toBe(2);
                     expect(connection.label).toBe('2');
                 });
-                input.on("onRemoveCallback", function(event, connection){
+                input.on("onRemoveHostCallback", function(event, connection){
                     expect(connection.id).toBe(2);
                     expect(connection.label).toBe('2');
                 });

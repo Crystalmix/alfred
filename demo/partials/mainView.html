@@ -9,13 +9,17 @@
             amount="6"
             height-cell="60"
             placeholder="placeholder"
+
             on-add-group-callback="addGroup()"
             on-edit-group-callback="editGroup(group)"
             on-remove-group-callback="removeGroup(group)"
+
             on-enter-host-callback="enterConnection(connection)"
             on-add-host-callback="addConnection()"
             on-edit-host-callback="editConnection(connection)"
-            on-upload-callback="uploadConnection(connection)"
-            on-remove-callback="removeConnection(connection)">
+            on-remove-host-callback="removeHost(connection)">
+
+            <!--on-upload-callback="uploadConnection(connection)"-->
+            <!--on-remove-callback="removeConnection(connection)">-->
     </alfred>
 </div>

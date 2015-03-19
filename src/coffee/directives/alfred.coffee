@@ -16,11 +16,11 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
         heightCell: "="
         placeholder: "="
         template: "="
+
         onEnterHostCallback: "&"
         onAddHostCallback: "&"
         onEditHostCallback: "&"
-        onUploadCallback: "&"
-        onRemoveCallback: "&"
+        onRemoveHostCallback: "&"
 
         onAddGroupCallback: "&"
         onEditGroupCallback: "&"
@@ -245,7 +245,7 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
         # @param connection    json-object
         @remove = (connection) ->
             if connection
-                $scope.onRemoveCallback({connection: connection})
+                $scope.onRemoveHostCallback({connection: connection})
 
         # Calls callback function on event 'add'
         @addConnection = () ->
@@ -258,6 +258,7 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
 
     link: (scope, element, attrs) ->
         $input = element.find '#alfred-input'
+
         # When user doesn't search any information, we should interrupt arrow hotkeys,
         # otherwise we couldn't override it.
         scope.is_interrupt_arrow_commands = yes
@@ -283,9 +284,9 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
                 $input.trigger "onUploadCallback", connection.connection
                 return no
 
-        if not angular.isDefined(attrs.onRemoveCallback)
-            scope.onRemoveCallback = (connection) ->
-                $input.trigger "onRemoveCallback", connection.connection
+        if not angular.isDefined(attrs.onRemoveHostCallback)
+            scope.onRemoveHostCallback = (connection) ->
+                $input.trigger "onRemoveHostCallback", connection.connection
                 return no
 
         if not angular.isDefined(attrs.onAddGroupCallback)

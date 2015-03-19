@@ -19,17 +19,17 @@ alfredDirective.filter "filterConnections", ["$filter", ($filter) ->
                             return value.label.indexOf(scope.query) isnt -1
                         return no
 
-                    isMatchHostname = (value) ->
-                        if value.hostname
-                            return value.hostname.indexOf(scope.query) isnt -1
+                    isMatchAddress = (value) ->
+                        if value.address
+                            return value.address.indexOf(scope.query) isnt -1
                         return no
 
                     isMatchUsername = (value) ->
-                        if value.ssh_username
-                            return  value.ssh_username.indexOf(scope.query) isnt -1
+                        if value.username
+                            return  value.username.indexOf(scope.query) isnt -1
                         return no
 
-                    return isMatchLabel(value) or isMatchHostname(value) or isMatchUsername(value)
+                    return isMatchLabel(value) or isMatchAddress(value) or isMatchUsername(value)
 
             do scope.changeSlider
 
