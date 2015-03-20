@@ -135,7 +135,7 @@
 
                                 <ul>
                                     <li class="mb" ng-repeat="tag in chosen_tags">
-                                        <button class="btn btn--s btn--blue btn--raised" lx-ripple>{{tag.label}}
+                                        <button class="btn btn--s btn--blue btn--raised" ng-click="filterByTag(tag)" lx-ripple>{{tag.label}}
                                         </button>
                                     </li>
                                 </ul>
