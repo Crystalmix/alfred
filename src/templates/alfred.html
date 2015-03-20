@@ -58,13 +58,6 @@
                             <!--Child groups-->
                             <div class="children-group">
                                 <ul>
-                                    <li>
-                                        <button class="btn btn--l btn--white btn--icon add-new-group" lx-ripple
-                                                ng-click="onAddGroupCallback()"
-                                                lx-ripple lx-tooltip="Add new group" tooltip-position="bottom">
-                                            <i class="group-icon"></i>
-                                        </button>
-                                    </li>
                                     <li ng-repeat="group in children_group"
                                         context-menu class="panel panel-default position-fixed"
                                         data-target="child_group-{{ $index }}"

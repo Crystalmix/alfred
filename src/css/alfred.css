@@ -120,8 +120,6 @@
   position: absolute !important;
   bottom: 7px;
   right: 24px;
-  width: 45px;
-  height: 45px;
 }
 .alfred-widget .list .list-row__primary {
   width: 36px;
@@ -144,9 +142,6 @@
 .alfred-widget .alfred-toolbar .children-group ul {
   padding: 0;
   margin: 15px 0;
-}
-.alfred-widget .alfred-toolbar .children-group .add-new-group {
-  border-radius: 0px;
 }
 .alfred-widget .alfred-toolbar .children-group .dropdown li.list-row {
   font-weight: normal;
@@ -228,12 +223,6 @@
 .alfred-widget li.parent-group-list a {
   color: #616161 !important;
 }
-.alfred-widget .group-icon {
-  background-image: url("../img/icons/icons_group.png");
-  width: 30px;
-  height: 30px;
-  display: block;
-}
 .alfred-widget .connect-icon {
   background-image: url("../img/icons/disable.png");
   width: 16px;
@@ -245,6 +234,22 @@
 }
 .alfred-widget .context-menu .list-row__primary {
   width: 32px;
+}
+.alfred-widget .add_new_host {
+  background-image: url("../img/icons/hosts/host_white_add_icon.png");
+  width: 16px;
+  height: 16px;
+  display: block;
+  left: 11px;
+  position: relative;
+}
+.alfred-widget .add_new_group {
+  background-image: url("../img/icons/group/group_white_add_icon.png");
+  width: 16px;
+  height: 16px;
+  display: block;
+  left: 11px;
+  position: relative;
 }
 .tag-list .list-content-tile {
   padding: 2px 0;

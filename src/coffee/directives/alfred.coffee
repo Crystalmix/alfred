@@ -245,6 +245,10 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
         @addConnection = () ->
             do $scope.onAddHostCallback
 
+        # Calls callback function on event 'add'
+        @addGroup = () ->
+            do $scope.onAddGroupCallback
+
         do transformationData
 
         return @

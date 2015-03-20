@@ -128,6 +128,11 @@ alfredDirective.directive "activeList",  () ->
                 do $event.stopPropagation
                 alfredCtrl.addConnection()
 
+            scope.addGroup = ($event) ->
+                do $event.preventDefault
+                do $event.stopPropagation
+                alfredCtrl.addGroup()
+
             scope.edit = ($event, connection) ->
                 do $event.preventDefault
                 do $event.stopPropagation
