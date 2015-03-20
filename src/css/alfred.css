@@ -251,6 +251,10 @@
   left: 11px;
   position: relative;
 }
+.alfred-widget .fab__actions--left {
+  right: 40px;
+  bottom: 0px;
+}
 .tag-list .list-content-tile {
   padding: 2px 0;
 }

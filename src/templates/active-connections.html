@@ -3,7 +3,8 @@
         <li
                 ng-repeat="(key,connection) in subConnections = (connections | filterConnections:query:from:offset:this) track by key"
                 id="{{key}}"
-                ng-click="select($event, connection, key)"
+                ng-click="select($event, key)"
+                ng-dblclick="connect($event, connection, key)"
                 connection-item="connection"
                 key="{{key}}"
                 ng-class="{ active: (key === selectedIndex) }"
@@ -26,6 +27,14 @@
             <!--Includes context menu for each cell-->
             <div class="dropdown position-fixed context-menu" id="menu-{{ $index }}">
                 <ul class="list dropdown-menu host-menu" role="menu">
+                    <li class="list-row" ng-click="connect($event, connection, key)">
+                        <div class="list-row__primary">
+                            <i class="connect-icon"></i>
+                        </div>
+                        <div class="list-row__content">
+                            Connect
+                        </div>
+                    </li>
                     <li class="list-row" ng-if="!isHistory(connection)" ng-click="edit($event, connection)">
                         <div class="list-row__primary">
                             <i class="mdi mdi-pencil"></i>
@@ -42,31 +51,24 @@
                             Remove
                         </div>
                     </li>
-                    <li class="list-row" ng-click="select($event, connection, key)">
-                        <div class="list-row__primary">
-                            <i class="connect-icon"></i>
-                        </div>
-                        <div class="list-row__content">
-                            Connect
-                        </div>
-                    </li>
+
                 </ul>
             </div>
             <!--End Includes context menu for each cell-->
         </li>
         <div class="fab add-buttom" ng-hide="!subConnections.length">
-            <button class="fab__primary btn btn--xl btn--blue btn--fab" lx-ripple>
+            <button class="fab__primary btn btn--l btn--blue btn--fab" lx-ripple>
                 <i class="mdi mdi-plus"></i>
                 <i class="mdi mdi-plus"></i>
             </button>
 
             <div class="fab__actions fab__actions--left">
-                <button class="btn btn--l btn--grey btn--fab" lx-ripple lx-tooltip="Add new group"
+                <button class="btn btn--m btn--grey btn--fab" lx-ripple lx-tooltip="Add new group"
                         tooltip-position="top"
                         ng-click="addGroup($event)">
                     <i class="add_new_group"></i>
                 </button>
-                <button class="btn btn--l btn--grey btn--fab" lx-ripple lx-tooltip="Add new host"
+                <button class="btn btn--m btn--grey btn--fab" lx-ripple lx-tooltip="Add new host"
                         tooltip-position="top"
                         ng-click="addConnection($event)">
                     <i class="add_new_host"></i>
