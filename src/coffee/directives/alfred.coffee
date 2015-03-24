@@ -81,10 +81,9 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
 
             _.each $scope.connections, (val, key) ->
                 #TODO make correct merge configs
-                if val.get_ssh_identity()
-                    val.set {username : val.get_ssh_identity().get("username")}
-                    val.set {password : val.get_ssh_identity().get("password")}
-                    val.set {key : val.get_ssh_identity().get("key")}
+                ssh_identity = val.get_ssh_identity()
+                if ssh_identity then val.set({username : ssh_identity.get("username")}) else val.set({username : null})
+
                 $scope.connections[key] = val.toJSON do_not_encrypt: no
 
 
