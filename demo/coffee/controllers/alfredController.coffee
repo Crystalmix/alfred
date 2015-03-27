@@ -30,8 +30,8 @@ class AlfredController
 
         @scope.placeholder = "ssh user@hostname -p port"
 
-        @scope.addGroup = () ->
-            console.log "--- outerController add group"
+        @scope.addGroup = (parent_group) ->
+            console.log "--- outerController add group with current-group ", parent_group
 
         @scope.editGroup = (group) ->
             console.log "--- outerController edit group", group

@@ -33,8 +33,8 @@
         return console.log("--- outerController remove connection", connection);
       };
       this.scope.placeholder = "ssh user@hostname -p port";
-      this.scope.addGroup = function() {
-        return console.log("--- outerController add group");
+      this.scope.addGroup = function(parent_group) {
+        return console.log("--- outerController add group with current-group ", parent_group);
       };
       this.scope.editGroup = function(group) {
         return console.log("--- outerController edit group", group);

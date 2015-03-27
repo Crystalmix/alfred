@@ -245,8 +245,8 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
             do $scope.onAddHostCallback
 
         # Calls callback function on event 'add'
-        @addGroup = () ->
-            do $scope.onAddGroupCallback
+        @addGroup = (current_group) ->
+            $scope.onAddGroupCallback {parent_group: current_group}
 
         do transformationData
 
@@ -282,8 +282,8 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
                 return no
 
         if not angular.isDefined(attrs.onAddGroupCallback)
-            scope.onAddGroupCallback = (group) ->
-                $input.trigger "onAddGroupCallback", group
+            scope.onAddGroupCallback = (current_group) ->
+                $input.trigger "onAddGroupCallback", current_group
                 return no
 
         if not angular.isDefined(attrs.onEditGroupCallback)

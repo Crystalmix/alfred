@@ -17,6 +17,7 @@ alfredDirective.directive "activeList",  () ->
             query:           "="
             from:            "="
             selectedIndex:   "="
+            currentGroup:    "="
 
         controller: ($scope) ->
 
@@ -131,7 +132,7 @@ alfredDirective.directive "activeList",  () ->
             scope.addGroup = ($event) ->
                 do $event.preventDefault
                 do $event.stopPropagation
-                alfredCtrl.addGroup()
+                alfredCtrl.addGroup(scope.currentGroup)
 
             scope.edit = ($event, connection) ->
                 do $event.preventDefault
