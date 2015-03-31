@@ -144,6 +144,11 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
                 @enterCallback connection
 
 
+        $scope.editGroup = (group) ->
+            group_model = $scope.groups.get(group.local_id) or $scope.groups.get(group.id)
+            $scope.onEditGroupCallback {group: group_model}
+
+
         jwerty.key '→', (->
             if $scope.is_interrupt_arrow_commands is yes and $scope.activities.length
                 $scope.isLeftActive = no
