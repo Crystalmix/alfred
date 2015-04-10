@@ -111,7 +111,7 @@
   overflow: hidden;
 }
 .alfred-widget .content-box .host_default_icon {
-  background-image: url("../img/icons/hosts/Host-icon_disable_light.png");
+  background-image: url("../img/icons/hosts/Host-icon_disable_dark.png");
   width: 20px;
   height: 19px;
   display: block;
@@ -226,13 +226,13 @@
   color: #616161 !important;
 }
 .alfred-widget .connect-icon {
-  background-image: url("../img/icons/disable.png");
+  background-image: url("../img/icons/connect_new.png");
   width: 16px;
   height: 16px;
   display: block;
 }
 .alfred-widget li.active .dropdown-menu .connect-icon {
-  background-image: url("../img/icons/disable_connect.png");
+  background-image: url("../img/icons/connect_new_active.png");
 }
 .alfred-widget .context-menu .list-row__primary {
   width: 32px;
