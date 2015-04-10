@@ -29,18 +29,12 @@
       this.scope.uploadConnection = function(connection) {
         return console.log("--- outerController upload connection", connection);
       };
-      this.scope.removeHost = function(connection) {
-        return console.log("--- outerController remove connection", connection);
-      };
       this.scope.placeholder = "ssh user@hostname -p port";
       this.scope.addGroup = function(parent_group) {
         return console.log("--- outerController add group with current-group ", parent_group);
       };
       this.scope.editGroup = function(group) {
         return console.log("--- outerController edit group", group);
-      };
-      this.scope.removeGroup = function(group) {
-        return console.log("--- outerController remove group", group);
       };
       this.scope.query = null;
       this.scope.activities = [];

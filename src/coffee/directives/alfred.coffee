@@ -20,11 +20,9 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
         onEnterHostCallback: "&"
         onAddHostCallback: "&"
         onEditHostCallback: "&"
-        onRemoveHostCallback: "&"
 
         onAddGroupCallback: "&"
         onEditGroupCallback: "&"
-        onRemoveGroupCallback: "&"
 
     controller: ($scope, $element) ->
         $scope.query = null
@@ -237,14 +235,6 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
             if connection
                 $scope.onEditHostCallback({connection: connection})
 
-
-        # Calls callback function on event 'remove'
-        #
-        # @param connection    json-object
-        @remove = (connection) ->
-            if connection
-                $scope.onRemoveHostCallback({connection: connection})
-
         # Calls callback function on event 'add'
         @addConnection = () ->
             do $scope.onAddHostCallback
@@ -281,11 +271,6 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
                 $input.trigger "onEditHostCallback", connection.connection
                 return no
 
-        if not angular.isDefined(attrs.onRemoveHostCallback)
-            scope.onRemoveHostCallback = (connection) ->
-                $input.trigger "onRemoveHostCallback", connection.connection
-                return no
-
         if not angular.isDefined(attrs.onAddGroupCallback)
             scope.onAddGroupCallback = (current_group) ->
                 $input.trigger "onAddGroupCallback", current_group
@@ -294,11 +279,6 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
         if not angular.isDefined(attrs.onEditGroupCallback)
             scope.onEditGroupCallback = (group) ->
                 $input.trigger "onEditGroupCallback", group
-                return no
-
-        if not angular.isDefined(attrs.onRemoveGroupCallback)
-            scope.onRemoveGroupCallback = (group) ->
-                $input.trigger "onRemoveGroupCallback", group
                 return no
 
         scope.$on "setFocus", (event, uid) ->

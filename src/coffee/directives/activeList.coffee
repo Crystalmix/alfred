@@ -139,11 +139,6 @@ alfredDirective.directive "activeList",  () ->
                 do $event.stopPropagation
                 alfredCtrl.edit(connection)
 
-            scope.remove = ($event, connection) ->
-                do $event.preventDefault
-                do $event.stopPropagation
-                alfredCtrl.remove(connection)
-
             scope.select = ($event, key) ->
                 if $event
                     do $event.preventDefault
