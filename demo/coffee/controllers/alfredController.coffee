@@ -16,8 +16,8 @@ class AlfredController
         @scope.enterConnection = (connection) ->
             console.log "--- outerController", connection
 
-        @scope.addConnection = () ->
-            console.log "--- outerController add connection"
+        @scope.addConnection = (parent_group) ->
+            console.log "--- outerController add connection ", parent_group
 
         @scope.editConnection = (connection) ->
             console.log "--- outerController edit connection", connection

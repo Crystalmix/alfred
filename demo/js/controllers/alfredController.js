@@ -20,8 +20,8 @@
       this.scope.enterConnection = function(connection) {
         return console.log("--- outerController", connection);
       };
-      this.scope.addConnection = function() {
-        return console.log("--- outerController add connection");
+      this.scope.addConnection = function(parent_group) {
+        return console.log("--- outerController add connection ", parent_group);
       };
       this.scope.editConnection = function(connection) {
         return console.log("--- outerController edit connection", connection);

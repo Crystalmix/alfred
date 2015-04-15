@@ -310,8 +310,10 @@
               });
             }
           };
-          this.addConnection = function() {
-            return $scope.onAddHostCallback();
+          this.addConnection = function(current_group) {
+            return $scope.onAddHostCallback({
+              parent_group: current_group
+            });
           };
           this.addGroup = function(current_group) {
             return $scope.onAddGroupCallback({
@@ -332,8 +334,8 @@
             };
           }
           if (!angular.isDefined(attrs.onAddHostCallback)) {
-            scope.onAddHostCallback = function() {
-              $input.trigger("onAddHostCallback");
+            scope.onAddHostCallback = function(current_group) {
+              $input.trigger("onAddHostCallback", current_group);
               return false;
             };
           }
@@ -529,7 +531,7 @@
         scope.addConnection = function($event) {
           $event.preventDefault();
           $event.stopPropagation();
-          return alfredCtrl.addConnection();
+          return alfredCtrl.addConnection(scope.currentGroup);
         };
         scope.addGroup = function($event) {
           $event.preventDefault();
