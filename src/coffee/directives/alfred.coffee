@@ -237,7 +237,8 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
         # @param connection    json-object
         @edit = (connection) ->
             if connection
-                $scope.onEditHostCallback {connection: connection}
+                connection_model = $scope.hosts.get(connection.local_id) or $scope.hosts.get(connection.id)
+                $scope.onEditHostCallback {connection: connection_model}
 
         # Calls callback function on event 'add'
         @addConnection = (current_group) ->
@@ -272,7 +273,7 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
 
         if not angular.isDefined(attrs.onEditHostCallback)
             scope.onEditHostCallback = (connection) ->
-                $input.trigger "onEditHostCallback", connection.connection
+                $input.trigger "onEditHostCallback", connection
                 return no
 
         if not angular.isDefined(attrs.onAddGroupCallback)

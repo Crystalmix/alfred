@@ -300,9 +300,11 @@
             return $scope.$apply();
           };
           this.edit = function(connection) {
+            var connection_model;
             if (connection) {
+              connection_model = $scope.hosts.get(connection.local_id) || $scope.hosts.get(connection.id);
               return $scope.onEditHostCallback({
-                connection: connection
+                connection: connection_model
               });
             }
           };
