@@ -77,12 +77,16 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
             # Filters hosts by chosen_tags
             do filter_hosts_by_chosen_tags
 
+            # Gets array of models - copy
+            $scope.connections = $scope.hosts.toJSON do_not_encrypt: false
+
             _.each $scope.connections, (val, key) ->
                 #TODO make correct merge configs
-                ssh_identity = val.get_ssh_identity()
-                if ssh_identity then val.set({username : ssh_identity.get("username")}) else val.set({username : null})
-
-                $scope.connections[key] = val.toJSON do_not_encrypt: no
+                ssh_identity = $scope.hosts.models[key].get_ssh_identity()
+                if ssh_identity
+                    val.username = $scope.hosts.models[key].get("username")
+                else
+                    val.username = null
 
 
         # Prepares entities for template

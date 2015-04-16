@@ -141,21 +141,17 @@
               $scope.connections = _.clone($scope.hosts.models);
             }
             filter_hosts_by_chosen_tags();
+            $scope.connections = $scope.hosts.toJSON({
+              do_not_encrypt: false
+            });
             return _.each($scope.connections, function(val, key) {
               var ssh_identity;
-              ssh_identity = val.get_ssh_identity();
+              ssh_identity = $scope.hosts.models[key].get_ssh_identity();
               if (ssh_identity) {
-                val.set({
-                  username: ssh_identity.get("username")
-                });
+                return val.username = $scope.hosts.models[key].get("username");
               } else {
-                val.set({
-                  username: null
-                });
+                return val.username = null;
               }
-              return $scope.connections[key] = val.toJSON({
-                do_not_encrypt: false
-              });
             });
           };
           transformationData = function() {
