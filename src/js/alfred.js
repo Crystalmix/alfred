@@ -276,7 +276,9 @@
             return $scope.setSelectedConnection(key);
           };
           this.enterCallback = function(connection) {
+            var connection_model;
             if (connection) {
+              connection_model = $scope.hosts.get(connection.local_id) || $scope.hosts.get(connection.id);
               return $scope.onEnterHostCallback({
                 connection: connection
               });
@@ -339,7 +341,7 @@
           }
           if (!angular.isDefined(attrs.onEditHostCallback)) {
             scope.onEditHostCallback = function(connection) {
-              $input.trigger("onEditHostCallback", connection.connection);
+              $input.trigger("onEditHostCallback", connection);
               return false;
             };
           }
