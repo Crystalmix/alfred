@@ -280,7 +280,7 @@
             if (connection) {
               connection_model = $scope.hosts.get(connection.local_id) || $scope.hosts.get(connection.id);
               return $scope.onEnterHostCallback({
-                connection: connection
+                connection: connection_model
               });
             }
           };

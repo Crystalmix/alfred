@@ -214,7 +214,7 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
         @enterCallback = (connection) ->
             if connection
                 connection_model = $scope.hosts.get(connection.local_id) or $scope.hosts.get(connection.id)
-                $scope.onEnterHostCallback({connection: connection})
+                $scope.onEnterHostCallback({connection: connection_model})
 
         # Saves paramaters: fromConnection, fromHistories
         @changeFromProperty = (from) ->
