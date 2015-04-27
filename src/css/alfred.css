@@ -48,8 +48,7 @@
   vertical-align: top;
 }
 .alfred-widget li.active {
-  color: white;
-  background: #2196F3;
+  color: #2196F3;
 }
 .alfred-widget li.active .dropdown-menu i,
 .alfred-widget li.active .dropdown-menu span,
