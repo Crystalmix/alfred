@@ -141,9 +141,13 @@
               $scope.connections = _.clone($scope.hosts.models);
             }
             filter_hosts_by_chosen_tags();
-            $scope.connections = $scope.hosts.toJSON({
-              do_not_encrypt: false
-            });
+            _.each($scope.connections, (function(_this) {
+              return function(connection, key) {
+                return $scope.connections[key] = $scope.connections[key].toJSON({
+                  do_not_encrypt: false
+                });
+              };
+            })(this));
             return _.each($scope.connections, function(val, key) {
               var ssh_identity;
               ssh_identity = $scope.hosts.models[key].get_ssh_identity();

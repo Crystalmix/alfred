@@ -78,7 +78,8 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
             do filter_hosts_by_chosen_tags
 
             # Gets array of models - copy
-            $scope.connections = $scope.hosts.toJSON do_not_encrypt: false
+            _.each $scope.connections, (connection, key) =>
+                $scope.connections[key] = $scope.connections[key].toJSON do_not_encrypt: no
 
             _.each $scope.connections, (val, key) ->
                 #TODO make correct merge configs
