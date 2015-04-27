@@ -47,15 +47,14 @@
 .alfred-widget .table-data {
   vertical-align: top;
 }
-.alfred-widget li.active {
+.alfred-widget li.active,
+.alfred-widget li.active .dropdown-menu i {
   color: #2196F3;
 }
-.alfred-widget li.active .dropdown-menu i,
 .alfred-widget li.active .dropdown-menu span,
 .alfred-widget .dropdown-menu span,
 .alfred-widget li {
   color: #616161;
-  cursor: default;
 }
 .alfred-widget #right {
   width: 100%;
@@ -139,10 +138,11 @@
 }
 .alfred-widget .alfred-toolbar .children-group li {
   margin-right: 15px;
+  margin-bottom: 15px;
 }
 .alfred-widget .alfred-toolbar .children-group ul {
   padding: 0;
-  margin: 15px 0 15px 0;
+  margin: 15px 0 0 0;
 }
 .alfred-widget .alfred-toolbar .children-group .dropdown li.list-row {
   font-weight: normal;
@@ -221,7 +221,6 @@
 .alfred-widget .open .dropdown-menu {
   display: block;
   opacity: 1;
-  z-index: 10000;
 }
 .alfred-widget li.parent-group-list a {
   color: #616161 !important;

@@ -46,13 +46,11 @@
     .table-data {
         vertical-align: top;
     }
-    li.active{
-      color: #2196F3;
+    li.active, li.active .dropdown-menu i {
+        color: #2196F3;
     }
-
-    li.active .dropdown-menu i, li.active .dropdown-menu span, .dropdown-menu span, li {
-        color: #616161;
-        cursor: default;
+    li.active .dropdown-menu span, .dropdown-menu span, li {
+        color: #616161
     }
 
     #right {
@@ -147,10 +145,11 @@
         .children-group {
             li {
                 margin-right: 15px;
+                margin-bottom: 15px;
             }
             ul {
                 padding: 0;
-                margin: 15px 0 15px 0;
+                margin: 15px 0 0 0;
             }
             .dropdown li.list-row {
                 font-weight: normal;
@@ -249,7 +248,6 @@
     .open .dropdown-menu {
         display: block;
         opacity: 1;
-        z-index: 10000;
     }
 
     li.parent-group-list a {
