@@ -1,51 +1,52 @@
-<div id="fixed" when-scrolled="loadMore()" ng-mouseover="toggleScroll()">
+<div id="fixed" when-scrolled="loadMore()">
     <ul class="list">
         <li
                 ng-repeat="(key,connection) in subConnections = (connections | filterConnections:query:from:offset:this) track by key"
-                id="{{key}}"
+                id="{{ key }}"
                 ng-click="select($event, key)"
                 ng-dblclick="connect($event, connection, key)"
                 connection-item="connection"
-                key="{{key}}"
+                key="{{ key }}"
                 ng-class="{ active: (key === selectedIndex) }"
                 ng-style="setHeight()"
                 context-menu
                 class="panel panel-default position-fixed list-row"
-                data-target="menu-{{ $index }}"
+                data-target="menu-{{ uid }}-{{ $index }}"
                 ng-class="{ 'highlight': highlight, 'expanded' : expanded }">
 
             <div class="list-row__primary">
                 <i class="icon icon--l host_default_icon"></i>
             </div>
             <div class="list-row__content">
-                <span ng-if="connection.label" class="display-block">{{connection.label}}</span>
+                <span ng-if="connection.label" class="display-block">{{ connection.label }}</span>
                 <span ng-if="!connection.label && connection.username"
-                      class="display-block">{{connection.username}}@{{connection.address}}</span>
+                      class="display-block">{{ connection.username }}@{{ connection.address }}</span>
                 <span ng-if="!connection.label && !connection.username"
-                      class="display-block">{{connection.address}}</span>
+                      class="display-block">{{ connection.address }}</span>
+                <!--Includes context menu for each cell-->
+                <div class="dropdown position-fixed" id="menu-{{ uid }}-{{ $index }}">
+                    <ul class="list dropdown-menu host-menu" role="menu">
+                        <li class="list-row" ng-click="connect($event, connection, key)">
+                            <div class="list-row__primary">
+                                <i class="connect-icon"></i>
+                            </div>
+                            <div class="list-row__content">
+                                Connect
+                            </div>
+                        </li>
+                        <li class="list-row" ng-if="!isHistory(connection)" ng-click="edit($event, connection)">
+                            <div class="list-row__primary">
+                                <i class="mdi mdi-pencil"></i>
+                            </div>
+                            <div class="list-row__content">
+                                <span>Edit</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <!--End Includes context menu for each cell-->
             </div>
-            <!--Includes context menu for each cell-->
-            <div class="dropdown position-fixed context-menu" id="menu-{{ $index }}">
-                <ul class="list dropdown-menu host-menu" role="menu">
-                    <li class="list-row" ng-click="connect($event, connection, key)">
-                        <div class="list-row__primary">
-                            <i class="connect-icon"></i>
-                        </div>
-                        <div class="list-row__content">
-                            Connect
-                        </div>
-                    </li>
-                    <li class="list-row" ng-if="!isHistory(connection)" ng-click="edit($event, connection)">
-                        <div class="list-row__primary">
-                            <i class="mdi mdi-pencil"></i>
-                        </div>
-                        <div class="list-row__content">
-                            <span>Edit</span>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-            <!--End Includes context menu for each cell-->
+
         </li>
         <div class="fab add-buttom" ng-hide="!subConnections.length">
             <button class="fab__primary btn btn--l btn--blue btn--fab" lx-ripple>

@@ -42,6 +42,7 @@
       this.scope.groups = [];
       this.scope.taghosts = [];
       this.scope.tags = [];
+      this.scope.uid = 123;
       sa = new SA("https://serverauditor.com");
       sa.init().done((function(_this) {
         return function() {

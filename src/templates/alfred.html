@@ -1,5 +1,4 @@
-
-<div id="{{uid}}" class="alfred-widget" flex-container="row" ng-click="setFocusAtInput()">
+<div id="{{ uid }}" class="alfred-widget" flex-container="row">
     <div class="alfred" flex-item="8">
         <div class="alfred-box">
             <!--Toolbar with menu-->
@@ -46,9 +45,9 @@
                                         <a ng-click="filterByGroup(null)"><b>All hosts</b></a>
                                     </li>
                                     <li class="parent-group-list" ng-repeat="group in path_groups">
-                                        <a ng-click="filterByGroup(group.local_id)">
+                                        <a ng-click="filterByGroup(group)">
                                             <i class="mdi mdi-chevron-right"></i>
-                                            {{group.label}}
+                                            {{ group.label }}
                                         </a>
                                     </li>
                                 </ul>
@@ -58,16 +57,16 @@
                             <!--Child groups-->
                             <div class="children-group">
                                 <ul>
-                                    <li ng-repeat="group in children_group"
-                                        context-menu class="panel panel-default position-fixed"
-                                        data-target="child_group-{{ $index }}"
-                                        ng-class="{ 'highlight': highlight, 'expanded' : expanded }">
+                                    <li ng-repeat="group in children_group">
 
                                         <button class="btn btn--l btn--white btn--raised" lx-ripple
-                                                ng-click="filterByGroup(group.local_id)">{{group.label}}
+                                                context-menu class="panel panel-default position-fixed"
+                                                data-target="child_group-{{ uid }}-{{ $index }}"
+                                                ng-class="{ 'highlight': highlight, 'expanded' : expanded }"
+                                                ng-click="filterByGroup(group)">{{ group.label }}
                                         </button>
 
-                                        <div class="dropdown position-fixed" id="child_group-{{ $index }}">
+                                        <div class="dropdown position-fixed" id="child_group-{{ uid }}-{{ $index }}">
                                             <ul class="list dropdown-menu" role="menu">
                                                 <li class="list-row" ng-click="editGroup(group)">
                                                     <div class="list-row__primary">
@@ -111,7 +110,7 @@
 
                                                 <div class="list-content-tile">
                                                     <a class="dropdown-link"
-                                                       ng-click="filterByTag(tag)">{{tag.label}}</a>
+                                                       ng-click="filterByTag(tag)">{{ tag.label }}</a>
                                                 </div>
                                             </li>
                                         </ul>
@@ -120,7 +119,8 @@
 
                                 <ul>
                                     <li class="mb" ng-repeat="tag in chosen_tags">
-                                        <button class="btn btn--s btn--blue btn--raised" ng-click="filterByTag(tag)" lx-ripple>{{tag.label}}
+                                        <button class="btn btn--s btn--blue btn--raised" ng-click="filterByTag(tag)"
+                                                lx-ripple>{{ tag.label }}
                                         </button>
                                     </li>
                                 </ul>
@@ -141,6 +141,7 @@
                     <div id="left" ng-class="{ active: isLeftActive }" ng-if="isLeftActive">
                         <div class="left-list" ng-if="isLeftActive">
                             <active-list connections="connections"
+                                         uid="uid"
                                          amount="amount"
                                          height-cell="heightCell"
                                          query="query"
@@ -154,6 +155,7 @@
                     <div id="right" ng-class="{ active: isRightActive }" ng-if="isRightActive">
                         <div class="left-list" ng-if="isRightActive">
                             <active-list connections="activities"
+                                         uid="uid"
                                          amount="amount"
                                          height-cell="heightCell"
                                          query="query"

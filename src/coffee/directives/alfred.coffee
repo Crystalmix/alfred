@@ -107,14 +107,12 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
             tags = if tag then _.find($scope.chosen_tags, (val) ->
                 val.local_id is tag.local_id
             )
-            if tags
-                return yes
-            else
-                return no
+            tags.length
 
 
-        $scope.filterByGroup = (local_id) ->
-            $scope.current_group = if local_id then $scope.groups.get(local_id) else null
+        $scope.filterByGroup = (group) ->
+            id = if group then (group.local_id or group.id) else null
+            $scope.current_group = if id then $scope.groups.get(id) else null
             $timeout (-> do transformationData)
 
 
@@ -150,6 +148,11 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
         $scope.editGroup = (group) ->
             group_model = $scope.groups.get(group.local_id) or $scope.groups.get(group.id)
             $scope.onEditGroupCallback {group: group_model}
+
+
+        $scope.safeApply = (expr) ->
+            unless $scope.$$phase
+                if expr then $scope.$apply expr else do $scope.$apply
 
 
         jwerty.key '→', (->
@@ -232,7 +235,7 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
             else
                 $scope.isLeftActive = yes
                 $scope.isRightActive = no
-            do $scope.$apply
+            do $scope.safeApply
 
         # Calls callback function on event 'edit'
         #
@@ -308,7 +311,7 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
             else
                 scope.is_interrupt_arrow_commands = yes
 
-            do scope.$apply
+            do scope.safeApply
 
         initializeParameters = () ->
             scope.fromConnection = 0
@@ -322,7 +325,7 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
 
         changeConnectState = (state) ->
             scope.connectState = state
-            do scope.$apply
+            do scope.safeApply
 
         scope.keydown = () ->
             $timeout (->

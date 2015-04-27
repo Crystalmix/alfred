@@ -18,6 +18,7 @@ alfredDirective.directive "activeList",  () ->
             from:            "="
             selectedIndex:   "="
             currentGroup:    "="
+            uid:             "="
 
         controller: ($scope) ->
 
@@ -61,10 +62,16 @@ alfredDirective.directive "activeList",  () ->
                     return yes
                 return no
 
+
+            $scope.safeApply = (expr) ->
+                unless $scope.$$phase
+                    if expr then $scope.$apply expr else do $scope.$apply
+
+
             # Method api for child directive
             @select = (key) ->
                 $scope.setSelectedConnection key
-                do $scope.$apply
+                do $scope.safeApply
 
             do $scope.changeOffset
 
@@ -121,7 +128,7 @@ alfredDirective.directive "activeList",  () ->
             # @param params   parameters from command quick connection
             scope.$on('quickConnect', (event, params) ->
                 scope.quickConnectionsParams = params
-                do scope.$apply
+                do scope.safeApply
             )
 
             scope.addConnection = ($event) ->
@@ -150,12 +157,14 @@ alfredDirective.directive "activeList",  () ->
                 scope.select $event, key
                 alfredCtrl.enterCallback connection
 
+
             scope.changeSlider = () ->
                 slider = (scope.amount * 100) / scope.filteredConnections.length
                 sizer = (scope.from * 100) / scope.filteredConnections.length
                 sizes = _normalizeSliderHeight(slider, sizer)
                 scope.slider = sizes.sliderHeight
                 scope.sizer = sizes.sizerHeight
+
 
             _normalizeSliderHeight = (sliderHeight, sizerHeight) ->
                 if sizerHeight > 100 - sliderHeight
@@ -167,7 +176,8 @@ alfredDirective.directive "activeList",  () ->
                 sizerHeight = Math.floor(sizerHeight) / 100;
                 sliderHeight = Math.ceil(sliderHeight) / 100;
 
-                return {sliderHeight: sliderHeight, sizerHeight: sizerHeight};
+                return {sliderHeight: sliderHeight, sizerHeight: sizerHeight}
+
 
             activateNextItem = () ->
                 currentIndex = scope.getSelectedConnection()
@@ -182,6 +192,7 @@ alfredDirective.directive "activeList",  () ->
                         do scope.loadDown
                 else
                     scope.setSelectedConnection(++currentIndex)
+
 
             activatePreviousItem = () ->
                 currentIndex = scope.getSelectedConnection()

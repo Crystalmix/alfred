@@ -39,6 +39,7 @@ class AlfredController
         @scope.groups = []
         @scope.taghosts = []
         @scope.tags = []
+        @scope.uid = 123
 
         sa = new SA("https://serverauditor.com")
         sa.init().done(=>
