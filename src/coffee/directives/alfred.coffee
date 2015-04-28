@@ -1,7 +1,7 @@
 ###
     The alfred directive indicates input field, determines display table or list
 ###
-alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConnectParse, $timeout) ->
+alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant", (quickConnectParse, $timeout, constant) ->
     restrict: "E"
     replace: yes
     templateUrl: "src/templates/alfred.html"
@@ -27,11 +27,13 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
     controller: ($scope, $element) ->
         $scope.query = null
         $scope.selectedIndex = 0
-        $scope.current_group = null
         $scope.chosen_tags = []
+        $scope.current_group = null
+        $scope.children_group = []
+        $scope.path_groups = []
 
         getGroups = () ->
-            current_group_id = if $scope.current_group then $scope.current_group.get('local_id') else null
+            current_group_id = if $scope.current_group then $scope.current_group.get("#{constant.local_id}") else null
 
             $scope.path_groups = if current_group_id then $scope.groups.get_parent_groups(current_group_id) else []
             do $scope.path_groups.reverse
@@ -51,26 +53,26 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
             array_of_local_id_of_tags = []
 
             _.each $scope.chosen_tags, (val) ->
-                array_of_local_id_of_tags = _.union array_of_local_id_of_tags, val.local_id
+                array_of_local_id_of_tags = _.union array_of_local_id_of_tags, val["#{constant.local_id}"]
 
             tag_hosts = $scope.taghosts.intersection_by_tags(array_of_local_id_of_tags)
 
             # Gets host.local_id from tag_hosts
             _.each tag_hosts, (val) ->
-                if val.get("host").local_id
-                    array_id_of_hosts = _.union array_id_of_hosts, val.get("host").local_id
+                if val.get("#{constant.tag_host.host}")["#{constant.local_id}"]
+                    array_id_of_hosts = _.union array_id_of_hosts, val.get("#{constant.tag_host.host}")["#{constant.local_id}"]
 
             # Merges connections 
             if tag_hosts.length
                 $scope.connections = _.filter $scope.connections, (val) ->
-                    if _.contains array_id_of_hosts, val.get("local_id")
+                    if _.contains array_id_of_hosts, val.get("#{constant.local_id}")
                         return val
 
 
         getConnections = () ->
             # Filters hosts by current_group
             if $scope.current_group
-                $scope.connections = $scope.hosts.filter_by_group($scope.current_group.get('local_id'), yes)
+                $scope.connections = $scope.hosts.filter_by_group($scope.current_group.get("#{constant.local_id}"), yes)
             else
                 $scope.connections = _.clone $scope.hosts.models
 
@@ -85,7 +87,7 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
                 #TODO make correct merge configs
                 ssh_identity = $scope.hosts.models[key].get_ssh_identity()
                 if ssh_identity
-                    val.username = $scope.hosts.models[key].get("username")
+                    val.username = $scope.hosts.models[key].get("#{constant.host.username}")
                 else
                     val.username = null
 
@@ -105,13 +107,13 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
         $scope.isCheckTag = (tag) ->
             tags = []
             tags = if tag then _.find($scope.chosen_tags, (val) ->
-                val.local_id is tag.local_id
+                val["#{constant.host.username}"] is tag["#{constant.host.username}"]
             )
             tags.length
 
 
         $scope.filterByGroup = (group) ->
-            id = if group then (group.local_id or group.id) else null
+            id = if group then group["#{constant.local_id}"] else null
             $scope.current_group = if id then $scope.groups.get(id) else null
             $timeout (-> do transformationData)
 
@@ -119,7 +121,7 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
         $scope.filterByTag = (tag) ->
             if tag
                 if $scope.isCheckTag tag
-                    $scope.chosen_tags = _.without($scope.chosen_tags, _.findWhere($scope.chosen_tags, tag.local_id))
+                    $scope.chosen_tags = _.without($scope.chosen_tags, _.findWhere($scope.chosen_tags, tag["#{constant.local_id}"]))
                 else
                     $scope.chosen_tags = _.union $scope.chosen_tags, tag
             else
@@ -146,7 +148,7 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
 
 
         $scope.editGroup = (group) ->
-            group_model = $scope.groups.get(group.local_id) or $scope.groups.get(group.id)
+            group_model = $scope.groups.get(group["#{constant.local_id}"]) or $scope.groups.get(group.id)
             $scope.onEditGroupCallback {group: group_model}
 
 
@@ -217,7 +219,7 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
         # @param connection    json-object
         @enterCallback = (connection) ->
             if connection
-                connection_model = $scope.hosts.get(connection.local_id) or $scope.hosts.get(connection.id)
+                connection_model = $scope.hosts.get(connection["#{constant.local_id}"]) or $scope.hosts.get(connection.id)
                 $scope.onEnterHostCallback({connection: connection_model})
 
         # Saves paramaters: fromConnection, fromHistories
@@ -242,7 +244,7 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
         # @param connection    json-object
         @edit = (connection) ->
             if connection
-                connection_model = $scope.hosts.get(connection.local_id) or $scope.hosts.get(connection.id)
+                connection_model = $scope.hosts.get(connection["#{constant.local_id}"]) or $scope.hosts.get(connection.id)
                 $scope.onEditHostCallback {connection: connection_model}
 
         # Calls callback function on event 'add'
@@ -264,32 +266,6 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", (quickConn
         # When user doesn't search any information, we should interrupt arrow hotkeys,
         # otherwise we couldn't override it.
         scope.is_interrupt_arrow_commands = yes
-
-        # If not define attrs, we should trigger jQuery events
-        if not angular.isDefined(attrs.onEnterHostCallback)
-            scope.onEnterHostCallback = (connection) ->
-                $input.trigger "onEnterHostCallback", connection.connection
-                return no
-
-        if not angular.isDefined(attrs.onAddHostCallback)
-            scope.onAddHostCallback = (current_group) ->
-                $input.trigger "onAddHostCallback", current_group
-                return no
-
-        if not angular.isDefined(attrs.onEditHostCallback)
-            scope.onEditHostCallback = (connection) ->
-                $input.trigger "onEditHostCallback", connection
-                return no
-
-        if not angular.isDefined(attrs.onAddGroupCallback)
-            scope.onAddGroupCallback = (current_group) ->
-                $input.trigger "onAddGroupCallback", current_group
-                return no
-
-        if not angular.isDefined(attrs.onEditGroupCallback)
-            scope.onEditGroupCallback = (group) ->
-                $input.trigger "onEditGroupCallback", group
-                return no
 
         scope.$on "setFocus", (event, uid) ->
             if uid is scope.uid

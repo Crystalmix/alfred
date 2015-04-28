@@ -15,13 +15,14 @@ module.exports = (grunt) ->
             dist:
                 src: [
                     "#{coffeePath}/module.coffee",
-                    "#{coffeePath}/services/quickConnectParser.coffee"
+                    "#{coffeePath}/services/quickConnectParser.coffee",
+                    "#{coffeePath}/services/constants.coffee"
                     "#{coffeePath}/directives/alfred.coffee",
                     "#{coffeePath}/directives/inactiveList.coffee",
                     "#{coffeePath}/directives/activeList.coffee",
                     "#{coffeePath}/directives/connectionItem.coffee",
                     "#{coffeePath}/directives/whenScrolled.coffee",
-                    "#{coffeePath}/filteres/filterConnections.coffee"
+                    "#{coffeePath}/filteres/filterConnections.coffee",
                 ],
                 dest: "#{coffeePath}/alfred.coffee",
 

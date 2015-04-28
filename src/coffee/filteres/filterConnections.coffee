@@ -1,5 +1,5 @@
 
-alfredDirective.filter "filterConnections", ["$filter", ($filter) ->
+alfredDirective.filter "filterConnections", ["$filter", "constant", ($filter, constant) ->
         (input, query, arg1, arg2, context) ->
             scope = context
             if scope.prevquery isnt scope.query and scope.query isnt ""
@@ -13,18 +13,18 @@ alfredDirective.filter "filterConnections", ["$filter", ($filter) ->
                     return value
                 else
                     isMatchLabel = (value) ->
-                        if value.label
-                            return value.label.indexOf(scope.query) isnt -1
+                        if value["#{constant.host.label}"]
+                            return value["#{constant.host.label}"].indexOf(scope.query) isnt -1
                         return no
 
                     isMatchAddress = (value) ->
-                        if value.address
-                            return value.address.indexOf(scope.query) isnt -1
+                        if value["#{constant.host.address}"]
+                            return value["#{constant.host.address}"].indexOf(scope.query) isnt -1
                         return no
 
                     isMatchUsername = (value) ->
-                        if value.username
-                            return  value.username.indexOf(scope.query) isnt -1
+                        if value["#{constant.host.username}"]
+                            return  value["#{constant.host.username}"].indexOf(scope.query) isnt -1
                         return no
 
                     return isMatchLabel(value) or isMatchAddress(value) or isMatchUsername(value)

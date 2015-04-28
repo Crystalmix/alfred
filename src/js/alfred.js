@@ -6,7 +6,7 @@
 
 
   /*
-      A hepler service that can parse quick connect parameters
+      A helper service that can parse quick connect parameters
       Possible cases:
           ssh               user@host
           ssh               user@host   -p port
@@ -63,11 +63,29 @@
 
 
   /*
+      A helper service that can return constants
+   */
+
+  alfredDirective.constant("constant", {
+    local_id: "local_id",
+    host: {
+      label: "label",
+      username: "username",
+      address: "address"
+    },
+    tag_host: {
+      host: "host",
+      tag: "tag"
+    }
+  });
+
+
+  /*
       The alfred directive indicates input field, determines display table or list
    */
 
   alfredDirective.directive("alfred", [
-    "quickConnectParse", "$timeout", function(quickConnectParse, $timeout) {
+    "quickConnectParse", "$timeout", "constant", function(quickConnectParse, $timeout, constant) {
       return {
         restrict: "E",
         replace: true,
@@ -93,11 +111,13 @@
           var filter_hosts_by_chosen_tags, getConnections, getGroups, transformationData;
           $scope.query = null;
           $scope.selectedIndex = 0;
-          $scope.current_group = null;
           $scope.chosen_tags = [];
+          $scope.current_group = null;
+          $scope.children_group = [];
+          $scope.path_groups = [];
           getGroups = function() {
             var current_group_id;
-            current_group_id = $scope.current_group ? $scope.current_group.get('local_id') : null;
+            current_group_id = $scope.current_group ? $scope.current_group.get("" + constant.local_id) : null;
             $scope.path_groups = current_group_id ? $scope.groups.get_parent_groups(current_group_id) : [];
             $scope.path_groups.reverse();
             $scope.children_group = current_group_id ? _.rest($scope.groups.get_all_children(current_group_id)) : $scope.groups.get_root();
@@ -118,17 +138,17 @@
             array_id_of_hosts = [];
             array_of_local_id_of_tags = [];
             _.each($scope.chosen_tags, function(val) {
-              return array_of_local_id_of_tags = _.union(array_of_local_id_of_tags, val.local_id);
+              return array_of_local_id_of_tags = _.union(array_of_local_id_of_tags, val["" + constant.local_id]);
             });
             tag_hosts = $scope.taghosts.intersection_by_tags(array_of_local_id_of_tags);
             _.each(tag_hosts, function(val) {
-              if (val.get("host").local_id) {
-                return array_id_of_hosts = _.union(array_id_of_hosts, val.get("host").local_id);
+              if (val.get("" + constant.tag_host.host)["" + constant.local_id]) {
+                return array_id_of_hosts = _.union(array_id_of_hosts, val.get("" + constant.tag_host.host)["" + constant.local_id]);
               }
             });
             if (tag_hosts.length) {
               return $scope.connections = _.filter($scope.connections, function(val) {
-                if (_.contains(array_id_of_hosts, val.get("local_id"))) {
+                if (_.contains(array_id_of_hosts, val.get("" + constant.local_id))) {
                   return val;
                 }
               });
@@ -136,7 +156,7 @@
           };
           getConnections = function() {
             if ($scope.current_group) {
-              $scope.connections = $scope.hosts.filter_by_group($scope.current_group.get('local_id'), true);
+              $scope.connections = $scope.hosts.filter_by_group($scope.current_group.get("" + constant.local_id), true);
             } else {
               $scope.connections = _.clone($scope.hosts.models);
             }
@@ -152,7 +172,7 @@
               var ssh_identity;
               ssh_identity = $scope.hosts.models[key].get_ssh_identity();
               if (ssh_identity) {
-                return val.username = $scope.hosts.models[key].get("username");
+                return val.username = $scope.hosts.models[key].get("" + constant.host.username);
               } else {
                 return val.username = null;
               }
@@ -175,13 +195,13 @@
             var tags;
             tags = [];
             tags = tag ? _.find($scope.chosen_tags, function(val) {
-              return val.local_id === tag.local_id;
+              return val["" + constant.host.username] === tag["" + constant.host.username];
             }) : void 0;
             return tags.length;
           };
           $scope.filterByGroup = function(group) {
             var id;
-            id = group ? group.local_id || group.id : null;
+            id = group ? group["" + constant.local_id] : null;
             $scope.current_group = id ? $scope.groups.get(id) : null;
             return $timeout((function() {
               return transformationData();
@@ -190,7 +210,7 @@
           $scope.filterByTag = function(tag) {
             if (tag) {
               if ($scope.isCheckTag(tag)) {
-                $scope.chosen_tags = _.without($scope.chosen_tags, _.findWhere($scope.chosen_tags, tag.local_id));
+                $scope.chosen_tags = _.without($scope.chosen_tags, _.findWhere($scope.chosen_tags, tag["" + constant.local_id]));
               } else {
                 $scope.chosen_tags = _.union($scope.chosen_tags, tag);
               }
@@ -223,7 +243,7 @@
           })(this);
           $scope.editGroup = function(group) {
             var group_model;
-            group_model = $scope.groups.get(group.local_id) || $scope.groups.get(group.id);
+            group_model = $scope.groups.get(group["" + constant.local_id]) || $scope.groups.get(group.id);
             return $scope.onEditGroupCallback({
               group: group_model
             });
@@ -289,7 +309,7 @@
           this.enterCallback = function(connection) {
             var connection_model;
             if (connection) {
-              connection_model = $scope.hosts.get(connection.local_id) || $scope.hosts.get(connection.id);
+              connection_model = $scope.hosts.get(connection["" + constant.local_id]) || $scope.hosts.get(connection.id);
               return $scope.onEnterHostCallback({
                 connection: connection_model
               });
@@ -315,7 +335,7 @@
           this.edit = function(connection) {
             var connection_model;
             if (connection) {
-              connection_model = $scope.hosts.get(connection.local_id) || $scope.hosts.get(connection.id);
+              connection_model = $scope.hosts.get(connection["" + constant.local_id]) || $scope.hosts.get(connection.id);
               return $scope.onEditHostCallback({
                 connection: connection_model
               });
@@ -338,36 +358,6 @@
           var $input, changeConnectState, checkQuery, initializeParameters, initializeTableParameters;
           $input = element.find('#alfred-input');
           scope.is_interrupt_arrow_commands = true;
-          if (!angular.isDefined(attrs.onEnterHostCallback)) {
-            scope.onEnterHostCallback = function(connection) {
-              $input.trigger("onEnterHostCallback", connection.connection);
-              return false;
-            };
-          }
-          if (!angular.isDefined(attrs.onAddHostCallback)) {
-            scope.onAddHostCallback = function(current_group) {
-              $input.trigger("onAddHostCallback", current_group);
-              return false;
-            };
-          }
-          if (!angular.isDefined(attrs.onEditHostCallback)) {
-            scope.onEditHostCallback = function(connection) {
-              $input.trigger("onEditHostCallback", connection);
-              return false;
-            };
-          }
-          if (!angular.isDefined(attrs.onAddGroupCallback)) {
-            scope.onAddGroupCallback = function(current_group) {
-              $input.trigger("onAddGroupCallback", current_group);
-              return false;
-            };
-          }
-          if (!angular.isDefined(attrs.onEditGroupCallback)) {
-            scope.onEditGroupCallback = function(group) {
-              $input.trigger("onEditGroupCallback", group);
-              return false;
-            };
-          }
           scope.$on("setFocus", function(event, uid) {
             if (uid === scope.uid) {
               return $timeout(scope.setFocusAtInput);
@@ -678,7 +668,7 @@
   });
 
   alfredDirective.filter("filterConnections", [
-    "$filter", function($filter) {
+    "$filter", "constant", function($filter, constant) {
       return function(input, query, arg1, arg2, context) {
         var filterFilter, scope;
         scope = context;
@@ -693,20 +683,20 @@
             return value;
           } else {
             isMatchLabel = function(value) {
-              if (value.label) {
-                return value.label.indexOf(scope.query) !== -1;
+              if (value["" + constant.host.label]) {
+                return value["" + constant.host.label].indexOf(scope.query) !== -1;
               }
               return false;
             };
             isMatchAddress = function(value) {
-              if (value.address) {
-                return value.address.indexOf(scope.query) !== -1;
+              if (value["" + constant.host.address]) {
+                return value["" + constant.host.address].indexOf(scope.query) !== -1;
               }
               return false;
             };
             isMatchUsername = function(value) {
-              if (value.username) {
-                return value.username.indexOf(scope.query) !== -1;
+              if (value["" + constant.host.username]) {
+                return value["" + constant.host.username].indexOf(scope.query) !== -1;
               }
               return false;
             };

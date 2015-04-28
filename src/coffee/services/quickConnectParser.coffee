@@ -1,6 +1,6 @@
 
 ###
-    A hepler service that can parse quick connect parameters
+    A helper service that can parse quick connect parameters
     Possible cases:
         ssh               user@host
         ssh               user@host   -p port
