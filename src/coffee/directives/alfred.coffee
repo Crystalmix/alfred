@@ -104,12 +104,12 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
             do getConnections if $scope.hosts
 
 
-        $scope.isCheckTag = (tag) ->
-            tags = []
-            tags = if tag then _.find($scope.chosen_tags, (val) ->
-                val["#{constant.host.username}"] is tag["#{constant.host.username}"]
-            )
-            tags.length
+        $scope.isChosenTag = (tag) ->
+            tag = if tag then _.findWhere($scope.chosen_tags, {local_id: tag["#{constant.local_id}"]}) else []
+            if tag
+                return yes
+            else
+                return no
 
 
         $scope.filterByGroup = (group) ->
@@ -120,8 +120,8 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
 
         $scope.filterByTag = (tag) ->
             if tag
-                if $scope.isCheckTag tag
-                    $scope.chosen_tags = _.without($scope.chosen_tags, _.findWhere($scope.chosen_tags, tag["#{constant.local_id}"]))
+                if $scope.isChosenTag tag
+                    $scope.chosen_tags = _.without($scope.chosen_tags, _.findWhere($scope.chosen_tags, {local_id: tag["#{constant.local_id}"]} ))
                 else
                     $scope.chosen_tags = _.union $scope.chosen_tags, tag
             else

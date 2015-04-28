@@ -22,7 +22,7 @@
                             <button class="btn btn--m btn--blue btn--flat" lx-ripple>
                                 <!--Buttons for hosts-->
                                 <span ng-if="isLeftActive && !connectState"
-                                      ng-click="changeActiveList()">activities</span>
+                                      ng-click="changeActiveList()">Activity</span>
                                 <span ng-if="isLeftActive && connectState" ng-click="enter()">connect</span>
                                 <!--End Buttons for hosts-->
 
@@ -89,6 +89,7 @@
                         <div flex-item="4">
                             <!--Path tags-->
                             <div class="tags">
+                                <!--Template from LUMX-->
                                 <lx-dropdown class="tag-toolbar" position="right">
                                     <button class="btn btn--m btn--icon" lx-ripple lx-dropdown-toggle>
                                         <i class="mdi mdi-tag tag"></i>
@@ -98,7 +99,7 @@
                                         <ul class="tag-list">
                                             <li class="list-row list-row--has-primary">
                                                 <div class="list-primary-tile">
-                                                    <i ng-if="isCheckTag(null)" class="mdi mdi-check"></i>
+                                                    <i ng-if="false" class="mdi mdi-check"></i>
                                                 </div>
                                                 <div class="list-content-tile">
                                                     <a class="dropdown-link"
@@ -107,7 +108,7 @@
                                             </li>
                                             <li class="list-row list-row--has-primary" ng-repeat="tag in copy_tags">
                                                 <div class="list-primary-tile">
-                                                    <i ng-if="isCheckTag(tag)" class="mdi mdi-check"></i>
+                                                    <i ng-if="isChosenTag(tag)" class="mdi mdi-check"></i>
                                                 </div>
 
                                                 <div class="list-content-tile">
@@ -118,6 +119,7 @@
                                         </ul>
                                     </lx-dropdown-menu>
                                 </lx-dropdown>
+                                <!--Template from LUMX-->
 
                                 <ul>
                                     <li class="mb" ng-repeat="tag in chosen_tags">
