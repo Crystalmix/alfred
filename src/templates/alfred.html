@@ -61,11 +61,13 @@
                                 <ul>
                                     <li ng-repeat="group in children_group">
 
-                                        <button class="btn btn--l btn--white btn--raised" lx-ripple
+                                        <button class="btn btn--l group-child" lx-ripple
                                                 context-menu class="panel panel-default position-fixed"
                                                 data-target="child_group-{{ uid }}-{{ $index }}"
                                                 ng-class="{ 'highlight': highlight, 'expanded' : expanded }"
-                                                ng-click="filterByGroup(group)">{{ group.label }}
+                                                ng-click="filterByGroup(group)">
+                                            <i class="group-child"></i>
+                                            {{ group.label }}
                                         </button>
 
                                         <div class="dropdown position-fixed" id="child_group-{{ uid }}-{{ $index }}">

@@ -187,6 +187,13 @@
 }
 .alfred-widget .alfred-toolbar li .btn {
   color: #616161;
+  border-right: 20px;
+  background: #e0e0e0;
+  border: none;
+  border-radius: 1.6rem;
+  padding: 0 0.8rem 0 0.8rem;
+  height: 31px;
+  line-height: 31px;
 }
 .alfred-widget .alfred-toolbar .tag {
   color: #616161;
@@ -247,6 +254,16 @@
   display: block;
   left: 11px;
   position: relative;
+}
+.alfred-widget i.group-child {
+  background-image: url("../img/icons/group/group_grey_add_icon.png");
+  width: 16px;
+  height: 16px;
+  display: block;
+  position: relative;
+  float: left;
+  top: 7px;
+  margin-right: 10px;
 }
 .alfred-widget .add_new_group {
   background-image: url("../img/icons/group/group_white_add_icon.png");
