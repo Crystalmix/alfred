@@ -32,6 +32,7 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
         $scope.children_group = []
         $scope.path_groups = []
 
+
         getGroups = () ->
             current_group_id = if $scope.current_group then $scope.current_group.get("#{constant.local_id}") else null
 

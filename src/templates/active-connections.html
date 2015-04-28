@@ -4,7 +4,7 @@
                 ng-repeat="(key,connection) in subConnections = (connections | filterConnections:query:from:offset:this) track by key"
                 id="{{ key }}"
                 ng-click="select($event, key)"
-                ng-dblclick="connect($event, connection, key)"
+                ng-dblclick="connect(connection, key)"
                 connection-item="connection"
                 key="{{ key }}"
                 ng-class="{ active: (key === selectedIndex) }"
@@ -26,7 +26,7 @@
                 <!--Includes context menu for each cell-->
                 <div class="dropdown position-fixed" id="menu-{{ uid }}-{{ $index }}">
                     <ul class="list dropdown-menu host-menu" role="menu">
-                        <li class="list-row" ng-click="connect($event, connection, key)">
+                        <li class="list-row" ng-click="connect(connection, key)">
                             <div class="list-row__primary">
                                 <i class="connect-icon"></i>
                             </div>
@@ -34,7 +34,7 @@
                                 Connect
                             </div>
                         </li>
-                        <li class="list-row" ng-if="!isHistory(connection)" ng-click="edit($event, connection)">
+                        <li class="list-row" ng-if="!isHistory(connection)" ng-click="edit(connection)">
                             <div class="list-row__primary">
                                 <i class="mdi mdi-pencil"></i>
                             </div>

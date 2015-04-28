@@ -141,20 +141,15 @@ alfredDirective.directive "activeList",  () ->
                 do $event.stopPropagation
                 alfredCtrl.addGroup(scope.currentGroup)
 
-            scope.edit = ($event, connection) ->
-                do $event.preventDefault
-                do $event.stopPropagation
+            scope.edit = (connection) ->
                 alfredCtrl.edit(connection)
 
-            scope.select = ($event, key) ->
-                if $event
-                    do $event.preventDefault
-                    do $event.stopPropagation
+            scope.select = (key) ->
                 scope.setSelectedConnection key
 
 
-            scope.connect = ($event, connection, key) ->
-                scope.select $event, key
+            scope.connect = (connection, key) ->
+                scope.select key
                 alfredCtrl.enterCallback connection
 
 
