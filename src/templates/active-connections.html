@@ -48,7 +48,14 @@
             </div>
 
         </li>
-        <div class="fab add-buttom" ng-hide="!subConnections.length">
+        <li ng-if="!subConnections.length">
+            <div class="list-row__content empty-list">
+                <span class="display-block">
+                    There is nothing
+                </span>
+            </div>
+        </li>
+        <div class="fab add-buttom">
             <button class="fab__primary btn btn--l btn--blue btn--fab" lx-ripple>
                 <i class="mdi mdi-plus"></i>
                 <i class="mdi mdi-plus"></i>
