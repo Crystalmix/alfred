@@ -46,10 +46,10 @@
     .table-data {
         vertical-align: top;
     }
-    li.active, li.active .dropdown-menu i {
+    li.active, li.active .context-menu i {
         color: #2196F3;
     }
-    li.active .dropdown-menu span, .dropdown-menu span, li {
+    li.active .context-menu span, .context-menu span, li {
         color: #616161
     }
 
@@ -252,9 +252,27 @@
         z-index: 100;
     }
 
-    .open .dropdown-menu {
+    .open .context-menu {
         display: block;
         opacity: 1;
+    }
+
+    .context-menu {
+        display: none;
+        border: none;
+        left: auto;
+        float: none;
+        min-width: inherit;
+        padding: inherit;
+        margin: inherit;
+        z-index: 1000;
+        border-radius: 2px;
+        background-color: #FFF;
+        text-align: left;
+        opacity: 1;
+        overflow: hidden;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, .3);
+        position: relative;
     }
 
     .empty-list {
@@ -272,7 +290,7 @@
         display: block;
     }
 
-    li.active .dropdown-menu .connect-icon {
+    li.active .context-menu .connect-icon {
         background-image: url("../img/icons/connect_new_active.png");
     }
 
@@ -321,42 +339,8 @@
     .list-primary-tile {
         margin-top: -13px;
     }
-}
+    a {
+        color: #616161;
+    }
 
-
-// For context-menu
-.dropdown-menu {
-    display: none;
-    border: none;
-    left: auto;
-    float: none;
-    min-width: inherit;
-    padding: inherit;
-    margin: inherit;
-    z-index: 1000;
-    border-radius: 2px;
-    background-color: #FFF;
-    text-align: left;
-    opacity: 1;
-    overflow: hidden;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, .3);
-    position: relative;
-}
-
-// For tags drop-down
-.dropdown-menu.dropdown-menu--right {
-    position: absolute;
-    z-index: 1000;
-    border-radius: 2px;
-    background-color: #FFF;
-    text-align: left;
-    opacity: 0;
-    overflow: hidden;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, .3);
-    display: block;
-}
-
-
-.tag-list a {
-    color: #616161;
 }
