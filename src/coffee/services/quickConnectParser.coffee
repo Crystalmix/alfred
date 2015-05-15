@@ -34,8 +34,8 @@ alfredDirective.factory 'quickConnectParse', () ->
         parser.on 1, (value) ->
             value = value.split('@')
             if value.length is 2
-                options.ssh_username = value[0]
-                options.hostname = value[1]
+                options.username = value[0]
+                options.address = value[1]
 
         parser.on 2, (value) ->
             options.other_args = value
@@ -44,7 +44,7 @@ alfredDirective.factory 'quickConnectParse', () ->
         parser.parse(query)
 
         if cmd is 'ssh'
-            if not options.ssh_username or not options.hostname or options.other_args?
+            if not options.username or not options.address or options.other_args?
                 return {}
             options.port = 22 if not options.port?
             return options

@@ -220,7 +220,7 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
         # @param connection    json-object
         @enterCallback = (connection) ->
             if connection
-                connection_model = $scope.hosts.get(connection["#{constant.local_id}"]) or $scope.hosts.get(connection.id)
+                connection_model = $scope.hosts.get(connection["#{constant.local_id}"]) or $scope.hosts.get(connection.id) or connection
                 $scope.onEnterHostCallback({connection: connection_model})
 
         # Saves paramaters: fromConnection, fromHistories

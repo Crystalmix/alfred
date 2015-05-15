@@ -38,8 +38,8 @@
         parser.on(1, function(value) {
           value = value.split('@');
           if (value.length === 2) {
-            options.ssh_username = value[0];
-            return options.hostname = value[1];
+            options.username = value[0];
+            return options.address = value[1];
           }
         });
         parser.on(2, function(value) {
@@ -48,7 +48,7 @@
         query = input.replace(/\s+@/g, '@').replace(/@\s+/g, '@').split(/\s+/);
         parser.parse(query);
         if (cmd === 'ssh') {
-          if (!options.ssh_username || !options.hostname || (options.other_args != null)) {
+          if (!options.username || !options.address || (options.other_args != null)) {
             return {};
           }
           if (options.port == null) {
@@ -313,7 +313,7 @@
           this.enterCallback = function(connection) {
             var connection_model;
             if (connection) {
-              connection_model = $scope.hosts.get(connection["" + constant.local_id]) || $scope.hosts.get(connection.id);
+              connection_model = $scope.hosts.get(connection["" + constant.local_id]) || $scope.hosts.get(connection.id) || connection;
               return $scope.onEnterHostCallback({
                 connection: connection_model
               });
