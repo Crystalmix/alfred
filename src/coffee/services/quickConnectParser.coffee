@@ -9,7 +9,7 @@
         ssh    -p port    user@host
         ssh    -pport     user@host
 ###
-alfredDirective.factory 'quickConnectParse', () ->
+alfredDirective.factory "quickConnectParse", ["constant", (constant) ->
     ###
         Parses parameters
         @param input string that contains one of the possible cases
@@ -34,8 +34,8 @@ alfredDirective.factory 'quickConnectParse', () ->
         parser.on 1, (value) ->
             value = value.split('@')
             if value.length is 2
-                options.username = value[0]
-                options.address = value[1]
+                options[constant.host.username] = value[0]
+                options[constant.host.address] = value[1]
 
         parser.on 2, (value) ->
             options.other_args = value
@@ -44,9 +44,10 @@ alfredDirective.factory 'quickConnectParse', () ->
         parser.parse(query)
 
         if cmd is 'ssh'
-            if not options.username or not options.address or options.other_args?
+            if not options[constant.host.username] or not options[constant.host.address] or options.other_args?
                 return {}
             options.port = 22 if not options.port?
             return options
 
         return {}
+]

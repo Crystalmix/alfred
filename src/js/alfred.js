@@ -16,50 +16,52 @@
           ssh    -pport     user@host
    */
 
-  alfredDirective.factory('quickConnectParse', function() {
-    return {
+  alfredDirective.factory("quickConnectParse", [
+    "constant", function(constant) {
+      return {
 
-      /*
-          Parses parameters
-          @param input string that contains one of the possible cases
-       */
-      parse: function(input) {
-        var ARGS, cmd, options, parser, query;
-        options = {};
-        cmd = null;
-        ARGS = [['-p', '--port [NUMBER]', 'Port to connect to on the remote host.']];
-        parser = new optparse.OptionParser(ARGS);
-        parser.on('port', function(name, value) {
-          return options.port = value;
-        });
-        parser.on(0, function(value) {
-          return cmd = value;
-        });
-        parser.on(1, function(value) {
-          value = value.split('@');
-          if (value.length === 2) {
-            options.username = value[0];
-            return options.address = value[1];
+        /*
+            Parses parameters
+            @param input string that contains one of the possible cases
+         */
+        parse: function(input) {
+          var ARGS, cmd, options, parser, query;
+          options = {};
+          cmd = null;
+          ARGS = [['-p', '--port [NUMBER]', 'Port to connect to on the remote host.']];
+          parser = new optparse.OptionParser(ARGS);
+          parser.on('port', function(name, value) {
+            return options.port = value;
+          });
+          parser.on(0, function(value) {
+            return cmd = value;
+          });
+          parser.on(1, function(value) {
+            value = value.split('@');
+            if (value.length === 2) {
+              options[constant.host.username] = value[0];
+              return options[constant.host.address] = value[1];
+            }
+          });
+          parser.on(2, function(value) {
+            return options.other_args = value;
+          });
+          query = input.replace(/\s+@/g, '@').replace(/@\s+/g, '@').split(/\s+/);
+          parser.parse(query);
+          if (cmd === 'ssh') {
+            if (!options[constant.host.username] || !options[constant.host.address] || (options.other_args != null)) {
+              return {};
+            }
+            if (options.port == null) {
+              options.port = 22;
+            }
+            return options;
           }
-        });
-        parser.on(2, function(value) {
-          return options.other_args = value;
-        });
-        query = input.replace(/\s+@/g, '@').replace(/@\s+/g, '@').split(/\s+/);
-        parser.parse(query);
-        if (cmd === 'ssh') {
-          if (!options.username || !options.address || (options.other_args != null)) {
-            return {};
-          }
-          if (options.port == null) {
-            options.port = 22;
-          }
-          return options;
+          return {};
         }
-        return {};
-      }
-    };
-  });
+      };
+    }
+  ]);
 
 
   /*
@@ -71,7 +73,8 @@
     host: {
       label: "label",
       username: "username",
-      address: "address"
+      address: "address",
+      port: "port"
     },
     tag_host: {
       host: "host",
