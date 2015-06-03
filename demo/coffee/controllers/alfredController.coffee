@@ -43,7 +43,10 @@ class AlfredController
 
         sa = new SA("https://serverauditor.com")
         sa.init().done(=>
-            sa.auth("zhulduz.zhankenova@crystalnix.com","1")
+            sa.login("zhulduz.zhankenova@crystalnix.com", "1", yes, yes)
+            .done(->
+                sa.sync()
+            )
         )
         sa.on(sa.event_names.MERGED_FULL_SYNC, () => # if AUTH_REMOTE_SUCCESS then the synchronization will be started
             @scope.hosts = sa.hosts

@@ -4,6 +4,7 @@
 ###
 
 alfredDirective.constant("constant", {
+
     local_id: "local_id"
 
     host:

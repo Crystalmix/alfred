@@ -46,7 +46,9 @@
       sa = new SA("https://serverauditor.com");
       sa.init().done((function(_this) {
         return function() {
-          return sa.auth("zhulduz.zhankenova@crystalnix.com", "1");
+          return sa.login("zhulduz.zhankenova@crystalnix.com", "1", true, true).done(function() {
+            return sa.sync();
+          });
         };
       })(this));
       sa.on(sa.event_names.MERGED_FULL_SYNC, (function(_this) {

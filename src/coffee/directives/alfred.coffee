@@ -17,12 +17,13 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
         placeholder: "="
         template: "="
 
+        onAddGroupCallback: "&"
+        onEditGroupCallback: "&"
+
         onEnterHostCallback: "&"
         onAddHostCallback: "&"
         onEditHostCallback: "&"
 
-        onAddGroupCallback: "&"
-        onEditGroupCallback: "&"
 
     controller: ($scope, $element) ->
         $scope.query = null
@@ -290,19 +291,23 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
 
             do scope.safeApply
 
+
         initializeParameters = () ->
             scope.fromConnection = 0
             scope.fromHistory = 0
             scope.selectedIndex = 0
             scope.connectState = no
 
+
         initializeTableParameters = () ->
-            scope.isLeftActive = if scope.hosts.length then yes else no
-            scope.isRightActive = if scope.hosts.length then no else yes
+            scope.isLeftActive = if scope.hosts.length or (not scope.hosts.length and not scope.activities.length) then yes else no
+            scope.isRightActive = not scope.isLeftActive
+
 
         changeConnectState = (state) ->
             scope.connectState = state
             do scope.safeApply
+
 
         scope.keydown = () ->
             $timeout (->
@@ -314,6 +319,7 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
                     changeConnectState no
                     scope.$broadcast "quickConnect", null
             ), 50
+
 
         do initializeParameters
         do initializeTableParameters

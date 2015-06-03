@@ -104,11 +104,11 @@
           heightCell: "=",
           placeholder: "=",
           template: "=",
+          onAddGroupCallback: "&",
+          onEditGroupCallback: "&",
           onEnterHostCallback: "&",
           onAddHostCallback: "&",
-          onEditHostCallback: "&",
-          onAddGroupCallback: "&",
-          onEditGroupCallback: "&"
+          onEditHostCallback: "&"
         },
         controller: function($scope, $element) {
           var filter_hosts_by_chosen_tags, getConnections, getGroups, transformationData;
@@ -396,8 +396,8 @@
             return scope.connectState = false;
           };
           initializeTableParameters = function() {
-            scope.isLeftActive = scope.hosts.length ? true : false;
-            return scope.isRightActive = scope.hosts.length ? false : true;
+            scope.isLeftActive = scope.hosts.length || (!scope.hosts.length && !scope.activities.length) ? true : false;
+            return scope.isRightActive = !scope.isLeftActive;
           };
           changeConnectState = function(state) {
             scope.connectState = state;
