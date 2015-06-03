@@ -118,7 +118,7 @@
 }
 .alfred-widget .add-buttom {
   position: absolute !important;
-  bottom: 7px;
+  bottom: 12px;
   right: 24px;
 }
 .alfred-widget .list .list-row__primary {

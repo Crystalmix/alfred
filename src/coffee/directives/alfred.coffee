@@ -137,10 +137,8 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
 
 
         $scope.changeActiveList = () ->
-            if $scope.connections.length and $scope.activities.length
-                $scope.isLeftActive = not $scope.isLeftActive
-                $scope.isRightActive = not $scope.isRightActive
-            return no
+            $scope.isLeftActive = not $scope.isLeftActive
+            $scope.isRightActive = not $scope.isRightActive
 
 
         $scope.enter = () =>
@@ -300,8 +298,8 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
 
 
         initializeTableParameters = () ->
-            scope.isLeftActive = if scope.hosts.length or (not scope.hosts.length and not scope.activities.length) then yes else no
-            scope.isRightActive = not scope.isLeftActive
+            scope.isLeftActive = yes
+            scope.isRightActive = no
 
 
         changeConnectState = (state) ->
