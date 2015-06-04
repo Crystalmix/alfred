@@ -6,8 +6,8 @@
                 <div class="tollbar-container">
 
                     <!--Search field-->
-                    <div flex-container="row">
-                        <div flex-item="10">
+                    <div class="input-row">
+                        <div class="input-fiedls">
                             <!--Template from LUMX-->
                             <lx-text-field label={{placeholder}} fixed-label="true">
                                 <input type="text"
@@ -18,7 +18,7 @@
                             <!--End Template from LUMX-->
                         </div>
 
-                        <div class="menu-toolbar" flex-item="2">
+                        <div class="menu-toolbar">
                             <button class="btn btn--m btn--blue btn--flat" lx-ripple>
                                 <!--Buttons for hosts-->
                                 <span ng-if="isLeftActive && !connectState"

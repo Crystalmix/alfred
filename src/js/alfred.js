@@ -111,7 +111,7 @@
           onEditHostCallback: "&"
         },
         controller: function($scope, $element) {
-          var filter_hosts_by_chosen_tags, getConnections, getGroups, transformationData;
+          var filter_hosts_by_chosen_tags, getConnections, getGroups, parseConnect, transformationData;
           $scope.query = null;
           $scope.selectedIndex = 0;
           $scope.chosen_tags = [];
@@ -194,6 +194,18 @@
               return getConnections();
             }
           };
+          parseConnect = (function(_this) {
+            return function(json) {
+              var connection, e;
+              try {
+                connection = quickConnectParse.parse(json);
+                return _this.enterCallback(connection);
+              } catch (_error) {
+                e = _error;
+                return console.warn(e, json);
+              }
+            };
+          })(this);
           $scope.isChosenTag = function(tag) {
             tag = tag ? _.findWhere($scope.chosen_tags, {
               local_id: tag["" + constant.local_id]
@@ -238,10 +250,8 @@
           };
           $scope.enter = (function(_this) {
             return function() {
-              var connection;
               if ($scope.query && $scope.query.indexOf("ssh") !== -1) {
-                connection = quickConnectParse.parse($scope.query);
-                return _this.enterCallback(connection);
+                return parseConnect($scope.query);
               }
             };
           })(this);
@@ -262,27 +272,31 @@
             }
           };
           jwerty.key('→', (function() {
-            if ($scope.is_interrupt_arrow_commands === true && $scope.activities.length) {
+            if ($scope.is_interrupt_arrow_commands === true) {
               $scope.isLeftActive = false;
-              return $scope.isRightActive = true;
-            } else if ($scope.scope.is_interrupt_arrow_commands === false) {
+              $scope.isRightActive = true;
+              return false;
+            } else {
               return true;
             }
           }), $element);
           jwerty.key('←', (function() {
-            if ($scope.is_interrupt_arrow_commands === true && $scope.hosts.length) {
+            if ($scope.is_interrupt_arrow_commands === true) {
               $scope.isLeftActive = true;
-              return $scope.isRightActive = false;
-            } else if ($scope.scope.is_interrupt_arrow_commands === false) {
+              $scope.isRightActive = false;
+              return false;
+            } else {
               return true;
             }
           }), $element);
           jwerty.key('⇥', (function() {
-            if ($scope.is_interrupt_arrow_commands === false && $scope.hosts.length && $scope.activities.length) {
+            if ($scope.is_interrupt_arrow_commands === true) {
               $scope.isLeftActive = !$scope.isLeftActive;
               $scope.isRightActive = !$scope.isRightActive;
+              return false;
+            } else {
+              return true;
             }
-            return false;
           }), $element);
           jwerty.key('↑', (function() {
             $scope.$broadcast("arrow", "up");
@@ -294,10 +308,8 @@
           }), $element);
           jwerty.key('↩', ((function(_this) {
             return function() {
-              var connection;
               if ($scope.query && $scope.query.indexOf("ssh") !== -1) {
-                connection = quickConnectParse.parse($scope.query);
-                return _this.enterCallback(connection);
+                return parseConnect($scope.query);
               } else {
                 return $scope.$broadcast("enter");
               }
@@ -310,12 +322,12 @@
           this.setSelectedIndex = function(key) {
             return $scope.setSelectedConnection(key);
           };
-          this.enterCallback = function(connection) {
-            var connection_model;
-            if (connection) {
-              connection_model = $scope.hosts.get(connection["" + constant.local_id]) || $scope.hosts.get(connection.id) || connection;
+          this.enterCallback = function(host) {
+            var host_model;
+            if (host) {
+              host_model = $scope.hosts.get(host["" + constant.local_id]) || host;
               return $scope.onEnterHostCallback({
-                connection: connection_model
+                host: host_model
               });
             }
           };
@@ -404,11 +416,9 @@
             return $timeout((function() {
               checkQuery();
               if (scope.query && scope.query.indexOf("ssh") === 0) {
-                changeConnectState(true);
-                return scope.$broadcast("quickConnect", scope.query);
+                return changeConnectState(true);
               } else {
-                changeConnectState(false);
-                return scope.$broadcast("quickConnect", null);
+                return changeConnectState(false);
               }
             }), 50);
           };
@@ -536,12 +546,8 @@
           if (scope.subConnections[key] != null) {
             scope.setSelectedConnection(key);
             connection = scope.subConnections[key];
-            return scope.connect(null, connection, key);
+            return scope.connect(connection, key);
           }
-        });
-        scope.$on('quickConnect', function(event, params) {
-          scope.quickConnectionsParams = params;
-          return scope.safeApply();
         });
         scope.addConnection = function($event) {
           $event.preventDefault();
@@ -710,6 +716,6 @@
 }).call(this);
 
 angular.module('alfredDirective').run(['$templateCache', function ($templateCache) {
-	$templateCache.put('src/templates/alfred.html', '<div id="{{ uid }}" class="alfred-widget" flex-container="row"> <div class="alfred" flex-item="8"> <div class="alfred-box"> <div class="toolbar alfred-toolbar"> <div class="tollbar-container"> <div flex-container="row"> <div flex-item="10"> <lx-text-field label={{placeholder}} fixed-label="true"> <input type="text" id="alfred-input" ng-model="query" ng-keydown="keydown($event)"> </lx-text-field> </div> <div class="menu-toolbar" flex-item="2"> <button class="btn btn--m btn--blue btn--flat" lx-ripple> <span ng-if="isLeftActive && !connectState" ng-click="changeActiveList()">Activity</span> <span ng-if="isLeftActive && connectState" ng-click="enter()">connect</span> <!--Button for activities--> <span> <i ng-if="isRightActive" class="mdi mdi-keyboard-backspace" ng-click="changeActiveList()"></i> </span> </button> </div> </div> <!--Filters by group, tag--> <div flex-container="row"> <div flex-item="8"> <div ng-if="path_groups.length" class="parent-group"> <ul> <li class="parent-group-list"> <a ng-click="filterByGroup(null)"><b>All hosts</b></a> </li> <li class="parent-group-list" ng-repeat="group in path_groups"> <a ng-click="filterByGroup(group)"> <i class="mdi mdi-chevron-right"></i> {{ group.label }} </a> </li> </ul> </div> <!--Child groups--> <div class="children-group"> <ul> <li ng-repeat="group in children_group"> <button class="btn btn--l group-child" lx-ripple context-menu class="panel panel-default position-fixed" data-target="child_group-{{ uid }}-{{ $index }}" ng-class="{ \'highlight\': highlight, \'expanded\' : expanded }" ng-click="filterByGroup(group)"> <i class="group-child"></i> {{ group.label }} </button> <div class="dropdown position-fixed" id="child_group-{{ uid }}-{{ $index }}"> <ul class="list context-menu" role="menu"> <li class="list-row" ng-click="editGroup(group)"> <div class="list-row__primary"> <i class="mdi mdi-pencil"></i> </div> <div class="list-row__content"> <span>Edit</span> </div> </li> </ul> </div> </li> </ul> </div> </div> <div flex-item="4"> <div class="tags"> <lx-dropdown class="tag-toolbar" position="right"> <button class="btn btn--m btn--icon" lx-ripple lx-dropdown-toggle> <i class="mdi mdi-tag tag"></i> </button> <lx-dropdown-menu> <ul class="tag-list"> <li class="list-row list-row--has-primary"> <div class="list-primary-tile"> <i ng-if="false" class="mdi mdi-check"></i> </div> <div class="list-content-tile"> <a class="dropdown-link" ng-click="filterByTag()"><b>Deselect all</b></a> </div> </li> <li class="list-row list-row--has-primary" ng-repeat="tag in copy_tags"> <div class="list-primary-tile"> <i ng-if="isChosenTag(tag)" class="mdi mdi-check"></i> </div> <div class="list-content-tile"> <a class="dropdown-link" ng-click="filterByTag(tag)">{{ tag.label }}</a> </div> </li> </ul> </lx-dropdown-menu> </lx-dropdown> <ul> <li class="mb" ng-repeat="tag in chosen_tags"> <button class="btn btn--s btn--blue btn--raised" ng-click="filterByTag(tag)" lx-ripple>{{ tag.label }} </button> </li> </ul> </div> </div> </div> </div> </div> <!--List--> <div class="content-box"> <div class="table"> <div id="left" ng-class="{ active: isLeftActive }" ng-if="isLeftActive"> <div class="left-list" ng-if="isLeftActive"> <active-list connections="connections" uid="uid" amount="amount" height-cell="heightCell" query="query" from="fromConnection" selected-index="selectedIndex" current-group="current_group"> </active-list> </div> </div> <div id="right" ng-class="{ active: isRightActive }" ng-if="isRightActive"> <div class="left-list" ng-if="isRightActive"> <active-list connections="activities" uid="uid" amount="amount" height-cell="heightCell" query="query" from="fromHistory" selected-index="selectedIndex" current-group="current_group"> </active-list> </div> </div> </div> </div> </div> </div> </div> ');
-	$templateCache.put('src/templates/active-connections.html', '<div id="fixed" when-scrolled="loadMore()"> <ul class="list"> <li ng-repeat="(key,connection) in subConnections=(connections | filterConnections:query:from:offset:this) track by key" id="{{ key }}" ng-click="select($event, key)" ng-dblclick="connect(connection, key)" connection-item="connection" key="{{ key }}" ng-class="{ active: (key===selectedIndex) }" ng-style="setHeight()" context-menu class="panel panel-default position-fixed list-row" data-target="menu-{{ uid }}-{{ $index }}" ng-class="{ \'highlight\': highlight, \'expanded\' : expanded }"> <div class="list-row__primary"> <i class="icon icon--l host_default_icon"></i> </div> <div class="list-row__content"> <span ng-if="connection.label" class="display-block">{{ connection.label }}</span> <span ng-if="!connection.label && connection.username" class="display-block">{{ connection.username }}@{{ connection.address }}</span> <span ng-if="!connection.label && !connection.username" class="display-block">{{ connection.address }}</span> <div class="dropdown position-fixed" id="menu-{{ uid }}-{{ $index }}"> <ul class="list context-menu host-menu" role="menu"> <li class="list-row" ng-click="connect(connection, key)"> <div class="list-row__primary"> <i class="connect-icon"></i> </div> <div class="list-row__content"> Connect </div> </li> <li class="list-row" ng-if="!isHistory(connection)" ng-click="edit(connection)"> <div class="list-row__primary"> <i class="mdi mdi-pencil"></i> </div> <div class="list-row__content"> <span>Edit</span> </div> </li> </ul> </div> </div> </li> <li ng-if="!subConnections.length" ng-style="setHeight()" class="panel panel-default position-fixed list-row"> <div class="list-row__content empty-list"> <span class="display-block"> There is nothing </span> </div> </li> <div class="fab add-buttom"> <button class="fab__primary btn btn--l btn--blue btn--fab" lx-ripple> <i class="mdi mdi-plus"></i> <i class="mdi mdi-plus"></i> </button> <div class="fab__actions fab__actions--left"> <button class="btn btn--m btn--blue btn--fab" lx-ripple lx-tooltip="Add new group" tooltip-position="top" ng-click="addGroup($event)"> <i class="add_new_group"></i> </button> <button class="btn btn--m btn--blue btn--fab" lx-ripple lx-tooltip="Add new host" tooltip-position="top" ng-click="addConnection($event)"> <i class="add_new_host"></i> </button> </div> </div> </ul> </div> <div class="scroller" ng-if="filteredConnections.length> amount"> <div class="sizer" ng-style="setSizerHeight()"></div> <div class="slider" ng-style="setSliderHeight()"></div> </div> ');
+	$templateCache.put('src/templates/alfred.html', '<div id="{{ uid }}" class="alfred-widget" flex-container="row"> <div class="alfred" flex-item="8"> <div class="alfred-box"> <div class="toolbar alfred-toolbar"> <div class="tollbar-container"> <div class="input-row"> <div class="input-fiedls"> <lx-text-field label={{placeholder}} fixed-label="true"> <input type="text" ng-model="query" ng-keydown="keydown($event)"> </lx-text-field> </div> <div class="menu-toolbar"> <button class="btn btn--m btn--blue btn--flat" lx-ripple> <span ng-if="isLeftActive && !connectState" ng-click="changeActiveList()">Activity</span> <span ng-if="isLeftActive && connectState" ng-click="enter()">connect</span> <!--Button for activities--> <span> <i ng-if="isRightActive" class="mdi mdi-keyboard-backspace" ng-click="changeActiveList()"></i> </span> </button> </div> </div> <!--Filters by group, tag--> <div flex-container="row"> <div flex-item="8"> <div ng-if="path_groups.length" class="parent-group"> <ul> <li class="parent-group-list"> <a ng-click="filterByGroup(null)"><b>All hosts</b></a> </li> <li class="parent-group-list" ng-repeat="group in path_groups"> <a ng-click="filterByGroup(group)"> <i class="mdi mdi-chevron-right"></i> {{ group.label }} </a> </li> </ul> </div> <!--Child groups--> <div class="children-group"> <ul> <li ng-repeat="group in children_group"> <button class="btn btn--l group-child" lx-ripple context-menu class="panel panel-default position-fixed" data-target="child_group-{{ uid }}-{{ $index }}" ng-class="{ \'highlight\': highlight, \'expanded\' : expanded }" ng-click="filterByGroup(group)"> <i class="group-child"></i> {{ group.label }} </button> <div class="dropdown position-fixed" id="child_group-{{ uid }}-{{ $index }}"> <ul class="list context-menu" role="menu"> <li class="list-row" ng-click="editGroup(group)"> <div class="list-row__primary"> <i class="mdi mdi-pencil"></i> </div> <div class="list-row__content"> <span>Edit</span> </div> </li> </ul> </div> </li> </ul> </div> </div> <div flex-item="4"> <div class="tags"> <lx-dropdown class="tag-toolbar" position="right"> <button class="btn btn--m btn--icon" lx-ripple lx-dropdown-toggle> <i class="mdi mdi-tag tag"></i> </button> <lx-dropdown-menu> <ul class="tag-list"> <li class="list-row list-row--has-primary"> <div class="list-primary-tile"> <i ng-if="false" class="mdi mdi-check"></i> </div> <div class="list-content-tile"> <a class="dropdown-link" ng-click="filterByTag()"><b>Deselect all</b></a> </div> </li> <li class="list-row list-row--has-primary" ng-repeat="tag in copy_tags"> <div class="list-primary-tile"> <i ng-if="isChosenTag(tag)" class="mdi mdi-check"></i> </div> <div class="list-content-tile"> <a class="dropdown-link" ng-click="filterByTag(tag)">{{ tag.label }}</a> </div> </li> </ul> </lx-dropdown-menu> </lx-dropdown> <ul> <li class="mb" ng-repeat="tag in chosen_tags"> <button class="btn btn--s btn--blue btn--raised" ng-click="filterByTag(tag)" lx-ripple>{{ tag.label }} </button> </li> </ul> </div> </div> </div> </div> </div> <!--List--> <div class="content-box"> <div class="table"> <div id="left" ng-class="{ active: isLeftActive }" ng-if="isLeftActive"> <div class="left-list" ng-if="isLeftActive"> <active-list connections="connections" uid="uid" amount="amount" height-cell="heightCell" query="query" from="fromConnection" selected-index="selectedIndex" current-group="current_group"> </active-list> </div> </div> <div id="right" ng-class="{ active: isRightActive }" ng-if="isRightActive"> <div class="left-list" ng-if="isRightActive"> <active-list connections="activities" uid="uid" amount="amount" height-cell="heightCell" query="query" from="fromHistory" selected-index="selectedIndex" current-group="current_group"> </active-list> </div> </div> </div> </div> </div> </div> </div> ');
+	$templateCache.put('src/templates/active-connections.html', '<div id="fixed" when-scrolled="loadMore()"> <ul class="list"> <li ng-repeat="(key,connection) in subConnections=(connections | filterConnections:query:from:offset:this) track by key" id="{{ key }}" ng-click="select($event, key)" ng-dblclick="connect(connection, key)" connection-item="connection" key="{{ key }}" ng-class="{ active: (key===selectedIndex) }" ng-style="setHeight()" context-menu class="panel panel-default position-fixed list-row" data-target="menu-{{ uid }}-{{ $index }}" ng-class="{ \'highlight\': highlight, \'expanded\' : expanded }"> <div class="list-row__primary"> <i class="icon icon--l host_default_icon"></i> </div> <div class="list-row__content"> <span ng-if="connection.label" class="display-block">{{ connection.label }}</span> <span ng-if="!connection.label && connection.username" class="display-block">{{ connection.username }}@{{ connection.address }}</span> <span ng-if="!connection.label && !connection.username" class="display-block">{{ connection.address }}</span> <div class="dropdown position-fixed" id="menu-{{ uid }}-{{ $index }}"> <ul class="list context-menu host-menu" role="menu"> <li class="list-row" ng-click="connect(connection, key)"> <div class="list-row__primary"> <i class="connect-icon"></i> </div> <div class="list-row__content"> Connect </div> </li> <li class="list-row" ng-if="!isHistory(connection)" ng-click="edit(connection)"> <div class="list-row__primary"> <i class="mdi mdi-pencil"></i> </div> <div class="list-row__content"> <span>Edit</span> </div> </li> </ul> </div> </div> </li> <li ng-if="!subConnections.length" ng-style="setHeight()" class="panel panel-default position-fixed list-row"> <div class="list-row__content empty-list"> <span class="display-block"> </span> </div> </li> <div class="fab add-buttom"> <button class="fab__primary btn btn--l btn--blue btn--fab" lx-ripple> <i class="mdi mdi-plus"></i> <i class="mdi mdi-plus"></i> </button> <div class="fab__actions fab__actions--left"> <button class="btn btn--m btn--blue btn--fab" lx-ripple lx-tooltip="Add new group" tooltip-position="top" ng-click="addGroup($event)"> <i class="add_new_group"></i> </button> <button class="btn btn--m btn--blue btn--fab" lx-ripple lx-tooltip="Add new host" tooltip-position="top" ng-click="addConnection($event)"> <i class="add_new_host"></i> </button> </div> </div> </ul> </div> <div class="scroller" ng-if="filteredConnections.length> amount"> <div class="sizer" ng-style="setSizerHeight()"></div> <div class="slider" ng-style="setSliderHeight()"></div> </div> ');
 }]);

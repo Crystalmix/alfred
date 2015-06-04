@@ -119,17 +119,10 @@ alfredDirective.directive "activeList",  () ->
                 if scope.subConnections[key]?
                     scope.setSelectedConnection(key)
                     connection = scope.subConnections[key]
-                    scope.connect null, connection, key
+                    scope.connect connection, key
             )
 
             # Listens to parent events 'quickConnect'
-            #
-            # @param event    jQuery event
-            # @param params   parameters from command quick connection
-            scope.$on('quickConnect', (event, params) ->
-                scope.quickConnectionsParams = params
-                do scope.safeApply
-            )
 
             scope.addConnection = ($event) ->
                 do $event.preventDefault

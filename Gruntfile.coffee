@@ -1,4 +1,5 @@
 coffeePath = "src/coffee"
+cssPath = "src/css"
 
 module.exports = (grunt) ->
     grunt.initConfig
@@ -10,6 +11,9 @@ module.exports = (grunt) ->
             dev:
                 files: ["demo/coffee/**/*.coffee"],
                 tasks: ['demo'],
+            less:
+                files: ["#{cssPath}/*.less"],
+                tasks: ['less'],
 
         concat:
             dist:

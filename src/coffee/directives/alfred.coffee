@@ -106,6 +106,15 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
             do getConnections if $scope.hosts
 
 
+        # Parsers json
+        parseConnect = (json) =>
+            try
+                connection = quickConnectParse.parse json
+                @enterCallback connection
+            catch e
+                console.warn e, json
+
+
         $scope.isChosenTag = (tag) ->
             tag = if tag then _.findWhere($scope.chosen_tags, {local_id: tag["#{constant.local_id}"]}) else []
             if tag
@@ -143,8 +152,7 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
 
         $scope.enter = () =>
             if $scope.query and $scope.query.indexOf("ssh") isnt -1
-                connection = quickConnectParse.parse $scope.query
-                @enterCallback connection
+                parseConnect $scope.query
 
 
         $scope.editGroup = (group) ->
@@ -157,29 +165,35 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
                 if expr then $scope.$apply expr else do $scope.$apply
 
 
+        # --- Defines hotkeys
+
         jwerty.key '→', (->
-            if $scope.is_interrupt_arrow_commands is yes and $scope.activities.length
+            if $scope.is_interrupt_arrow_commands is yes
                 $scope.isLeftActive = no
                 $scope.isRightActive = yes
-            else if $scope.scope.is_interrupt_arrow_commands is no
+                return no
+            else
                 return yes
         ), $element
 
 
         jwerty.key '←', (->
-            if $scope.is_interrupt_arrow_commands is yes and $scope.hosts.length
+            if $scope.is_interrupt_arrow_commands is yes
                 $scope.isLeftActive = yes
                 $scope.isRightActive = no
-            else if $scope.scope.is_interrupt_arrow_commands is no
+                return no
+            else
                 return yes
         ), $element
 
 
         jwerty.key '⇥', (->
-            if $scope.is_interrupt_arrow_commands is no and $scope.hosts.length and $scope.activities.length
+            if $scope.is_interrupt_arrow_commands is yes
                 $scope.isLeftActive = not $scope.isLeftActive
                 $scope.isRightActive = not $scope.isRightActive
-            return no
+                return no
+            else
+                return yes
         ), $element
 
 
@@ -197,12 +211,12 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
 
         jwerty.key '↩', (=>
             if $scope.query and $scope.query.indexOf("ssh") isnt -1
-                connection = quickConnectParse.parse $scope.query
-                @enterCallback connection
+                parseConnect $scope.query
             else
                 $scope.$broadcast "enter"
         ), $element
 
+        # --- End Defines hotkeys
 
         ###
             Methods are api between alfred directive and child directives
@@ -217,10 +231,11 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
         # Calls callback function on event 'enter'
         #
         # @param connection    json-object
-        @enterCallback = (connection) ->
-            if connection
-                connection_model = $scope.hosts.get(connection["#{constant.local_id}"]) or $scope.hosts.get(connection.id) or connection
-                $scope.onEnterHostCallback({connection: connection_model})
+        @enterCallback = (host) ->
+            if host
+                host_model = $scope.hosts.get(host["#{constant.local_id}"]) or host
+                $scope.onEnterHostCallback({host: host_model})
+
 
         # Saves paramaters: fromConnection, fromHistories
         @changeFromProperty = (from) ->
@@ -312,10 +327,8 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
                 do checkQuery
                 if scope.query and scope.query.indexOf("ssh") is 0
                     changeConnectState yes
-                    scope.$broadcast "quickConnect", scope.query   # If it is quick connect we should add element with parameters to the list
                 else
                     changeConnectState no
-                    scope.$broadcast "quickConnect", null
             ), 50
 
 

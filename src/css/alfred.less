@@ -128,10 +128,22 @@
     }
 
     .alfred-toolbar {
-
-        .menu-toolbar {
-            text-align: right;
+        .input-row {
+            width: 100%;
+            position: relative;
+            .input-fiedls {
+                margin-right: 100px;
+                min-width: 215px;
+                overflow: hidden;
+            }
+            .menu-toolbar {
+                position: absolute;
+                right: 0;
+                top: 7px;
+                z-index: 100;
+            }
         }
+
 
         .head-groups, .bottom-group {
             display: -webkit-inline-box;
