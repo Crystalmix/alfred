@@ -1,5 +1,6 @@
 coffeePath = "src/coffee"
 cssPath = "src/css"
+templatePath = "src/templates"
 
 module.exports = (grunt) ->
     grunt.initConfig
@@ -14,6 +15,10 @@ module.exports = (grunt) ->
             less:
                 files: ["#{cssPath}/*.less"],
                 tasks: ['less'],
+            html:
+                files: ["#{templatePath}/*.html"],
+                tasks: ['ngTemplateCache', 'concat:addTemplates'],
+
 
         concat:
             dist:
