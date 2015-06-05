@@ -36,7 +36,6 @@
     }
     .alfred {
         width: 80%;
-        margin: 0 auto;
         min-width: 230px;
         background-color: #fff;
     }
@@ -360,4 +359,26 @@
 
 .btn, .text-field__input, span.display-block, .dropdown-link {
     cursor: default;
+}
+
+.flex-list {
+    width: 80% !important;
+    margin: 0 auto;
+    max-width: 750px !important;
+    min-width: 400px !important;
+    -webkit-transition: all 500ms;
+    transition: all 500ms;
+    flex: none !important;
+    height: 85%;
+    margin-top: 101px;
+    min-height: 150px;
+}
+
+.alfred-widget[max-width^="500px"] .flex-list {
+    width: 100% !important;
+}
+
+.alfred-widget[max-height^="660px"] .flex-list {
+    height: 100% !important;
+    margin-top: 0;
 }
