@@ -315,3 +315,9 @@
 .tag-list a {
   color: #616161;
 }
+.btn,
+.text-field__input,
+span.display-block,
+.dropdown-link {
+  cursor: default;
+}

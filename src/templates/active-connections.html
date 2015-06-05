@@ -3,9 +3,8 @@
         <li
                 ng-repeat="(key,connection) in subConnections = (connections | filterConnections:query:from:offset:this) track by key"
                 id="{{ key }}"
-                ng-click="select($event, key)"
+                ng-click="select(key)"
                 ng-dblclick="connect(connection, key)"
-                connection-item="connection"
                 key="{{ key }}"
                 ng-class="{ active: (key === selectedIndex) }"
                 ng-style="setHeight()"

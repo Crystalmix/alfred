@@ -19,20 +19,19 @@
                         </div>
 
                         <div class="menu-toolbar">
-                            <button class="btn btn--m btn--blue btn--flat" lx-ripple>
-                                <!--Buttons for hosts-->
-                                <span ng-if="isLeftActive && !connectState"
-                                      ng-click="changeActiveList()">Activity</span>
-                                <span ng-if="isLeftActive && connectState" ng-click="enter()">connect</span>
-                                <!--End Buttons for hosts-->
+                            <!--Switch to activity/host-->
+                            <button class="btn btn--m btn--blue btn--flat" lx-ripple ng-click="changeActiveList()">
+                                <span ng-if="isLeftActive && !connectState">activity</span>
 
-                                <!--Button for activities-->
-                                <span>
-                                    <i ng-if="isRightActive" class="mdi mdi-keyboard-backspace"
-                                       ng-click="changeActiveList()"></i>
-                                </span>
-                                <!--End Button for activities-->
+                                <span ng-if="isRightActive"><i class="mdi mdi-keyboard-backspace"></i></span>
                             </button>
+                            <!--End Switch to activity/host-->
+
+                            <!--Buttons for quick connect-->
+                            <button class="btn btn--m btn--blue btn--flat" lx-ripple ng-if="isLeftActive && connectState" ng-click="enter()">
+                                <span>connect</span>
+                            </button>
+                            <!--End Buttons for quick connect-->
                         </div>
                     </div>
                     <!--End Search field-->

@@ -54,14 +54,6 @@ alfredDirective.directive "activeList",  () ->
                     ++$scope.from
                     ++$scope.offset
 
-            # Checks is it history entity
-            #
-            #@param connection    json-object
-            $scope.isHistory = (connection) ->
-                if connection.is_history
-                    return yes
-                return no
-
 
             $scope.safeApply = (expr) ->
                 unless $scope.$$phase
@@ -121,29 +113,34 @@ alfredDirective.directive "activeList",  () ->
                     connection = scope.subConnections[key]
                     scope.connect connection, key
             )
-
-            # Listens to parent events 'quickConnect'
+            # End Listens to parent events 'quickConnect'
 
             scope.addConnection = ($event) ->
                 do $event.preventDefault
                 do $event.stopPropagation
                 alfredCtrl.addConnection(scope.currentGroup)
 
+
             scope.addGroup = ($event) ->
                 do $event.preventDefault
                 do $event.stopPropagation
                 alfredCtrl.addGroup(scope.currentGroup)
 
+
             scope.edit = (connection) ->
                 alfredCtrl.edit(connection)
 
+
             scope.select = (key) ->
                 scope.setSelectedConnection key
+                return no
+
 
 
             scope.connect = (connection, key) ->
                 scope.select key
                 alfredCtrl.enterCallback connection
+                return no
 
 
             scope.changeSlider = () ->
