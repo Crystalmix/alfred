@@ -152,7 +152,6 @@
   position: absolute;
   right: 0;
   top: 7px;
-  z-index: 100;
 }
 .alfred-widget .alfred-toolbar .head-groups,
 .alfred-widget .alfred-toolbar .bottom-group {

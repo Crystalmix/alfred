@@ -136,7 +136,6 @@ alfredDirective.directive "activeList",  () ->
                 return no
 
 
-
             scope.connect = (connection, key) ->
                 scope.select key
                 alfredCtrl.enterCallback connection

@@ -8,7 +8,7 @@
                 key="{{ key }}"
                 ng-class="{ active: (key === selectedIndex) }"
                 ng-style="setHeight()"
-                context-menu
+                context-menu="select(key)"
                 class="panel panel-default position-fixed list-row"
                 data-target="menu-{{ uid }}-{{ $index }}"
                 ng-class="{ 'highlight': highlight, 'expanded' : expanded }">
