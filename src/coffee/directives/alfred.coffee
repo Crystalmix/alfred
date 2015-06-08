@@ -27,7 +27,6 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
 
     controller: ($scope, $element) ->
         $scope.query = null
-        $scope.selectedIndex = 0
         $scope.chosen_tags = []
         $scope.current_group = null
         $scope.children_group = []
@@ -87,9 +86,9 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
 
             _.each $scope.connections, (val, key) ->
                 #TODO make correct merge configs
-                ssh_identity = $scope.hosts.models[key].get_ssh_identity()
-                if ssh_identity
-                    val.username = $scope.hosts.models[key].get("#{constant.host.username}")
+                username_object = $scope.hosts.models[key].get_merged_username()
+                if username_object and username_object.username
+                    val.username = username_object.username
                 else
                     val.username = null
 
@@ -308,7 +307,7 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
         initializeParameters = () ->
             scope.fromConnection = 0
             scope.fromHistory = 0
-            scope.selectedIndex = 0
+            scope.selectedIndex = null
             scope.connectState = no
 
 

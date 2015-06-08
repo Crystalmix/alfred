@@ -46,14 +46,30 @@
 .alfred-widget .table-data {
   vertical-align: top;
 }
-.alfred-widget li.active,
-.alfred-widget li.active .context-menu i {
-  color: #2196F3;
+.alfred-widget li.active {
+  color: white;
+  background-color: #2196F3;
 }
 .alfred-widget li.active .context-menu span,
 .alfred-widget .context-menu span,
 .alfred-widget li {
   color: #616161;
+}
+.alfred-widget .host-menu li.list-row {
+  border-left: 3px solid transparent;
+  margin: 4px 0 0 0;
+  padding: 0 20px;
+}
+.alfred-widget .host-menu li.list-row span.display-block.fs-body-1.description.ng-binding {
+  color: rgba(0, 0, 0, 0.54);
+  font-size: 12px;
+}
+.alfred-widget .host-menu li.list-row:last-child {
+  margin: 4px 0;
+}
+.alfred-widget .host-menu li.list-row:hover {
+  background: whitesmoke;
+  border-left: 3px solid #616161;
 }
 .alfred-widget #right {
   width: 100%;
@@ -268,9 +284,6 @@
   width: 16px;
   height: 16px;
   display: block;
-}
-.alfred-widget li.active .context-menu .connect-icon {
-  background-image: url("../img/icons/connect_new_active.png");
 }
 .alfred-widget .context-menu .list-row__primary {
   width: 32px;

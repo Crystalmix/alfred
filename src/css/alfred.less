@@ -45,11 +45,34 @@
     .table-data {
         vertical-align: top;
     }
-    li.active, li.active .context-menu i {
-        color: #2196F3;
+    li.active {
+        color: white;
+        background-color: #2196F3;
     }
+    //li.active .context-menu i {
+    //    color: #2196F3;
+    //}
+
     li.active .context-menu span, .context-menu span, li {
         color: #616161
+    }
+
+    .host-menu li.list-row {
+        border-left: 3px solid transparent;
+        margin: 4px 0 0 0;
+        padding: 0 20px;
+
+        span.display-block.fs-body-1.description.ng-binding {
+            color: rgba(0, 0, 0, 0.54);
+            font-size: 12px;
+        }
+    }
+    .host-menu li.list-row:last-child {
+        margin: 4px 0;
+    }
+    .host-menu li.list-row:hover {
+        background: whitesmoke;
+        border-left: 3px solid #616161;
     }
 
     #right {
@@ -301,9 +324,9 @@
         display: block;
     }
 
-    li.active .context-menu .connect-icon {
-        background-image: url("../img/icons/connect_new_active.png");
-    }
+    //li.active .context-menu .connect-icon {
+    //    background-image: url("../img/icons/connect_new_active.png");
+    //}
 
     .context-menu .list-row__primary {
         width: 32px;

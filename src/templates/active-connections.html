@@ -18,10 +18,9 @@
             </div>
             <div class="list-row__content">
                 <span ng-if="connection.label" class="display-block">{{ connection.label }}</span>
-                <span ng-if="!connection.label && connection.username"
-                      class="display-block">{{ connection.username }}@{{ connection.address }}</span>
-                <span ng-if="!connection.label && !connection.username"
-                      class="display-block">{{ connection.address }}</span>
+                <span ng-if="!connection.label" class="display-block">{{ connection.address }}</span>
+                <span class="display-block fs-body-1 description">{{ connection.username }}</span>
+
                 <!--Includes context menu for each cell-->
                 <div class="dropdown position-fixed" id="menu-{{ uid }}-{{ $index }}">
                     <ul class="list context-menu host-menu" role="menu">
@@ -53,6 +52,8 @@
                 </span>
             </div>
         </li>
+
+        <!-- Add buttons -->
         <div class="fab add-buttom">
             <button class="fab__primary btn btn--l btn--blue btn--fab" lx-ripple>
                 <i class="mdi mdi-plus"></i>
@@ -72,6 +73,7 @@
                 </button>
             </div>
         </div>
+        <!-- End Add buttons -->
 
     </ul>
 </div>
