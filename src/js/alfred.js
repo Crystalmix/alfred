@@ -347,12 +347,13 @@
             }
             return $scope.safeApply();
           };
-          this.edit = function(connection) {
+          this.edit = function(connection, always_open_form) {
             var connection_model;
             if (connection) {
               connection_model = $scope.hosts.get(connection["" + constant.local_id]) || $scope.hosts.get(connection.id);
               return $scope.onEditHostCallback({
-                connection: connection_model
+                connection: connection_model,
+                always_open_form: always_open_form
               });
             }
           };
@@ -475,12 +476,6 @@
           $scope.from = 0;
           return $scope.setSelectedConnection(0);
         };
-        $scope.setSelectedConnection = function(index) {
-          return $scope.selectedIndex = index;
-        };
-        $scope.getSelectedConnection = function() {
-          return $scope.selectedIndex;
-        };
         $scope.loadUp = function() {
           if ($scope.filteredConnections[$scope.from - 1]) {
             --$scope.from;
@@ -553,7 +548,9 @@
           return alfredCtrl.addGroup(scope.currentGroup);
         };
         scope.edit = function(connection) {
-          return alfredCtrl.edit(connection);
+          var always_open_form;
+          always_open_form = true;
+          return alfredCtrl.edit(connection, always_open_form);
         };
         scope.select = function(key) {
           scope.setSelectedConnection(key);
@@ -571,6 +568,15 @@
           sizes = _normalizeSliderHeight(slider, sizer);
           scope.slider = sizes.sliderHeight;
           return scope.sizer = sizes.sizerHeight;
+        };
+        scope.setSelectedConnection = function(index) {
+          var always_open_form;
+          scope.selectedIndex = index;
+          always_open_form = false;
+          return alfredCtrl.edit(scope.connections[index], always_open_form);
+        };
+        scope.getSelectedConnection = function() {
+          return scope.selectedIndex;
         };
         _normalizeSliderHeight = function(sliderHeight, sizerHeight) {
           if (sizerHeight > 100 - sliderHeight) {

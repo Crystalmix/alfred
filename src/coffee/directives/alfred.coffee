@@ -256,10 +256,10 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
         # Calls callback function on event 'edit'
         #
         # @param connection    json-object
-        @edit = (connection) ->
+        @edit = (connection, always_open_form) ->
             if connection
                 connection_model = $scope.hosts.get(connection["#{constant.local_id}"]) or $scope.hosts.get(connection.id)
-                $scope.onEditHostCallback {connection: connection_model}
+                $scope.onEditHostCallback {connection: connection_model, always_open_form: always_open_form}
 
         # Calls callback function on event 'add'
         @addConnection = (current_group) ->

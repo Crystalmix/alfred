@@ -38,11 +38,6 @@ alfredDirective.directive "activeList",  () ->
                 $scope.from = 0
                 $scope.setSelectedConnection 0
 
-            $scope.setSelectedConnection = (index) ->
-                $scope.selectedIndex = index
-
-            $scope.getSelectedConnection = () ->
-                $scope.selectedIndex
 
             $scope.loadUp = () ->
                 if $scope.filteredConnections[$scope.from-1]
@@ -119,7 +114,7 @@ alfredDirective.directive "activeList",  () ->
                 do $event.preventDefault
                 do $event.stopPropagation
                 alfredCtrl.addConnection(scope.currentGroup)
-
+    
 
             scope.addGroup = ($event) ->
                 do $event.preventDefault
@@ -128,7 +123,8 @@ alfredDirective.directive "activeList",  () ->
 
 
             scope.edit = (connection) ->
-                alfredCtrl.edit(connection)
+                always_open_form = yes
+                alfredCtrl.edit(connection, always_open_form)
 
 
             scope.select = (key) ->
@@ -148,6 +144,16 @@ alfredDirective.directive "activeList",  () ->
                 sizes = _normalizeSliderHeight(slider, sizer)
                 scope.slider = sizes.sliderHeight
                 scope.sizer = sizes.sizerHeight
+
+
+            scope.setSelectedConnection = (index) ->
+                scope.selectedIndex = index
+                always_open_form = no
+                alfredCtrl.edit(scope.connections[index], always_open_form)
+
+
+            scope.getSelectedConnection = () ->
+                scope.selectedIndex
 
 
             _normalizeSliderHeight = (sliderHeight, sizerHeight) ->
