@@ -57,7 +57,7 @@
         color: #616161
     }
 
-    .host-menu li.list-row {
+    .host-menu li.list-row, .group-menu li.list-row{
         border-left: 3px solid transparent;
         margin: 4px 0 0 0;
         padding: 0 20px;
@@ -66,11 +66,15 @@
             color: rgba(0, 0, 0, 0.54);
             font-size: 12px;
         }
+
+        .list-row__content {
+            padding: 10px 0;
+        }
     }
-    .host-menu li.list-row:last-child {
+    .host-menu li.list-row:last-child, .group-menu li.list-row:last-child {
         margin: 4px 0;
     }
-    .host-menu li.list-row:hover {
+    .host-menu li.list-row:hover, .group-menu li.list-row:hover {
         background: whitesmoke;
         border-left: 3px solid #616161;
     }
@@ -187,6 +191,7 @@
             .dropdown li.list-row {
                 font-weight: normal;
                 margin: 0;
+                float: none;
             }
         }
 

@@ -114,7 +114,7 @@ alfredDirective.directive "activeList",  () ->
                 do $event.preventDefault
                 do $event.stopPropagation
                 alfredCtrl.addConnection(scope.currentGroup)
-    
+
 
             scope.addGroup = ($event) ->
                 do $event.preventDefault
@@ -125,6 +125,10 @@ alfredDirective.directive "activeList",  () ->
             scope.edit = (connection) ->
                 always_open_form = yes
                 alfredCtrl.edit(connection, always_open_form)
+
+
+            scope.remove = (connection) ->
+                alfredCtrl.removeConnection(connection)
 
 
             scope.select = (key) ->

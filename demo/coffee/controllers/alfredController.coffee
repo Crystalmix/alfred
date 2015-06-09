@@ -19,8 +19,11 @@ class AlfredController
         @scope.addConnection = (parent_group) ->
             console.log "--- outerController add connection ", parent_group
 
-        @scope.editConnection = (connection) ->
-            console.log "--- outerController edit connection", connection
+        @scope.editConnection = (host) ->
+            console.log "--- outerController edit connection", host
+
+        @scope.removeConnection = (host) ->
+            console.log "--- outerController remove connection", host
 
         @scope.uploadConnection = (connection) ->
             console.log "--- outerController upload connection", connection
@@ -32,6 +35,9 @@ class AlfredController
 
         @scope.editGroup = (group) ->
             console.log "--- outerController edit group", group
+
+        @scope.removeGroup = (group) ->
+            console.log "--- outerController remove group", group
 
         @scope.query = null
         @scope.activities = []

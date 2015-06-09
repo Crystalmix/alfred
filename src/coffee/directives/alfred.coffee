@@ -19,10 +19,12 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
 
         onAddGroupCallback: "&"
         onEditGroupCallback: "&"
+        onRemoveGroupCallback: "&"
 
         onEnterHostCallback: "&"
         onAddHostCallback: "&"
         onEditHostCallback: "&"
+        onRemoveHostCallback: "&"
 
 
     controller: ($scope, $element) ->
@@ -159,6 +161,11 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
             $scope.onEditGroupCallback {group: group_model}
 
 
+        $scope.removeGroup = (group) ->
+            group_model = $scope.groups.get(group["#{constant.local_id}"]) or $scope.groups.get(group.id)
+            $scope.onRemoveGroupCallback {group: group_model}
+
+
         $scope.safeApply = (expr) ->
             unless $scope.$$phase
                 if expr then $scope.$apply expr else do $scope.$apply
@@ -259,7 +266,15 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
         @edit = (connection, always_open_form) ->
             if connection
                 connection_model = $scope.hosts.get(connection["#{constant.local_id}"]) or $scope.hosts.get(connection.id)
-                $scope.onEditHostCallback {connection: connection_model, always_open_form: always_open_form}
+                $scope.onEditHostCallback {host: connection_model, always_open_form: always_open_form}
+
+        # Calls callback function on event 'remove'
+        #
+        # @param connection    json-object
+        @removeConnection = (connection) ->
+            if connection
+                connection_model = $scope.hosts.get(connection["#{constant.local_id}"]) or $scope.hosts.get(connection.id)
+                $scope.onRemoveHostCallback {host: connection_model}
 
         # Calls callback function on event 'add'
         @addConnection = (current_group) ->
@@ -268,6 +283,7 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
         # Calls callback function on event 'add'
         @addGroup = (current_group) ->
             $scope.onAddGroupCallback {parent_group: current_group}
+
 
         do transformationData
 

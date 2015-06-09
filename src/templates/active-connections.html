@@ -8,7 +8,7 @@
                 key="{{ key }}"
                 ng-class="{ active: (key === selectedIndex) }"
                 ng-style="setHeight()"
-                context-menu="select(key)"
+                context-menu="select(key)" context-menu-disabled="is_disable_context_menu"
                 class="panel panel-default position-fixed list-row"
                 data-target="menu-{{ uid }}-{{ $index }}"
                 ng-class="{ 'highlight': highlight, 'expanded' : expanded }">
@@ -38,6 +38,14 @@
                             </div>
                             <div class="list-row__content">
                                 <span>Edit</span>
+                            </div>
+                        </li>
+                        <li class="list-row" ng-if="!isHistory(connection)" ng-click="remove(connection)">
+                            <div class="list-row__primary">
+                                <i class="mdi mdi-delete"></i>
+                            </div>
+                            <div class="list-row__content">
+                                <span>Remove</span>
                             </div>
                         </li>
                     </ul>

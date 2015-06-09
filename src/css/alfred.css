@@ -55,19 +55,27 @@
 .alfred-widget li {
   color: #616161;
 }
-.alfred-widget .host-menu li.list-row {
+.alfred-widget .host-menu li.list-row,
+.alfred-widget .group-menu li.list-row {
   border-left: 3px solid transparent;
   margin: 4px 0 0 0;
   padding: 0 20px;
 }
-.alfred-widget .host-menu li.list-row span.display-block.fs-body-1.description.ng-binding {
+.alfred-widget .host-menu li.list-row span.display-block.fs-body-1.description.ng-binding,
+.alfred-widget .group-menu li.list-row span.display-block.fs-body-1.description.ng-binding {
   color: rgba(0, 0, 0, 0.54);
   font-size: 12px;
 }
-.alfred-widget .host-menu li.list-row:last-child {
+.alfred-widget .host-menu li.list-row .list-row__content,
+.alfred-widget .group-menu li.list-row .list-row__content {
+  padding: 10px 0;
+}
+.alfred-widget .host-menu li.list-row:last-child,
+.alfred-widget .group-menu li.list-row:last-child {
   margin: 4px 0;
 }
-.alfred-widget .host-menu li.list-row:hover {
+.alfred-widget .host-menu li.list-row:hover,
+.alfred-widget .group-menu li.list-row:hover {
   background: whitesmoke;
   border-left: 3px solid #616161;
 }
@@ -173,6 +181,7 @@
 .alfred-widget .alfred-toolbar .children-group .dropdown li.list-row {
   font-weight: normal;
   margin: 0;
+  float: none;
 }
 .alfred-widget .alfred-toolbar .parent-group li {
   margin-right: 22px;

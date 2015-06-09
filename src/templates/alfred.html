@@ -58,25 +58,33 @@
                             <!--Child groups-->
                             <div class="children-group">
                                 <ul>
-                                    <li ng-repeat="group in children_group">
+                                    <li ng-repeat="group in children_group"
+                                        context-menu class="panel panel-default position-fixed"
+                                        data-target="child_group-{{ uid }}-{{ $index }}"
+                                        ng-class="{ 'highlight': highlight, 'expanded' : expanded }" >
 
                                         <button class="btn btn--l group-child" lx-ripple
-                                                context-menu class="panel panel-default position-fixed"
-                                                data-target="child_group-{{ uid }}-{{ $index }}"
-                                                ng-class="{ 'highlight': highlight, 'expanded' : expanded }"
                                                 ng-click="filterByGroup(group)">
                                             <i class="group-child"></i>
                                             {{ group.label }}
                                         </button>
 
                                         <div class="dropdown position-fixed" id="child_group-{{ uid }}-{{ $index }}">
-                                            <ul class="list context-menu" role="menu">
+                                            <ul class="list context-menu group-menu" role="menu">
                                                 <li class="list-row" ng-click="editGroup(group)">
                                                     <div class="list-row__primary">
                                                         <i class="mdi mdi-pencil"></i>
                                                     </div>
                                                     <div class="list-row__content">
-                                                        <span>Edit</span>
+                                                        Edit
+                                                    </div>
+                                                </li>
+                                                <li class="list-row" ng-click="removeGroup(group)">
+                                                    <div class="list-row__primary">
+                                                        <i class="mdi mdi-delete"></i>
+                                                    </div>
+                                                    <div class="list-row__content">
+                                                        <span>Remove</span>
                                                     </div>
                                                 </li>
                                             </ul>
