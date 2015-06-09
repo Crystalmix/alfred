@@ -113,12 +113,24 @@
           onRemoveHostCallback: "&"
         },
         controller: function($scope, $element) {
-          var filter_hosts_by_chosen_tags, getConnections, getGroups, parseConnect, transformationData;
+          var collections_to_update, filter_hosts_by_chosen_tags, getConnections, getGroups, parseConnect, transformationData;
           $scope.query = null;
           $scope.chosen_tags = [];
           $scope.current_group = null;
           $scope.children_group = [];
           $scope.path_groups = [];
+          collections_to_update = ["hosts", "groups", "tags", "taghosts"];
+          _.each(collections_to_update, function(val) {
+            $scope[val].on("change", function() {
+              return transformationData();
+            });
+            $scope[val].on("add", function() {
+              return transformationData();
+            });
+            return $scope[val].on("destroy", function() {
+              return transformationData();
+            });
+          });
           getGroups = function() {
             var current_group_id;
             current_group_id = $scope.current_group ? $scope.current_group.get("" + constant.local_id) : null;

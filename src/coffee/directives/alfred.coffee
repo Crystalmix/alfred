@@ -35,6 +35,23 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
         $scope.path_groups = []
 
 
+        # Binds Backbone.collection events to update view
+        collections_to_update = ["hosts", "groups", "tags", "taghosts"]
+
+        _.each collections_to_update, (val) ->
+            $scope[val].on("change", () ->
+                do transformationData
+            )
+
+            $scope[val].on("add", () ->
+                do transformationData
+            )
+
+            $scope[val].on("destroy", () ->
+                do transformationData
+            )
+
+
         getGroups = () ->
             current_group_id = if $scope.current_group then $scope.current_group.get("#{constant.local_id}") else null
 
