@@ -259,16 +259,20 @@
           $scope.editGroup = function(group) {
             var group_model;
             group_model = $scope.groups.get(group["" + constant.local_id]) || $scope.groups.get(group.id);
-            return $scope.onEditGroupCallback({
-              group: group_model
-            });
+            if (group_model) {
+              return $scope.onEditGroupCallback({
+                group: group_model
+              });
+            }
           };
           $scope.removeGroup = function(group) {
             var group_model;
             group_model = $scope.groups.get(group["" + constant.local_id]) || $scope.groups.get(group.id);
-            return $scope.onRemoveGroupCallback({
-              group: group_model
-            });
+            if (group_model) {
+              return $scope.onRemoveGroupCallback({
+                group: group_model
+              });
+            }
           };
           $scope.safeApply = function(expr) {
             if (!$scope.$$phase) {
@@ -334,9 +338,11 @@
             var host_model;
             if (host) {
               host_model = $scope.hosts.get(host["" + constant.local_id]) || host;
-              return $scope.onEnterHostCallback({
-                host: host_model
-              });
+              if (host_model) {
+                return $scope.onEnterHostCallback({
+                  host: host_model
+                });
+              }
             }
           };
           this.changeFromProperty = function(from) {
@@ -360,19 +366,23 @@
             var connection_model;
             if (connection) {
               connection_model = $scope.hosts.get(connection["" + constant.local_id]) || $scope.hosts.get(connection.id);
-              return $scope.onEditHostCallback({
-                host: connection_model,
-                always_open_form: always_open_form
-              });
+              if (connection_model) {
+                return $scope.onEditHostCallback({
+                  host: connection_model,
+                  always_open_form: always_open_form
+                });
+              }
             }
           };
           this.removeConnection = function(connection) {
             var connection_model;
             if (connection) {
               connection_model = $scope.hosts.get(connection["" + constant.local_id]) || $scope.hosts.get(connection.id);
-              return $scope.onRemoveHostCallback({
-                host: connection_model
-              });
+              if (connection_model) {
+                return $scope.onRemoveHostCallback({
+                  host: connection_model
+                });
+              }
             }
           };
           this.addConnection = function(current_group) {

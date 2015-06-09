@@ -158,12 +158,12 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
 
         $scope.editGroup = (group) ->
             group_model = $scope.groups.get(group["#{constant.local_id}"]) or $scope.groups.get(group.id)
-            $scope.onEditGroupCallback {group: group_model}
+            if group_model then $scope.onEditGroupCallback {group: group_model}
 
 
         $scope.removeGroup = (group) ->
             group_model = $scope.groups.get(group["#{constant.local_id}"]) or $scope.groups.get(group.id)
-            $scope.onRemoveGroupCallback {group: group_model}
+            if group_model then $scope.onRemoveGroupCallback {group: group_model}
 
 
         $scope.safeApply = (expr) ->
@@ -240,7 +240,7 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
         @enterCallback = (host) ->
             if host
                 host_model = $scope.hosts.get(host["#{constant.local_id}"]) or host
-                $scope.onEnterHostCallback({host: host_model})
+                if host_model then $scope.onEnterHostCallback({host: host_model})
 
 
         # Saves paramaters: fromConnection, fromHistories
@@ -266,7 +266,7 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
         @edit = (connection, always_open_form) ->
             if connection
                 connection_model = $scope.hosts.get(connection["#{constant.local_id}"]) or $scope.hosts.get(connection.id)
-                $scope.onEditHostCallback {host: connection_model, always_open_form: always_open_form}
+                if connection_model then $scope.onEditHostCallback {host: connection_model, always_open_form: always_open_form}
 
         # Calls callback function on event 'remove'
         #
@@ -274,7 +274,7 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
         @removeConnection = (connection) ->
             if connection
                 connection_model = $scope.hosts.get(connection["#{constant.local_id}"]) or $scope.hosts.get(connection.id)
-                $scope.onRemoveHostCallback {host: connection_model}
+                if connection_model then $scope.onRemoveHostCallback {host: connection_model}
 
         # Calls callback function on event 'add'
         @addConnection = (current_group) ->
