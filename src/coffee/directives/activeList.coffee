@@ -133,7 +133,8 @@ alfredDirective.directive "activeList",  () ->
 
             scope.select = (key) ->
                 scope.setSelectedConnection key
-                return no
+                always_open_form = no
+                alfredCtrl.edit(scope.subConnections[key], always_open_form)
 
 
             scope.connect = (connection, key) ->
@@ -152,8 +153,6 @@ alfredDirective.directive "activeList",  () ->
 
             scope.setSelectedConnection = (index) ->
                 scope.selectedIndex = index
-                always_open_form = no
-                alfredCtrl.edit(scope.connections[index], always_open_form)
 
 
             scope.getSelectedConnection = () ->

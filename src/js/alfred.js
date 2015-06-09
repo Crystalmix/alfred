@@ -574,8 +574,10 @@
           return alfredCtrl.removeConnection(connection);
         };
         scope.select = function(key) {
+          var always_open_form;
           scope.setSelectedConnection(key);
-          return false;
+          always_open_form = false;
+          return alfredCtrl.edit(scope.subConnections[key], always_open_form);
         };
         scope.connect = function(connection, key) {
           scope.select(key);
@@ -591,10 +593,7 @@
           return scope.sizer = sizes.sizerHeight;
         };
         scope.setSelectedConnection = function(index) {
-          var always_open_form;
-          scope.selectedIndex = index;
-          always_open_form = false;
-          return alfredCtrl.edit(scope.connections[index], always_open_form);
+          return scope.selectedIndex = index;
         };
         scope.getSelectedConnection = function() {
           return scope.selectedIndex;
