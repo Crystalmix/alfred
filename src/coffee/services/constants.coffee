@@ -17,4 +17,6 @@ alfredDirective.constant("constant", {
         host: "host"
         tag: "tag"
 
+    status:
+        delete: "DELETE_FAILED"
 })

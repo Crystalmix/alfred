@@ -39,16 +39,24 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
         collections_to_update = ["hosts", "groups", "tags", "taghosts"]
 
         _.each collections_to_update, (val) ->
-            $scope[val].on("change", () ->
-                do transformationData
+            $scope[val].on("change", (model) ->
+                # We must make check because before we remove model, we set status
+                if model.changed["status"] isnt constant.status.delete
+                    $timeout (->
+                        do transformationData
+                    )
             )
 
             $scope[val].on("add", () ->
-                do transformationData
+                $timeout (->
+                    do transformationData
+                )
             )
 
             $scope[val].on("destroy", () ->
-                do transformationData
+                $timeout (->
+                    do transformationData
+                )
             )
 
 

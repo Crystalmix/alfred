@@ -79,6 +79,9 @@
     tag_host: {
       host: "host",
       tag: "tag"
+    },
+    status: {
+      "delete": "DELETE_FAILED"
     }
   });
 
@@ -121,14 +124,22 @@
           $scope.path_groups = [];
           collections_to_update = ["hosts", "groups", "tags", "taghosts"];
           _.each(collections_to_update, function(val) {
-            $scope[val].on("change", function() {
-              return transformationData();
+            $scope[val].on("change", function(model) {
+              if (model.changed["status"] !== constant.status["delete"]) {
+                return $timeout((function() {
+                  return transformationData();
+                }));
+              }
             });
             $scope[val].on("add", function() {
-              return transformationData();
+              return $timeout((function() {
+                return transformationData();
+              }));
             });
             return $scope[val].on("destroy", function() {
-              return transformationData();
+              return $timeout((function() {
+                return transformationData();
+              }));
             });
           });
           getGroups = function() {
