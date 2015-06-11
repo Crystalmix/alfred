@@ -1,5 +1,28 @@
 <div id="{{ uid }}" class="alfred-widget" flex-container="row">
     <div class="alfred flex-list" flex-item="8">
+
+        <!-- Add buttons -->
+        <div class="fab add-buttom">
+            <button class="fab__primary btn btn--l btn--blue btn--fab" lx-ripple>
+                <i class="mdi mdi-plus"></i>
+                <i class="mdi mdi-plus"></i>
+            </button>
+
+            <div class="fab__actions fab__actions--left">
+                <button class="btn btn--m btn--blue btn--fab" lx-ripple lx-tooltip="Add new group"
+                        tooltip-position="top"
+                        ng-click="addGroup($event)">
+                    <i class="add_new_group"></i>
+                </button>
+                <button class="btn btn--m btn--blue btn--fab" lx-ripple lx-tooltip="Add new host"
+                        tooltip-position="top"
+                        ng-click="addConnection($event)">
+                    <i class="add_new_host"></i>
+                </button>
+            </div>
+        </div>
+        <!-- End Add buttons -->
+
         <div class="alfred-box">
             <!--Toolbar with menu-->
             <div class="toolbar alfred-toolbar">

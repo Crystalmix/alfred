@@ -196,6 +196,20 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
                 if expr then $scope.$apply expr else do $scope.$apply
 
 
+        $scope.addConnection = ($event) ->
+            do $event.preventDefault
+            do $event.stopPropagation
+            $scope.onAddHostCallback {parent_group: $scope.current_group}
+#            @addConnection($scope.currentGroup)
+
+
+        $scope.addGroup = ($event) ->
+            do $event.preventDefault
+            do $event.stopPropagation
+            $scope.onAddGroupCallback {parent_group: $scope.current_group}
+#            @addGroup($scope.currentGroup)
+
+
         # --- Defines hotkeys
 
         jwerty.key '→', (->
@@ -301,13 +315,13 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
                 connection_model = $scope.hosts.get(connection["#{constant.local_id}"]) or $scope.hosts.get(connection.id)
                 if connection_model then $scope.onRemoveHostCallback {host: connection_model}
 
-        # Calls callback function on event 'add'
-        @addConnection = (current_group) ->
-            $scope.onAddHostCallback {parent_group: current_group}
-
-        # Calls callback function on event 'add'
-        @addGroup = (current_group) ->
-            $scope.onAddGroupCallback {parent_group: current_group}
+#        # Calls callback function on event 'add'
+#        @addConnection = (current_group) ->
+#            $scope.onAddHostCallback {parent_group: current_group}
+#
+#        # Calls callback function on event 'add'
+#        @addGroup = (current_group) ->
+#            $scope.onAddGroupCallback {parent_group: current_group}
 
 
         do transformationData

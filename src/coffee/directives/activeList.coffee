@@ -110,16 +110,16 @@ alfredDirective.directive "activeList",  () ->
             )
             # End Listens to parent events 'quickConnect'
 
-            scope.addConnection = ($event) ->
-                do $event.preventDefault
-                do $event.stopPropagation
-                alfredCtrl.addConnection(scope.currentGroup)
-
-
-            scope.addGroup = ($event) ->
-                do $event.preventDefault
-                do $event.stopPropagation
-                alfredCtrl.addGroup(scope.currentGroup)
+#            scope.addConnection = ($event) ->
+#                do $event.preventDefault
+#                do $event.stopPropagation
+#                alfredCtrl.addConnection(scope.currentGroup)
+#
+#
+#            scope.addGroup = ($event) ->
+#                do $event.preventDefault
+#                do $event.stopPropagation
+#                alfredCtrl.addGroup(scope.currentGroup)
 
 
             scope.edit = (connection) ->
