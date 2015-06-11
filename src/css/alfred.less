@@ -1,10 +1,11 @@
 .alfred-widget {
-    .left-list, .right-list, .main-list {
+    .right-list, .main-list {
         position: relative;
     }
     .toolbar {
-        height: inherit;
         border-bottom: 1px solid #ddd;
+        height: 22% !important;
+        min-height: 180px;
     }
     .table {
         width: 100%;
@@ -41,6 +42,7 @@
     }
     .alfred-box {
         box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        height: 100%;
     }
     .table-data {
         vertical-align: top;
@@ -133,7 +135,10 @@
     }
 
     .content-box {
-        overflow: hidden;
+        height: 74%;
+        overflow-y: auto;
+        min-height: 65px;
+        position: relative;
         .host_default_icon {
             background-image: url("../img/icons/hosts/Host-icon_disable_dark.png");
             width: 20px;
@@ -396,7 +401,7 @@
     -webkit-transition: all 500ms;
     transition: all 500ms;
     flex: none !important;
-    height: 85%;
+    height: 80%;
     margin-top: 101px;
     min-height: 150px;
 }

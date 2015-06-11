@@ -31,5 +31,5 @@ alfredDirective.filter "filterConnections", ["$filter", "constant", ($filter, co
 
             do scope.changeSlider
 
-            return scope.filteredConnections.slice arg1, arg2
+            return scope.filteredConnections
     ]
