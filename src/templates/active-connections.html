@@ -1,7 +1,7 @@
 <div id="fixed" when-scrolled="loadMore()">
     <ul class="list">
         <li
-                ng-repeat="(key,connection) in subConnections = (connections | filterConnections:query:from:offset:this) track by key"
+                ng-repeat="(key,connection) in subConnections = (connections | filterConnections:query:this) track by key"
                 id="{{ key }}"
                 ng-click="select(key)"
                 ng-dblclick="connect(connection, key)"

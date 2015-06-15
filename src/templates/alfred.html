@@ -1,27 +1,6 @@
 <div id="{{ uid }}" class="alfred-widget" flex-container="row">
     <div class="alfred flex-list" flex-item="8">
 
-        <!-- Add buttons -->
-        <div class="fab add-buttom">
-            <button class="fab__primary btn btn--l btn--blue btn--fab" lx-ripple>
-                <i class="mdi mdi-plus"></i>
-                <i class="mdi mdi-plus"></i>
-            </button>
-
-            <div class="fab__actions fab__actions--left">
-                <button class="btn btn--m btn--blue btn--fab" lx-ripple lx-tooltip="Add new group"
-                        tooltip-position="top"
-                        ng-click="addGroup($event)">
-                    <i class="add_new_group"></i>
-                </button>
-                <button class="btn btn--m btn--blue btn--fab" lx-ripple lx-tooltip="Add new host"
-                        tooltip-position="top"
-                        ng-click="addConnection($event)">
-                    <i class="add_new_host"></i>
-                </button>
-            </div>
-        </div>
-        <!-- End Add buttons -->
 
         <div class="alfred-box">
             <!--Toolbar with menu-->
@@ -51,7 +30,8 @@
                             <!--End Switch to activity/host-->
 
                             <!--Buttons for quick connect-->
-                            <button class="btn btn--m btn--blue btn--flat" lx-ripple ng-if="isLeftActive && connectState" ng-click="enter()">
+                            <button class="btn btn--m btn--blue btn--flat" lx-ripple
+                                    ng-if="isLeftActive && connectState" ng-click="enter()">
                                 <span>connect</span>
                             </button>
                             <!--End Buttons for quick connect-->
@@ -59,9 +39,15 @@
                     </div>
                     <!--End Search field-->
 
-                    <!--Filters by group, tag-->
+                </div>
+            </div>
+            <!--End Toolbar with menu-->
+
+            <!--Filters by group, tag-->
+            <div class="data-box">
+                <div class="groups-toolbar">
                     <div flex-container="row">
-                        <div flex-item="8">
+                        <div flex-item="8" class="group-content">
                             <!--Path groups-->
                             <div ng-if="path_groups.length" class="parent-group">
                                 <ul>
@@ -84,7 +70,7 @@
                                     <li ng-repeat="group in children_group"
                                         context-menu class="panel panel-default position-fixed"
                                         data-target="child_group-{{ uid }}-{{ $index }}"
-                                        ng-class="{ 'highlight': highlight, 'expanded' : expanded }" >
+                                        ng-class="{ 'highlight': highlight, 'expanded' : expanded }">
 
                                         <button class="btn btn--l group-child" lx-ripple
                                                 ng-click="filterByGroup(group)">
@@ -118,7 +104,7 @@
                             </div>
                             <!--End Child groups-->
                         </div>
-                        <div flex-item="4">
+                        <div flex-item="4" class="tag-content">
                             <!--Path tags-->
                             <div class="tags">
                                 <!--Template from LUMX-->
@@ -165,45 +151,66 @@
                         </div>
 
                     </div>
-
-                    <!--End Here there is group template-->
                 </div>
-            </div>
-            <!--End Toolbar with menu-->
+                <!--End Filters by group, tag-->
 
-            <!--List-->
-            <div class="content-box">
-                <div class="table">
-                    <div id="left" ng-class="{ active: isLeftActive }" ng-if="isLeftActive">
-                        <div class="left-list" ng-if="isLeftActive">
-                            <active-list connections="connections"
-                                         uid="uid"
-                                         amount="amount"
-                                         height-cell="heightCell"
-                                         query="query"
-                                         from="fromConnection"
-                                         selected-index="selectedIndex"
-                                         current-group="current_group">
-                            </active-list>
+                <!--List-->
+                <div class="content-box">
+                    <div class="table">
+                        <div id="left" ng-class="{ active: isLeftActive }" ng-if="isLeftActive">
+                            <div class="left-list" ng-if="isLeftActive">
+                                <active-list connections="connections"
+                                             uid="uid"
+                                             amount="amount"
+                                             height-cell="heightCell"
+                                             query="query"
+                                             from="fromConnection"
+                                             selected-index="selectedIndex"
+                                             current-group="current_group">
+                                </active-list>
+                            </div>
                         </div>
-                    </div>
 
-                    <div id="right" ng-class="{ active: isRightActive }" ng-if="isRightActive">
-                        <div class="left-list" ng-if="isRightActive">
-                            <active-list connections="activities"
-                                         uid="uid"
-                                         amount="amount"
-                                         height-cell="heightCell"
-                                         query="query"
-                                         from="fromHistory"
-                                         selected-index="selectedIndex"
-                                         current-group="current_group">
-                            </active-list>
+                        <div id="right" ng-class="{ active: isRightActive }" ng-if="isRightActive">
+                            <div class="left-list" ng-if="isRightActive">
+                                <active-list connections="activities"
+                                             uid="uid"
+                                             amount="amount"
+                                             height-cell="heightCell"
+                                             query="query"
+                                             from="fromHistory"
+                                             selected-index="selectedIndex"
+                                             current-group="current_group">
+                                </active-list>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
             <!--End List-->
         </div>
+
+        <!-- Add buttons -->
+        <div class="fab add-buttom">
+            <button class="fab__primary btn btn--l btn--blue btn--fab" lx-ripple>
+                <i class="mdi mdi-plus"></i>
+                <i class="mdi mdi-plus"></i>
+            </button>
+
+            <div class="fab__actions fab__actions--left">
+                <button class="btn btn--m btn--blue btn--fab" lx-ripple lx-tooltip="Add new group"
+                        tooltip-position="top"
+                        ng-click="addGroup($event)">
+                    <i class="add_new_group"></i>
+                </button>
+                <button class="btn btn--m btn--blue btn--fab" lx-ripple lx-tooltip="Add new host"
+                        tooltip-position="top"
+                        ng-click="addConnection($event)">
+                    <i class="add_new_host"></i>
+                </button>
+            </div>
+        </div>
+        <!-- End Add buttons -->
+
     </div>
 </div>

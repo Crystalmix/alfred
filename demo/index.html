@@ -16,17 +16,21 @@
         <script src="../bower_components/jquery/dist/jquery.min.js"></script>
 
         <style>
+            .container {
+                height: 100%;
+            }
             .alfred-widget {
                 top: 100px;
                 position: relative;
                 width: 100%;
+                height: 100%;
             }
         </style>
 
     </head>
     <body ng-app="alfredApp">
         <div class="container">
-            <div ui-view></div>
+            <div ui-view style="height: 100%;"></div>
         </div>
 
 

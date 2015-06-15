@@ -1,6 +1,6 @@
 
 alfredDirective.filter "filterConnections", ["$filter", "constant", ($filter, constant) ->
-        (input, query, arg1, arg2, context) ->
+        (input, query, context) ->
             scope = context
             if scope.prevquery isnt scope.query and scope.query isnt ""
                 do scope.initializeParameteres
