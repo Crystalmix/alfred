@@ -24,10 +24,6 @@ alfredDirective.directive "activeList",  () ->
                 height: $scope.heightCell + 'px'
 
 
-            $scope.initializeParameteres = () ->
-                $scope.setSelectedConnection 0
-
-
             $scope.safeApply = (expr) ->
                 unless $scope.$$phase
                     if expr then $scope.$apply expr else do $scope.$apply

@@ -464,9 +464,6 @@
             height: $scope.heightCell + 'px'
           };
         };
-        $scope.initializeParameteres = function() {
-          return $scope.setSelectedConnection(0);
-        };
         $scope.safeApply = function(expr) {
           if (!$scope.$$phase) {
             if (expr) {
@@ -603,7 +600,6 @@
         var filterFilter, scope;
         scope = context;
         if (scope.prevquery !== scope.query && scope.query !== "") {
-          scope.initializeParameteres();
           scope.prevquery = scope.query;
         }
         filterFilter = $filter("filter");
