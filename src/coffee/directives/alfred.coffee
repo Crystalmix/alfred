@@ -8,7 +8,6 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
     scope:
         uid: "="
         hosts: "="
-        activities: "="
         groups: "="
         taghosts: "="
         tags: "="
@@ -170,14 +169,17 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
             $scope.$broadcast "setSelectedIndex", index
 
 
-        $scope.changeActiveList = () ->
-            $scope.isLeftActive = not $scope.isLeftActive
-            $scope.isRightActive = not $scope.isRightActive
+        $scope.is_selectedIndex = () ->
+            if $scope.selectedIndex? and $scope.selectedIndex >=0
+                return yes
+            return no
 
 
         $scope.enter = () =>
             if $scope.query and $scope.query.indexOf("ssh") isnt -1
-                parseConnect $scope.query
+                return parseConnect $scope.query
+            if $scope.is_selectedIndex()
+                @enterCallback $scope.connections[$scope.selectedIndex]
 
 
         $scope.editGroup = (group) ->
@@ -208,36 +210,6 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
 
 
         # --- Defines hotkeys
-
-        jwerty.key '→', (->
-            if $scope.is_interrupt_arrow_commands is yes
-                $scope.isLeftActive = no
-                $scope.isRightActive = yes
-                return no
-            else
-                return yes
-        ), $element
-
-
-        jwerty.key '←', (->
-            if $scope.is_interrupt_arrow_commands is yes
-                $scope.isLeftActive = yes
-                $scope.isRightActive = no
-                return no
-            else
-                return yes
-        ), $element
-
-
-        jwerty.key '⇥', (->
-            if $scope.is_interrupt_arrow_commands is yes
-                $scope.isLeftActive = not $scope.isLeftActive
-                $scope.isRightActive = not $scope.isRightActive
-                return no
-            else
-                return yes
-        ), $element
-
 
         jwerty.key '↑', (->
             $scope.$broadcast "arrow", "up"
@@ -270,6 +242,7 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
         @setSelectedIndex = (key) ->
             $scope.setSelectedConnection key
 
+
         # Calls callback function on event 'enter'
         #
         # @param connection    json-object
@@ -279,23 +252,6 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
                 if host_model then $scope.onEnterHostCallback({host: host_model})
 
 
-        # Saves paramaters: fromConnection, fromHistories
-        @changeFromProperty = (from) ->
-            if $scope.isLeftActive
-                $scope.fromConnection = from
-            else
-                $scope.fromHistory = from
-
-        # Changes active list on hotkeys
-        @changeActiveList = () ->
-            if $scope.isLeftActive
-                $scope.isLeftActive = no
-                $scope.isRightActive = yes
-            else
-                $scope.isLeftActive = yes
-                $scope.isRightActive = no
-            do $scope.safeApply
-
         # Calls callback function on event 'edit'
         #
         # @param connection    json-object
@@ -303,6 +259,7 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
             if connection
                 connection_model = $scope.hosts.get(connection["#{constant.local_id}"]) or $scope.hosts.get(connection.id)
                 if connection_model then $scope.onEditHostCallback {host: connection_model, always_open_form: always_open_form}
+
 
         # Calls callback function on event 'remove'
         #
@@ -349,14 +306,8 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
 
 
         initializeParameters = () ->
-            scope.fromHistory = 0
             scope.selectedIndex = null
             scope.connectState = no
-
-
-        initializeTableParameters = () ->
-            scope.isLeftActive = yes
-            scope.isRightActive = no
 
 
         changeConnectState = (state) ->
@@ -375,5 +326,4 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
 
 
         do initializeParameters
-        do initializeTableParameters
 ]

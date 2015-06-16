@@ -99,7 +99,6 @@
         scope: {
           uid: "=",
           hosts: "=",
-          activities: "=",
           groups: "=",
           taghosts: "=",
           tags: "=",
@@ -267,14 +266,19 @@
             $scope.selectedIndex = index;
             return $scope.$broadcast("setSelectedIndex", index);
           };
-          $scope.changeActiveList = function() {
-            $scope.isLeftActive = !$scope.isLeftActive;
-            return $scope.isRightActive = !$scope.isRightActive;
+          $scope.is_selectedIndex = function() {
+            if (($scope.selectedIndex != null) && $scope.selectedIndex >= 0) {
+              return true;
+            }
+            return false;
           };
           $scope.enter = (function(_this) {
             return function() {
               if ($scope.query && $scope.query.indexOf("ssh") !== -1) {
                 return parseConnect($scope.query);
+              }
+              if ($scope.is_selectedIndex()) {
+                return _this.enterCallback($scope.connections[$scope.selectedIndex]);
               }
             };
           })(this);
@@ -319,33 +323,6 @@
               parent_group: $scope.current_group
             });
           };
-          jwerty.key('→', (function() {
-            if ($scope.is_interrupt_arrow_commands === true) {
-              $scope.isLeftActive = false;
-              $scope.isRightActive = true;
-              return false;
-            } else {
-              return true;
-            }
-          }), $element);
-          jwerty.key('←', (function() {
-            if ($scope.is_interrupt_arrow_commands === true) {
-              $scope.isLeftActive = true;
-              $scope.isRightActive = false;
-              return false;
-            } else {
-              return true;
-            }
-          }), $element);
-          jwerty.key('⇥', (function() {
-            if ($scope.is_interrupt_arrow_commands === true) {
-              $scope.isLeftActive = !$scope.isLeftActive;
-              $scope.isRightActive = !$scope.isRightActive;
-              return false;
-            } else {
-              return true;
-            }
-          }), $element);
           jwerty.key('↑', (function() {
             $scope.$broadcast("arrow", "up");
             return false;
@@ -381,23 +358,6 @@
               }
             }
           };
-          this.changeFromProperty = function(from) {
-            if ($scope.isLeftActive) {
-              return $scope.fromConnection = from;
-            } else {
-              return $scope.fromHistory = from;
-            }
-          };
-          this.changeActiveList = function() {
-            if ($scope.isLeftActive) {
-              $scope.isLeftActive = false;
-              $scope.isRightActive = true;
-            } else {
-              $scope.isLeftActive = true;
-              $scope.isRightActive = false;
-            }
-            return $scope.safeApply();
-          };
           this.edit = function(connection, always_open_form) {
             var connection_model;
             if (connection) {
@@ -425,7 +385,7 @@
           return this;
         },
         link: function(scope, element, attrs) {
-          var $input, changeConnectState, checkQuery, initializeParameters, initializeTableParameters;
+          var $input, changeConnectState, checkQuery, initializeParameters;
           $input = element.find('#alfred-input');
           scope.is_interrupt_arrow_commands = true;
           scope.$on("setFocus", function(event, uid) {
@@ -453,13 +413,8 @@
             return scope.safeApply();
           };
           initializeParameters = function() {
-            scope.fromHistory = 0;
             scope.selectedIndex = null;
             return scope.connectState = false;
-          };
-          initializeTableParameters = function() {
-            scope.isLeftActive = true;
-            return scope.isRightActive = false;
           };
           changeConnectState = function(state) {
             scope.connectState = state;
@@ -475,8 +430,7 @@
               }
             }), 50);
           };
-          initializeParameters();
-          return initializeTableParameters();
+          return initializeParameters();
         }
       };
     }
@@ -510,16 +464,6 @@
             height: $scope.heightCell + 'px'
           };
         };
-        $scope.setSizerHeight = function() {
-          return {
-            height: $scope.sizer + '%'
-          };
-        };
-        $scope.setSliderHeight = function() {
-          return {
-            height: $scope.slider + '%'
-          };
-        };
         $scope.initializeParameteres = function() {
           return $scope.setSelectedConnection(0);
         };
@@ -545,9 +489,6 @@
         scope.prevquery = null;
         scope.$watch("selectedIndex", function(key) {
           return alfredCtrl.setSelectedIndex(key);
-        });
-        scope.$watch("from", function(from) {
-          return alfredCtrl.changeFromProperty(from);
         });
         scope.$on('arrow', function(event, orientation) {
           if (orientation === 'up') {
@@ -699,6 +640,6 @@
 }).call(this);
 
 angular.module('alfredDirective').run(['$templateCache', function ($templateCache) {
-	$templateCache.put('src/templates/alfred.html', '<div id="{{ uid }}" class="alfred-widget" flex-container="row"> <div class="alfred flex-list" flex-item="8"> <div class="alfred-box"> <div class="toolbar alfred-toolbar"> <div class="tollbar-container"> <div class="input-row"> <div class="input-fiedls"> <lx-text-field label={{placeholder}} fixed-label="true"> <input type="text" id="alfred-input" ng-model="query" ng-keydown="keydown($event)"> </lx-text-field> </div> <div class="menu-toolbar"> <button class="btn btn--m btn--blue btn--flat" lx-ripple ng-click="changeActiveList()"> <span ng-if="isLeftActive && !connectState">activity</span> <span ng-if="isRightActive"><i class="mdi mdi-keyboard-backspace"></i></span> </button> <!--Buttons for quick connect--> <button class="btn btn--m btn--blue btn--flat" lx-ripple ng-if="isLeftActive && connectState" ng-click="enter()"> <span>connect</span> </button> </div> </div> </div> </div> <!--Filters by group, tag--> <div class="data-box"> <div class="groups-toolbar"> <div flex-container="row"> <div flex-item="8" class="group-content"> <div ng-if="path_groups.length" class="parent-group"> <ul> <li class="parent-group-list"> <a ng-click="filterByGroup(null)"><b>All hosts</b></a> </li> <li class="parent-group-list" ng-repeat="group in path_groups"> <a ng-click="filterByGroup(group)"> <i class="mdi mdi-chevron-right"></i> {{ group.label }} </a> </li> </ul> </div> <!--Child groups--> <div class="children-group"> <ul> <li ng-repeat="group in children_group" context-menu class="panel panel-default position-fixed" data-target="child_group-{{ uid }}-{{ $index }}" ng-class="{ \'highlight\': highlight, \'expanded\' : expanded }"> <button class="btn btn--l group-child" lx-ripple ng-click="filterByGroup(group)"> <i class="group-child"></i> {{ group.label }} </button> <div class="dropdown position-fixed" id="child_group-{{ uid }}-{{ $index }}"> <ul class="list context-menu group-menu" role="menu"> <li class="list-row" ng-click="editGroup(group)"> <div class="list-row__primary"> <i class="mdi mdi-pencil"></i> </div> <div class="list-row__content"> Edit </div> </li> <li class="list-row" ng-click="removeGroup(group)"> <div class="list-row__primary"> <i class="mdi mdi-delete"></i> </div> <div class="list-row__content"> <span>Remove</span> </div> </li> </ul> </div> </li> </ul> </div> </div> <div flex-item="4" class="tag-content"> <div class="tags"> <lx-dropdown class="tag-toolbar" position="right"> <button class="btn btn--m btn--icon" lx-ripple lx-dropdown-toggle> <i class="mdi mdi-tag tag"></i> </button> <lx-dropdown-menu> <ul class="tag-list"> <li class="list-row list-row--has-primary"> <div class="list-primary-tile"> <i ng-if="false" class="mdi mdi-check"></i> </div> <div class="list-content-tile"> <a class="dropdown-link" ng-click="filterByTag()"><b>Deselect all</b></a> </div> </li> <li class="list-row list-row--has-primary" ng-repeat="tag in copy_tags"> <div class="list-primary-tile"> <i ng-if="isChosenTag(tag)" class="mdi mdi-check"></i> </div> <div class="list-content-tile"> <a class="dropdown-link" ng-click="filterByTag(tag)">{{ tag.label }}</a> </div> </li> </ul> </lx-dropdown-menu> </lx-dropdown> <ul> <li class="mb" ng-repeat="tag in chosen_tags"> <button class="btn btn--s btn--blue btn--raised" ng-click="filterByTag(tag)" lx-ripple>{{ tag.label }} </button> </li> </ul> </div> </div> </div> </div> <!--List--> <div class="content-box"> <div class="table"> <div id="left" ng-class="{ active: isLeftActive }" ng-if="isLeftActive"> <div class="left-list" ng-if="isLeftActive"> <active-list connections="connections" uid="uid" height-cell="heightCell" query="query" selected-index="selectedIndex" current-group="current_group"> </active-list> </div> </div> <div id="right" ng-class="{ active: isRightActive }" ng-if="isRightActive"> <div class="left-list" ng-if="isRightActive"> <active-list connections="activities" uid="uid" amount="amount" height-cell="heightCell" query="query" from="fromHistory" selected-index="selectedIndex" current-group="current_group"> </active-list> </div> </div> </div> </div> </div> </div> <div class="fab add-buttom"> <button class="fab__primary btn btn--l btn--blue btn--fab" lx-ripple> <i class="mdi mdi-plus"></i> <i class="mdi mdi-plus"></i> </button> <div class="fab__actions fab__actions--left"> <button class="btn btn--m btn--blue btn--fab" lx-ripple lx-tooltip="Add new group" tooltip-position="top" ng-click="addGroup($event)"> <i class="add_new_group"></i> </button> <button class="btn btn--m btn--blue btn--fab" lx-ripple lx-tooltip="Add new host" tooltip-position="top" ng-click="addConnection($event)"> <i class="add_new_host"></i> </button> </div> </div> </div> </div> ');
+	$templateCache.put('src/templates/alfred.html', '<div id="{{ uid }}" class="alfred-widget" flex-container="row"> <div class="alfred flex-list" flex-item="8"> <div class="alfred-box"> <div class="toolbar alfred-toolbar"> <div class="tollbar-container"> <div class="input-row"> <div class="input-fiedls"> <lx-text-field label={{placeholder}} fixed-label="true"> <input type="text" id="alfred-input" ng-model="query" ng-keydown="keydown($event)"> </lx-text-field> </div> <div class="menu-toolbar"> <button class="btn btn--m btn--blue btn--flat" lx-ripple ng-if="connectState || is_selectedIndex()" ng-click="enter()"> <span>connect</span> </button> <button class="btn btn--m btn--grey btn--flat btn--is-disabled" lx-ripple ng-if="!connectState && !is_selectedIndex()"> <span>connect</span> </button> </div> </div> </div> </div> <!--Filters by group, tag--> <div class="data-box"> <div class="groups-toolbar"> <div flex-container="row"> <div flex-item="8" class="group-content"> <div ng-if="path_groups.length" class="parent-group"> <ul> <li class="parent-group-list"> <a ng-click="filterByGroup(null)"><b>All hosts</b></a> </li> <li class="parent-group-list" ng-repeat="group in path_groups"> <a ng-click="filterByGroup(group)"> <i class="mdi mdi-chevron-right"></i> {{ group.label }} </a> </li> </ul> </div> <!--Child groups--> <div class="children-group"> <ul> <li ng-repeat="group in children_group" context-menu class="panel panel-default position-fixed" data-target="child_group-{{ uid }}-{{ $index }}" ng-class="{ \'highlight\': highlight, \'expanded\' : expanded }"> <button class="btn btn--l group-child" lx-ripple ng-click="filterByGroup(group)"> <i class="group-child"></i> {{ group.label }} </button> <div class="dropdown position-fixed" id="child_group-{{ uid }}-{{ $index }}"> <ul class="list context-menu group-menu" role="menu"> <li class="list-row" ng-click="editGroup(group)"> <div class="list-row__primary"> <i class="mdi mdi-pencil"></i> </div> <div class="list-row__content"> Edit </div> </li> <li class="list-row" ng-click="removeGroup(group)"> <div class="list-row__primary"> <i class="mdi mdi-delete"></i> </div> <div class="list-row__content"> <span>Remove</span> </div> </li> </ul> </div> </li> </ul> </div> </div> <div flex-item="4" class="tag-content"> <div class="tags"> <lx-dropdown class="tag-toolbar" position="right"> <button class="btn btn--m btn--icon" lx-ripple lx-dropdown-toggle> <i class="mdi mdi-tag tag"></i> </button> <lx-dropdown-menu> <ul class="tag-list"> <li class="list-row list-row--has-primary"> <div class="list-primary-tile"> <i ng-if="false" class="mdi mdi-check"></i> </div> <div class="list-content-tile"> <a class="dropdown-link" ng-click="filterByTag()"><b>Deselect all</b></a> </div> </li> <li class="list-row list-row--has-primary" ng-repeat="tag in copy_tags"> <div class="list-primary-tile"> <i ng-if="isChosenTag(tag)" class="mdi mdi-check"></i> </div> <div class="list-content-tile"> <a class="dropdown-link" ng-click="filterByTag(tag)">{{ tag.label }}</a> </div> </li> </ul> </lx-dropdown-menu> </lx-dropdown> <ul> <li class="mb" ng-repeat="tag in chosen_tags"> <button class="btn btn--s btn--blue btn--raised" ng-click="filterByTag(tag)" lx-ripple>{{ tag.label }} </button> </li> </ul> </div> </div> </div> </div> <!--List--> <div class="content-box"> <div class="table"> <div id="left"> <div class="left-list"> <active-list connections="connections" uid="uid" height-cell="heightCell" query="query" selected-index="selectedIndex" current-group="current_group"> </active-list> </div> </div> </div> </div> </div> </div> <div class="fab add-buttom"> <button class="fab__primary btn btn--l btn--blue btn--fab" lx-ripple> <i class="mdi mdi-plus"></i> <i class="mdi mdi-plus"></i> </button> <div class="fab__actions fab__actions--left"> <button class="btn btn--m btn--blue btn--fab" lx-ripple lx-tooltip="Add new group" tooltip-position="top" ng-click="addGroup($event)"> <i class="add_new_group"></i> </button> <button class="btn btn--m btn--blue btn--fab" lx-ripple lx-tooltip="Add new host" tooltip-position="top" ng-click="addConnection($event)"> <i class="add_new_host"></i> </button> </div> </div> </div> </div> ');
 	$templateCache.put('src/templates/active-connections.html', '<div id="fixed"> <ul class="list"> <li ng-repeat="(key,connection) in filteredConnections=(connections | filterConnections:query:this) track by key" id="{{ key }}" ng-click="select(key)" ng-dblclick="connect(connection, key)" key="{{ key }}" ng-class="{ active: (key===selectedIndex) }" ng-style="setHeight()" context-menu="select(key)" context-menu-disabled="is_disable_context_menu" class="panel panel-default position-fixed list-row" data-target="menu-{{ uid }}-{{ $index }}" ng-class="{ \'highlight\': highlight, \'expanded\' : expanded }"> <div class="list-row__primary"> <i class="icon icon--l host_default_icon"></i> </div> <div class="list-row__content"> <span ng-if="connection.label" class="display-block">{{ connection.label }}</span> <span ng-if="!connection.label" class="display-block">{{ connection.address }}</span> <span class="display-block fs-body-1 description">{{ connection.username }}</span> <div class="dropdown position-fixed" id="menu-{{ uid }}-{{ $index }}"> <ul class="list context-menu host-menu" role="menu"> <li class="list-row" ng-click="connect(connection, key)"> <div class="list-row__primary"> <i class="connect-icon"></i> </div> <div class="list-row__content"> Connect </div> </li> <li class="list-row" ng-if="!isHistory(connection)" ng-click="edit(connection)"> <div class="list-row__primary"> <i class="mdi mdi-pencil"></i> </div> <div class="list-row__content"> <span>Edit</span> </div> </li> <li class="list-row" ng-if="!isHistory(connection)" ng-click="remove(connection)"> <div class="list-row__primary"> <i class="mdi mdi-delete"></i> </div> <div class="list-row__content"> <span>Remove</span> </div> </li> </ul> </div> </div> </li> </ul> </div> ');
 }]);

@@ -20,17 +20,14 @@
                         </div>
 
                         <div class="menu-toolbar">
-                            <!--Switch to activity/host-->
-                            <button class="btn btn--m btn--blue btn--flat" lx-ripple ng-click="changeActiveList()">
-                                <span ng-if="isLeftActive && !connectState">activity</span>
 
-                                <span ng-if="isRightActive"><i class="mdi mdi-keyboard-backspace"></i></span>
-                            </button>
-                            <!--End Switch to activity/host-->
-
-                            <!--Buttons for quick connect-->
                             <button class="btn btn--m btn--blue btn--flat" lx-ripple
-                                    ng-if="isLeftActive && connectState" ng-click="enter()">
+                                    ng-if="connectState || is_selectedIndex()" ng-click="enter()">
+                                <span>connect</span>
+                            </button>
+
+                            <button class="btn btn--m btn--grey btn--flat btn--is-disabled" lx-ripple
+                                    ng-if="!connectState && !is_selectedIndex()">
                                 <span>connect</span>
                             </button>
                             <!--End Buttons for quick connect-->
@@ -156,26 +153,12 @@
                 <!--List-->
                 <div class="content-box">
                     <div class="table">
-                        <div id="left" ng-class="{ active: isLeftActive }" ng-if="isLeftActive">
-                            <div class="left-list" ng-if="isLeftActive">
+                        <div id="left">
+                            <div class="left-list">
                                 <active-list connections="connections"
                                              uid="uid"
                                              height-cell="heightCell"
                                              query="query"
-                                             selected-index="selectedIndex"
-                                             current-group="current_group">
-                                </active-list>
-                            </div>
-                        </div>
-
-                        <div id="right" ng-class="{ active: isRightActive }" ng-if="isRightActive">
-                            <div class="left-list" ng-if="isRightActive">
-                                <active-list connections="activities"
-                                             uid="uid"
-                                             amount="amount"
-                                             height-cell="heightCell"
-                                             query="query"
-                                             from="fromHistory"
                                              selected-index="selectedIndex"
                                              current-group="current_group">
                                 </active-list>

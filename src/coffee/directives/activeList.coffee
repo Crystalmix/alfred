@@ -23,12 +23,6 @@ alfredDirective.directive "activeList",  () ->
             $scope.setHeight = () ->
                 height: $scope.heightCell + 'px'
 
-            $scope.setSizerHeight = () ->
-                height: $scope.sizer + '%'
-
-            $scope.setSliderHeight = () ->
-                height: $scope.slider + '%'
-
 
             $scope.initializeParameteres = () ->
                 $scope.setSelectedConnection 0
@@ -58,8 +52,6 @@ alfredDirective.directive "activeList",  () ->
             scope.$watch "selectedIndex", (key) ->
                 alfredCtrl.setSelectedIndex(key)
 
-            scope.$watch "from", (from) ->
-                alfredCtrl.changeFromProperty(from)
 
             # Listens to parent events 'arrow'
             #
