@@ -1,7 +1,7 @@
 <div id="fixed">
     <ul class="list">
         <li
-                ng-repeat="(key,connection) in subConnections = (connections | filterConnections:query:this) track by key"
+                ng-repeat="(key,connection) in filteredConnections = (connections | filterConnections:query:this) track by key"
                 id="{{ key }}"
                 ng-click="select(key)"
                 ng-dblclick="connect(connection, key)"
@@ -54,12 +54,5 @@
             </div>
 
         </li>
-        <!--<li ng-if="!subConnections.length" ng-style="setHeight()" class="panel panel-default position-fixed list-row">-->
-            <!--<div class="list-row__content empty-list">-->
-                <!--<span class="display-block">-->
-                <!--</span>-->
-            <!--</div>-->
-        <!--</li>-->
-
     </ul>
 </div>

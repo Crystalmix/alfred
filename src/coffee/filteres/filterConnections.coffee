@@ -8,7 +8,7 @@ alfredDirective.filter "filterConnections", ["$filter", "constant", ($filter, co
             filterFilter = $filter("filter")
 
             # Custom filter: filter by certain properties
-            scope.filteredConnections = filterFilter scope.connections, (value)->
+            return filterFilter scope.connections, (value)->
                 unless scope.query
                     return value
                 else
@@ -29,7 +29,4 @@ alfredDirective.filter "filterConnections", ["$filter", "constant", ($filter, co
 
                     return isMatchLabel(value) or isMatchAddress(value) or isMatchUsername(value)
 
-            do scope.changeSlider
-
-            return scope.filteredConnections
     ]

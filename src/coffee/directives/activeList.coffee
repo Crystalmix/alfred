@@ -12,10 +12,8 @@ alfredDirective.directive "activeList",  () ->
         templateUrl: "src/templates/active-connections.html"
         scope:
             connections:     "="
-            amount:          "="
             heightCell:      "="
             query:           "="
-            from:            "="
             selectedIndex:   "="
             currentGroup:    "="
             uid:             "="
@@ -31,23 +29,9 @@ alfredDirective.directive "activeList",  () ->
             $scope.setSliderHeight = () ->
                 height: $scope.slider + '%'
 
-            $scope.changeOffset = () ->
-                $scope.offset = $scope.from + $scope.amount
 
             $scope.initializeParameteres = () ->
-                $scope.from = 0
                 $scope.setSelectedConnection 0
-
-
-            $scope.loadUp = () ->
-                if $scope.filteredConnections[$scope.from-1]
-                    --$scope.from
-                    --$scope.offset
-
-            $scope.loadDown = () ->
-                if $scope.filteredConnections[$scope.offset]
-                    ++$scope.from
-                    ++$scope.offset
 
 
             $scope.safeApply = (expr) ->
@@ -59,8 +43,6 @@ alfredDirective.directive "activeList",  () ->
             @select = (key) ->
                 $scope.setSelectedConnection key
                 do $scope.safeApply
-
-            do $scope.changeOffset
 
             return @
 
@@ -77,7 +59,6 @@ alfredDirective.directive "activeList",  () ->
                 alfredCtrl.setSelectedIndex(key)
 
             scope.$watch "from", (from) ->
-                scope.offset = scope.from + scope.amount
                 alfredCtrl.changeFromProperty(from)
 
             # Listens to parent events 'arrow'
@@ -103,23 +84,12 @@ alfredDirective.directive "activeList",  () ->
             scope.$on('enter', (event, key) ->
                 unless key?
                     key = scope.getSelectedConnection()
-                if scope.subConnections[key]?
+                if scope.filteredConnections[key]?
                     scope.setSelectedConnection(key)
-                    connection = scope.subConnections[key]
+                    connection = scope.filteredConnections[key]
                     scope.connect connection, key
             )
             # End Listens to parent events 'quickConnect'
-
-#            scope.addConnection = ($event) ->
-#                do $event.preventDefault
-#                do $event.stopPropagation
-#                alfredCtrl.addConnection(scope.currentGroup)
-#
-#
-#            scope.addGroup = ($event) ->
-#                do $event.preventDefault
-#                do $event.stopPropagation
-#                alfredCtrl.addGroup(scope.currentGroup)
 
 
             scope.edit = (connection) ->
@@ -134,21 +104,13 @@ alfredDirective.directive "activeList",  () ->
             scope.select = (key) ->
                 scope.setSelectedConnection key
                 always_open_form = no
-                alfredCtrl.edit(scope.subConnections[key], always_open_form)
+                alfredCtrl.edit(scope.filteredConnections[key], always_open_form)
 
 
             scope.connect = (connection, key) ->
                 scope.select key
                 alfredCtrl.enterCallback connection
                 return no
-
-
-            scope.changeSlider = () ->
-                slider = (scope.amount * 100) / scope.filteredConnections.length
-                sizer = (scope.from * 100) / scope.filteredConnections.length
-                sizes = _normalizeSliderHeight(slider, sizer)
-                scope.slider = sizes.sliderHeight
-                scope.sizer = sizes.sizerHeight
 
 
             scope.setSelectedConnection = (index) ->
@@ -159,48 +121,21 @@ alfredDirective.directive "activeList",  () ->
                 scope.selectedIndex
 
 
-            _normalizeSliderHeight = (sliderHeight, sizerHeight) ->
-                if sizerHeight > 100 - sliderHeight
-                    sizerHeight = 100 - sliderHeight
-                if  sliderHeight > 100
-                    sliderHeight = 100
-                sliderHeight *= 100;
-                sizerHeight *= 100;
-                sizerHeight = Math.floor(sizerHeight) / 100;
-                sliderHeight = Math.ceil(sliderHeight) / 100;
-
-                return {sliderHeight: sliderHeight, sizerHeight: sizerHeight}
-
-
             activateNextItem = () ->
                 currentIndex = scope.getSelectedConnection()
-                next = scope.subConnections[currentIndex+1]
+                next = scope.filteredConnections[currentIndex+1]
                 # Checks is next element?
                 unless next?
-                    if _.isEqual(_.last(scope.subConnections), _.last(scope.filteredConnections))
-                        scope.from   = 0
-                        scope.offset = scope.amount
-                        scope.setSelectedConnection(0)
-                    else
-                        do scope.loadDown
+                    scope.setSelectedConnection(0)
                 else
                     scope.setSelectedConnection(++currentIndex)
 
 
             activatePreviousItem = () ->
                 currentIndex = scope.getSelectedConnection()
-                prev = scope.subConnections[currentIndex-1]
+                prev = scope.filteredConnections[currentIndex-1]
                 # Checks is prev element?
                 unless prev?
-                    if _.isEqual(_.first(scope.subConnections), _.first(scope.filteredConnections))
-                        from = scope.filteredConnections.length - scope.amount
-                        if from > 0
-                            scope.from   = from
-                            scope.offset = scope.filteredConnections.length - 1
-                            scope.setSelectedConnection(scope.amount - 1)
-                        else
-                            scope.setSelectedConnection(scope.filteredConnections.length - 1)
-                    else
-                        do scope.loadUp
+                    scope.setSelectedConnection(scope.filteredConnections.length - 1)
                 else
                     scope.setSelectedConnection(--currentIndex)
