@@ -276,33 +276,27 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
 
 
     link: (scope, element, attrs) ->
-        $input = element.find '#alfred-input'
+        $input = null
 
-        # When user doesn't search any information, we should interrupt arrow hotkeys,
-        # otherwise we couldn't override it.
-        scope.is_interrupt_arrow_commands = yes
+        $timeout (->
+            $input = element.find '#alfred-input'
+        )
 
-        scope.$on "setFocus", (event, uid) ->
-            if uid is scope.uid
-                $timeout scope.setFocusAtInput
-
-        scope.setFocusAtInput = () ->
+        _setFocusAtInput = () ->
             do $input.focus
             return no
 
-        scope.$watch $input, () =>
-            $timeout (->
-                do scope.setFocusAtInput
-            ), 200
+        # When user doesn't search any information, we should interrupt arrow hotkeys,
+        # otherwise we couldn't override it.
+        _is_interrupt_arrow_commands = yes
+
 
         # Checks query in order to switch/switch-off table state
         checkQuery = () ->
             if scope.query
-                scope.is_interrupt_arrow_commands = no
+                _is_interrupt_arrow_commands = no
             else
-                scope.is_interrupt_arrow_commands = yes
-
-            do scope.safeApply
+                _is_interrupt_arrow_commands = yes
 
 
         initializeParameters = () ->
@@ -313,6 +307,19 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
         changeConnectState = (state) ->
             scope.connectState = state
             do scope.safeApply
+
+
+        scope.$on "setFocus", (event, uid) ->
+            if uid is scope.uid
+                $timeout (->
+                    do _setFocusAtInput
+                )
+
+
+        scope.$watch $input, () =>
+            $timeout (=>
+                do _setFocusAtInput
+            ), 200
 
 
         scope.keydown = () ->

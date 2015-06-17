@@ -385,32 +385,22 @@
           return this;
         },
         link: function(scope, element, attrs) {
-          var $input, changeConnectState, checkQuery, initializeParameters;
-          $input = element.find('#alfred-input');
-          scope.is_interrupt_arrow_commands = true;
-          scope.$on("setFocus", function(event, uid) {
-            if (uid === scope.uid) {
-              return $timeout(scope.setFocusAtInput);
-            }
-          });
-          scope.setFocusAtInput = function() {
+          var $input, changeConnectState, checkQuery, initializeParameters, _is_interrupt_arrow_commands, _setFocusAtInput;
+          $input = null;
+          $timeout((function() {
+            return $input = element.find('#alfred-input');
+          }));
+          _setFocusAtInput = function() {
             $input.focus();
             return false;
           };
-          scope.$watch($input, (function(_this) {
-            return function() {
-              return $timeout((function() {
-                return scope.setFocusAtInput();
-              }), 200);
-            };
-          })(this));
+          _is_interrupt_arrow_commands = true;
           checkQuery = function() {
             if (scope.query) {
-              scope.is_interrupt_arrow_commands = false;
+              return _is_interrupt_arrow_commands = false;
             } else {
-              scope.is_interrupt_arrow_commands = true;
+              return _is_interrupt_arrow_commands = true;
             }
-            return scope.safeApply();
           };
           initializeParameters = function() {
             scope.selectedIndex = null;
@@ -420,6 +410,20 @@
             scope.connectState = state;
             return scope.safeApply();
           };
+          scope.$on("setFocus", function(event, uid) {
+            if (uid === scope.uid) {
+              return $timeout((function() {
+                return _setFocusAtInput();
+              }));
+            }
+          });
+          scope.$watch($input, (function(_this) {
+            return function() {
+              return $timeout((function() {
+                return _setFocusAtInput();
+              }), 200);
+            };
+          })(this));
           scope.keydown = function() {
             return $timeout((function() {
               checkQuery();
