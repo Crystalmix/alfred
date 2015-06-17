@@ -417,13 +417,11 @@
               }));
             }
           });
-          scope.$watch($input, (function(_this) {
-            return function() {
-              return $timeout((function() {
-                return _setFocusAtInput();
-              }), 200);
-            };
-          })(this));
+          scope.$watch($input, function() {
+            return $timeout((function() {
+              return _setFocusAtInput();
+            }));
+          });
           scope.keydown = function() {
             return $timeout((function() {
               checkQuery();

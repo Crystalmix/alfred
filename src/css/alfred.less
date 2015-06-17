@@ -175,6 +175,13 @@
 
             .tag-content {
                 float: right;
+                .dropdown-menu {
+                    display: none;
+                }
+
+                .dropdown-menu .dropdown__menu--is-dropped {
+                    display: block;
+                }
             }
 
             .group-content {
@@ -417,7 +424,7 @@
 
 }
 
-.btn, .text-field__input, span.display-block, .dropdown-link {
+.btn, .text-field__input, span.display-block, .dropdown-link, .parent-group-list {
     cursor: default;
 }
 

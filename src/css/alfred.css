@@ -170,6 +170,12 @@
 .alfred-widget .data-box .groups-toolbar .tag-content {
   float: right;
 }
+.alfred-widget .data-box .groups-toolbar .tag-content .dropdown-menu {
+  display: none;
+}
+.alfred-widget .data-box .groups-toolbar .tag-content .dropdown-menu .dropdown__menu--is-dropped {
+  display: block;
+}
 .alfred-widget .data-box .groups-toolbar .group-content {
   float: left;
 }
@@ -370,7 +376,8 @@
 .btn,
 .text-field__input,
 span.display-block,
-.dropdown-link {
+.dropdown-link,
+.parent-group-list {
   cursor: default;
 }
 .flex-list {

@@ -316,10 +316,10 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
                 )
 
 
-        scope.$watch $input, () =>
-            $timeout (=>
+        scope.$watch $input, () ->
+            $timeout (->
                 do _setFocusAtInput
-            ), 200
+            )
 
 
         scope.keydown = () ->
