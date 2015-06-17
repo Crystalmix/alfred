@@ -322,6 +322,14 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
             )
 
 
+        scope.setFocusAtInput = ($event) ->
+            if $($event.target)[0] == element[0]
+                scope.setSelectedConnection null
+                do _setFocusAtInput
+            else
+                return yes
+
+
         scope.keydown = () ->
             $timeout (->
                 do checkQuery

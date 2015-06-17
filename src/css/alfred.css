@@ -291,9 +291,6 @@
   color: #2196f3;
   width: 22px;
 }
-.alfred-widget .alfred-toolbar ::-webkit-input-placeholder {
-  color: white;
-}
 .alfred-widget .dropdown.position-fixed {
   position: fixed;
   z-index: 100;

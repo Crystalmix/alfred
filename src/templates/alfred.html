@@ -1,4 +1,4 @@
-<div id="{{ uid }}" class="alfred-widget" flex-container="row">
+<div id="{{ uid }}" class="alfred-widget" flex-container="row" ng-click="setFocusAtInput($event)">
     <div class="alfred flex-list" flex-item="8">
 
         <div class="alfred-box">
@@ -9,7 +9,15 @@
                     <!--Search field-->
                     <div class="input-row">
                         <div class="input-fiedls">
-                            <!--Template from LUMX-->
+                            <md-input-container md-no-float>
+                                <input type="text"
+                                       id="alfred-input"
+                                       ng-model="query"
+                                       ng-keydown="keydown($event)"
+                                       placeholder={{placeholder}}>
+                            </md-input-container>
+
+                            <!--Template from LUMX
                             <lx-text-field label={{placeholder}} fixed-label="true">
                                 <input type="text"
                                        id="alfred-input"
