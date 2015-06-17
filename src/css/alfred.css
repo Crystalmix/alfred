@@ -365,7 +365,7 @@
   padding: 2px 0;
 }
 .tag-list .list-primary-tile {
-  margin-top: -13px;
+  width: 16px;
 }
 .tag-list a {
   color: #616161;
