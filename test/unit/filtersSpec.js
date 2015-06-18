@@ -11,6 +11,7 @@ describe('Unit test filters: alfred', function() {
             scope.setSelectedConnection = function(index) {
                 scope.selectedIndex = index;
             };
+            scope.selectedIndex = null;
             filter = $filter("filterConnections")
         })
     );
@@ -33,7 +34,7 @@ describe('Unit test filters: alfred', function() {
             var filteredConnections = filter(scope.connections, null, scope);
             expect(filteredConnections.length).toEqual(8);
             expect(filteredConnections[0].label).toEqual("1");
-            expect(scope.selectedIndex).not.toBeDefined();
+            expect(scope.selectedIndex).toEqual(null);
         }
     );
 
@@ -77,11 +78,14 @@ describe('Unit test filters: alfred', function() {
         }
     );
 
-    it("should initialize parameters if previous query doesn`t match to current",
+    it("should initialize selectedIndex to null",
         function() {
+            var filteredConnections;
             scope.query = "2";
-            filter(scope.connections, "1", scope);
-            expect(scope.prevquery).toEqual("2");
+            scope.selectedIndex = 5;
+            filteredConnections = filter(scope.connections, "2", scope);
+            expect(filteredConnections.length).toEqual(1);
+            expect(scope.selectedIndex).toEqual(null);
         }
     );
 });

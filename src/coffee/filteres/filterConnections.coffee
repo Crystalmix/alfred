@@ -2,12 +2,11 @@
 alfredDirective.filter "filterConnections", ["$filter", "constant", ($filter, constant) ->
     (connections, query, context) ->
         scope = context
-        if scope.prevquery isnt scope.query and scope.query isnt ""
-            scope.prevquery = scope.query
+
         filterFilter = $filter("filter")
 
         # Custom filter: filter by certain properties
-        return filterFilter scope.connections, (value)->
+        filtered = filterFilter scope.connections, (value)->
             unless scope.query
                 return value
             else
@@ -28,4 +27,10 @@ alfredDirective.filter "filterConnections", ["$filter", "constant", ($filter, co
 
                 return isMatchLabel(value) or isMatchAddress(value) or isMatchUsername(value)
 
+
+        #TODO this is not correct to make changes at this filter
+        unless filtered[scope.selectedIndex]
+            scope.selectedIndex = null
+
+        return filtered
 ]

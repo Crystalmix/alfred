@@ -38,12 +38,9 @@ alfredDirective.directive "activeList",  () ->
 
 
         link: (scope, element, attrs, alfredCtrl) ->
-            # Checks if list length is less than amount of cells
-            scope.selectedIndex = if scope.selectedIndex >= scope.connections.length then (scope.connections.length-1) else scope.selectedIndex
 
             # Saves parent controller at the scope variable
             scope.alfredController = alfredCtrl
-            scope.prevquery = null
 
             scope.$watch "selectedIndex", (key) ->
                 alfredCtrl.setSelectedIndex(key)

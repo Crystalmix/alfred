@@ -491,9 +491,7 @@
       },
       link: function(scope, element, attrs, alfredCtrl) {
         var activateNextItem, activatePreviousItem;
-        scope.selectedIndex = scope.selectedIndex >= scope.connections.length ? scope.connections.length - 1 : scope.selectedIndex;
         scope.alfredController = alfredCtrl;
-        scope.prevquery = null;
         scope.$watch("selectedIndex", function(key) {
           return alfredCtrl.setSelectedIndex(key);
         });
@@ -607,13 +605,10 @@
   alfredDirective.filter("filterConnections", [
     "$filter", "constant", function($filter, constant) {
       return function(connections, query, context) {
-        var filterFilter, scope;
+        var filterFilter, filtered, scope;
         scope = context;
-        if (scope.prevquery !== scope.query && scope.query !== "") {
-          scope.prevquery = scope.query;
-        }
         filterFilter = $filter("filter");
-        return filterFilter(scope.connections, function(value) {
+        filtered = filterFilter(scope.connections, function(value) {
           var isMatchAddress, isMatchLabel, isMatchUsername;
           if (!scope.query) {
             return value;
@@ -639,6 +634,10 @@
             return isMatchLabel(value) || isMatchAddress(value) || isMatchUsername(value);
           }
         });
+        if (!filtered[scope.selectedIndex]) {
+          scope.selectedIndex = null;
+        }
+        return filtered;
       };
     }
   ]);
