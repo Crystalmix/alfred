@@ -17,8 +17,8 @@ describe('Unit test filters: alfred', function() {
                 query = "ssh user@localhost -p 222";
                 response = quickConnectParse.parse(query);
                 expect(response.port).toBe(222);
-                expect(response.hostname).toBe('localhost');
-                expect(response.ssh_username).toBe('user');
+                expect(response.address).toBe('localhost');
+                expect(response.username).toBe('user');
             }
         );
         it("should set default port",
@@ -26,8 +26,8 @@ describe('Unit test filters: alfred', function() {
                 query = "ssh user@localhost";
                 response = quickConnectParse.parse(query);
                 expect(response.port).toBe(22);
-                expect(response.hostname).toBe('localhost');
-                expect(response.ssh_username).toBe('user');
+                expect(response.address).toBe('localhost');
+                expect(response.username).toBe('user');
             }
         );
         it("should change position port",
@@ -35,8 +35,8 @@ describe('Unit test filters: alfred', function() {
                 query = "ssh -p 222 user@localhost";
                 response = quickConnectParse.parse(query);
                 expect(response.port).toBe(222);
-                expect(response.hostname).toBe('localhost');
-                expect(response.ssh_username).toBe('user');
+                expect(response.address).toBe('localhost');
+                expect(response.username).toBe('user');
             }
         );
         it("should ignore whitepaces",
@@ -44,8 +44,8 @@ describe('Unit test filters: alfred', function() {
                 query = "ssh -p 222          user         @         localhost";
                 response = quickConnectParse.parse(query);
                 expect(response.port).toBe(222);
-                expect(response.hostname).toBe('localhost');
-                expect(response.ssh_username).toBe('user');
+                expect(response.address).toBe('localhost');
+                expect(response.username).toBe('user');
             }
         );
 
@@ -54,8 +54,8 @@ describe('Unit test filters: alfred', function() {
                 query = "ssh -p 222 user@localhost  -p 35";
                 response = quickConnectParse.parse(query);
                 expect(response.port).toBe(35);
-                expect(response.hostname).toBe('localhost');
-                expect(response.ssh_username).toBe('user');
+                expect(response.address).toBe('localhost');
+                expect(response.username).toBe('user');
             }
         );
     })
