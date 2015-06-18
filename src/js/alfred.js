@@ -606,7 +606,7 @@
 
   alfredDirective.filter("filterConnections", [
     "$filter", "constant", function($filter, constant) {
-      return function(input, query, context) {
+      return function(connections, query, context) {
         var filterFilter, scope;
         scope = context;
         if (scope.prevquery !== scope.query && scope.query !== "") {

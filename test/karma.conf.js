@@ -1,7 +1,7 @@
-module.exports = function(config){
+module.exports = function (config) {
     config.set({
 
-        basePath : '../',
+        basePath: '../',
 
         preprocessors: {
             'app/partials/*.html': ['ng-html2js']
@@ -26,22 +26,22 @@ module.exports = function(config){
             stripPrefix: 'src/'
         },
 
-        autoWatch : false,
+        autoWatch: false,
         logLevel: config.LOG_INFO,
 
-        browsers : ['Chrome'],
+        browsers: ['Chrome'],
 
-        plugins : [
-                'karma-chrome-launcher',
-                'karma-firefox-launcher',
-                'karma-jasmine',
-                'karma-junit-reporter',
-                'karma-ng-html2js-preprocessor'
-                ],
+        plugins: [
+            'karma-chrome-launcher',
+            'karma-firefox-launcher',
+            'karma-jasmine',
+            'karma-junit-reporter',
+            'karma-ng-html2js-preprocessor'
+        ],
 
-        junitReporter : {
-          outputFile: 'test_out/unit.xml',
-          suite: 'unit'
+        junitReporter: {
+            outputFile: 'test_out/unit.xml',
+            suite: 'unit'
         }
 
     });
