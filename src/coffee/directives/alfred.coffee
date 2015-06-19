@@ -37,25 +37,26 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
         collections_to_update = ["hosts", "groups", "tags", "taghosts"]
 
         _.each collections_to_update, (val) ->
-            $scope[val].on("change", (model) ->
-                # We must make check because before we remove model, we set status
-                if model.changed["status"] isnt constant.status.delete
+            if $scope[val]
+                $scope[val].on("change", (model) ->
+                    # We must make check because before we remove model, we set status
+                    if model.changed["status"] isnt constant.status.delete
+                        $timeout (->
+                            do transformationData
+                        )
+                )
+
+                $scope[val].on("add", () ->
                     $timeout (->
                         do transformationData
                     )
-            )
-
-            $scope[val].on("add", () ->
-                $timeout (->
-                    do transformationData
                 )
-            )
 
-            $scope[val].on("destroy", () ->
-                $timeout (->
-                    do transformationData
+                $scope[val].on("destroy", () ->
+                    $timeout (->
+                        do transformationData
+                    )
                 )
-            )
 
 
         getGroups = () ->
@@ -109,8 +110,9 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
             _.each $scope.connections, (connection, key) =>
                 $scope.connections[key] = $scope.connections[key].toJSON do_not_encrypt: no
 
+            # Sets username field
             _.each $scope.connections, (val, key) ->
-                #TODO make correct merge configs
+                # Returns object username = {username: "username", is_merged: false}
                 username_object = $scope.hosts.models[key].get_merged_username()
                 if username_object and username_object.username
                     val.username = username_object.username
@@ -118,10 +120,16 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
                     val.username = null
 
 
+
         # Prepares entities for template
         transformationData = () ->
             # Gets clone tags
-            $scope.copy_tags = $scope.tags.toJSON({do_not_encrypt: no}) if $scope.tags
+            # TODO:It is not work correctly when 'edit tag' will appear
+            if $scope.tags
+                if not $scope.copy_tags or $scope.tags.length isnt $scope.copy_tags.length
+                    $scope.copy_tags = $scope.tags.toJSON({do_not_encrypt: no})
+            else
+                $scope.copy_tags = []
 
             # Prepares all groups
             do getGroups if $scope.groups

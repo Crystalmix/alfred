@@ -17,6 +17,7 @@ module.exports = function (config) {
             'bower_components/angular-mocks/angular-mocks.js',
             'bower_components/jwerty/jwerty.js',
             'bower_components/optparse/lib/optparse.js',
+            'bower_components/serverauditor/dist/serverauditor.js',
             'src/js/*.js',
             'test/unit/*.js',
             'src/templates/*.html'
