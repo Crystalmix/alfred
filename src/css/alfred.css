@@ -292,6 +292,9 @@
 .tag-list a {
   color: #616161;
 }
+.tags-list {
+  overflow-x: hidden !important;
+}
 .btn,
 .text-field__input,
 span.display-block,
