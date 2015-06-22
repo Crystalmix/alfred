@@ -1,5 +1,5 @@
 <div id="fixed">
-    <ul class="list">
+    <ul class="list hosts">
         <li
                 ng-repeat="(key,connection) in filteredConnections = (connections | filterConnections:query:this) track by key"
                 id="{{ key }}"
