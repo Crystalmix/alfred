@@ -37,6 +37,7 @@
 .alfred-widget .alfred .host-menu li.list-row .list-row__content,
 .alfred-widget .alfred .group-menu li.list-row .list-row__content {
   padding: 10px 0;
+  cursor: default;
 }
 .alfred-widget .alfred .host-menu li.list-row:last-child,
 .alfred-widget .alfred .group-menu li.list-row:last-child {

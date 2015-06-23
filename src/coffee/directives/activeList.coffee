@@ -31,7 +31,7 @@ alfredDirective.directive "activeList",  () ->
 
             # Method api for child directive
             @select = (key) ->
-                $scope.setSelectedConnection key
+                setSelectedConnection key
                 do $scope.safeApply
 
             return @
@@ -68,9 +68,9 @@ alfredDirective.directive "activeList",  () ->
             # Listens to parent events 'enter'
             scope.$on('enter', (event, key) ->
                 unless key?
-                    key = scope.getSelectedConnection()
+                    key = getSelectedConnection()
                 if scope.filteredConnections[key]?
-                    scope.setSelectedConnection(key)
+                    setSelectedConnection(key)
                     connection = scope.filteredConnections[key]
                     scope.connect connection, key
             )
@@ -87,7 +87,7 @@ alfredDirective.directive "activeList",  () ->
 
 
             scope.select = (key) ->
-                scope.setSelectedConnection key
+                setSelectedConnection key
                 always_open_form = no
                 alfredCtrl.edit(scope.filteredConnections[key], always_open_form)
 
@@ -98,29 +98,34 @@ alfredDirective.directive "activeList",  () ->
                 return no
 
 
-            scope.setSelectedConnection = (index) ->
+            # Private methods
+
+            setSelectedConnection = (index) ->
                 scope.selectedIndex = index
 
 
-            scope.getSelectedConnection = () ->
+            getSelectedConnection = () ->
                 scope.selectedIndex
 
 
             activateNextItem = () ->
-                currentIndex = scope.getSelectedConnection()
+                currentIndex = getSelectedConnection()
                 next = scope.filteredConnections[currentIndex+1]
                 # Checks is next element?
                 unless next?
-                    scope.setSelectedConnection(0)
+                    setSelectedConnection(0)
                 else
-                    scope.setSelectedConnection(++currentIndex)
+                    setSelectedConnection(++currentIndex)
 
 
             activatePreviousItem = () ->
-                currentIndex = scope.getSelectedConnection()
+                currentIndex = getSelectedConnection()
                 prev = scope.filteredConnections[currentIndex-1]
                 # Checks is prev element?
                 unless prev?
-                    scope.setSelectedConnection(scope.filteredConnections.length - 1)
+                    setSelectedConnection(scope.filteredConnections.length - 1)
                 else
-                    scope.setSelectedConnection(--currentIndex)
+                    setSelectedConnection(--currentIndex)
+
+
+            # End Private methods

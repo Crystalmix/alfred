@@ -61,7 +61,7 @@ describe('Unit test alfredDirectives: alfred', function () {
         sa = null;
     });
 
-    describe('Init directive', function () {
+    describe('Init directive as template', function () {
 
         it("should render another template",
             function () {
@@ -113,9 +113,9 @@ describe('Unit test alfredDirectives: alfred', function () {
 
     });
 
-    describe('Should update methods', function () {
+    describe('Alfred gets Backbone models, so Alfred should listen to changes with them', function () {
 
-            it("should update models",
+            it("should update models at template",
                 function (done) {
                     var scopeDirective = element.isolateScope();
                     // Update host
@@ -210,213 +210,112 @@ describe('Unit test alfredDirectives: alfred', function () {
                 expect(scopeDirective.chosen_tags.length).toEqual(1);
             }
         );
+    });
 
 
-        describe('hotkeys test', function () {
-            /* KeyCode
-                 {
-                     13: 'enter',
-                     38: 'up',
-                     40: 'down'
-                 }
-             */
+    describe('hotkeys test', function () {
+        /* KeyCode
+         {
+         13: 'enter',
+         38: 'up',
+         40: 'down'
+         }
+         */
 
-            var first_host, second_host, third_host;
-            beforeEach(function (done) {
-                first_host = sa.hosts.add({address: "remote.com"});
-                second_host = sa.hosts.add({address: "127.0.0.1"});
-                third_host = sa.hosts.add({address: "o.com"});
-                $timeout.flush();
-                first_host.save_all({}).done(function () {
-                    second_host.save_all({}).done(function () {
-                        third_host.save_all({}).done(function () {
-                            done();
-                        })
+        var first_host, second_host, third_host;
+        beforeEach(function (done) {
+            first_host = sa.hosts.add({address: "remote.com"});
+            second_host = sa.hosts.add({address: "127.0.0.1"});
+            third_host = sa.hosts.add({address: "o.com"});
+            $timeout.flush();
+            first_host.save_all({}).done(function () {
+                second_host.save_all({}).done(function () {
+                    third_host.save_all({}).done(function () {
+                        done();
                     })
-                });
+                })
             });
+        });
 
-            it("should select item on click event",
-                function () {
-                    var scopeDirective = element.isolateScope(),
-                        liElems = element.find('.list.hosts');
+        it("should select item on click event",
+            function () {
+                var scopeDirective = element.isolateScope(),
+                    liElems = element.find('.panel.panel-default.position-fixed.list-row');
 
-                    expect(liElems.eq(0).hasClass('active')).toBe(false);
-                    expect(liElems.eq(1).hasClass('active')).toBe(false);
-                    expect(scopeDirective.selectedIndex).toBe(null);
+                expect(liElems.eq(0).hasClass('active')).toBe(false);
+                expect(liElems.eq(1).hasClass('active')).toBe(false);
+                expect(liElems.eq(2).hasClass('active')).toBe(false);
+                expect(scopeDirective.selectedIndex).toBe(null);
 
-                    liElems.eq(2).trigger("click");
-                    expect(liElems.eq(2).hasClass('active')).toBe(true);
-                    expect(liElems.eq(0).hasClass('active')).toBe(false);
-                    expect(scopeDirective.selectedIndex).toBe(2);
-                    //
-                    //liElems.eq(4).trigger("click");
-                    //expect(liElems.eq(4).hasClass('active')).toBe(true);
-                    //expect(liElems.eq(2).hasClass('active')).toBe(false);
-                    //expect(liElems.eq(0).hasClass('active')).toBe(false);
-                    //expect(scopeDirective.selectedIndex).toBe(4);
-                }
-            );
+                liElems.eq(0).trigger("click");
+                expect(liElems.eq(0).hasClass('active')).toBe(true);
+                expect(liElems.eq(1).hasClass('active')).toBe(false);
+                expect(liElems.eq(2).hasClass('active')).toBe(false);
+                expect(scopeDirective.selectedIndex).toBe(0);
 
-            //it("should make active next/previous element",
-            //    function () {
-            //        var scopeDirective = element.isolateScope();
-            //
-            //        expect(scopeDirective.selectedIndex).toBe(0);
-            //        jwerty.fire('down', element);
-            //        scopeDirective.$digest();
-            //        expect(scopeDirective.selectedIndex).toBe(1);
-            //        jwerty.fire('down', element);
-            //        scopeDirective.$digest();
-            //        expect(scopeDirective.selectedIndex).toBe(2);
-            //        jwerty.fire('down', element);
-            //        scopeDirective.$digest();
-            //        expect(scopeDirective.selectedIndex).toBe(3);
-            //        jwerty.fire('down', element);
-            //        scopeDirective.$digest();
-            //        expect(scopeDirective.selectedIndex).toBe(4);
-            //        jwerty.fire('down', element);
-            //        scopeDirective.$digest();
-            //        expect(scopeDirective.selectedIndex).toBe(5);
-            //        jwerty.fire('down', element);
-            //        scopeDirective.$digest();
-            //        expect(scopeDirective.selectedIndex).toBe(5);
-            //
-            //        jwerty.fire('up', element);
-            //        scopeDirective.$digest();
-            //        expect(scopeDirective.selectedIndex).toBe(4);
-            //        jwerty.fire('up', element);
-            //        scopeDirective.$digest();
-            //        expect(scopeDirective.selectedIndex).toBe(3);
-            //        jwerty.fire('up', element);
-            //        scopeDirective.$digest();
-            //        expect(scopeDirective.selectedIndex).toBe(2);
-            //        jwerty.fire('up', element);
-            //        scopeDirective.$digest();
-            //        expect(scopeDirective.selectedIndex).toBe(1);
-            //        jwerty.fire('up', element);
-            //        scopeDirective.$digest();
-            //        expect(scopeDirective.selectedIndex).toBe(0);
-            //        jwerty.fire('up', element);
-            //        scopeDirective.$digest();
-            //        expect(scopeDirective.selectedIndex).toBe(0);
-            //    }
-            //);
+                liElems.eq(2).trigger("click");
+                expect(liElems.eq(0).hasClass('active')).toBe(false);
+                expect(liElems.eq(1).hasClass('active')).toBe(false);
+                expect(liElems.eq(2).hasClass('active')).toBe(true);
+                expect(scopeDirective.selectedIndex).toBe(2);
 
-        })
-    })
+                //Deselect element
+                element.trigger("click");
+                expect(liElems.eq(0).hasClass('active')).toBe(false);
+                expect(liElems.eq(1).hasClass('active')).toBe(false);
+                expect(liElems.eq(2).hasClass('active')).toBe(false);
+                expect(scopeDirective.selectedIndex).toBe(null);
+            }
+        );
+
+        it("should make active next/previous element",
+            function () {
+                var scopeDirective = element.isolateScope();
+
+                expect(scopeDirective.selectedIndex).toBe(null);
+                jwerty.fire('down', element);
+                scopeDirective.$digest();
+                expect(scopeDirective.selectedIndex).toBe(1);
+                jwerty.fire('down', element);
+                scopeDirective.$digest();
+                expect(scopeDirective.selectedIndex).toBe(2);
+                jwerty.fire('down', element);
+                scopeDirective.$digest();
+                expect(scopeDirective.selectedIndex).toBe(0);
+                jwerty.fire('down', element);
+                scopeDirective.$digest();
+                expect(scopeDirective.selectedIndex).toBe(1);
+                jwerty.fire('down', element);
+                scopeDirective.$digest();
+                expect(scopeDirective.selectedIndex).toBe(2);
+                jwerty.fire('down', element);
+                scopeDirective.$digest();
+                expect(scopeDirective.selectedIndex).toBe(0);
+
+                jwerty.fire('up', element);
+                scopeDirective.$digest();
+                expect(scopeDirective.selectedIndex).toBe(2);
+                jwerty.fire('up', element);
+                scopeDirective.$digest();
+                expect(scopeDirective.selectedIndex).toBe(1);
+                jwerty.fire('up', element);
+                scopeDirective.$digest();
+                expect(scopeDirective.selectedIndex).toBe(0);
+                jwerty.fire('up', element);
+                scopeDirective.$digest();
+                expect(scopeDirective.selectedIndex).toBe(2);
+                jwerty.fire('up', element);
+                scopeDirective.$digest();
+                expect(scopeDirective.selectedIndex).toBe(1);
+                jwerty.fire('up', element);
+                scopeDirective.$digest();
+                expect(scopeDirective.selectedIndex).toBe(0);
+            }
+        );
+
+    });
+
+
 });
-//
-//        it("should trigger parent scope callback",
-//            function() {
-//                var input = element.find("input"),
-//                    isMac = navigator.userAgent.toLowerCase().indexOf('mac') !== -1,
-//                    hotKey = isMac ? 'meta' : 'ctrl';
-//                var scopeDirective = element.isolateScope();
-//                scope.enterConnection = function(connection) {
-//                    expect(connection.id).toBe(1);
-//                };
-//                scope.addConnection = function(connection) {
-//                    expect(connection).not.toBeDefined();
-//                };
-//
-//                scope.editConnection = function(connection) {
-//                    expect(connection.id).toBe(1);
-//                };
-//
-//                scope.removeConnection = function(connection) {
-//                    expect(connection.id).toBe(1);
-//                };
-//
-//                scope.uploadConnection = function(connection) {
-//                    expect(connection.hostname).toBe('history - hostname2');
-//                };
-//                scope.connections = generateConnectionArray(16);
-//                scope.histories   = generateHistoryArray(10);
-//                scope.placeholder = "ssh user@hostname -p port";
-//                element           = $compile(angular.element('<alfred connections="connections" \
-//                                                                    histories="histories" \
-//                                                                    amount="6" \
-//                                                                    height-cell="42" \
-//                                                                    placeholder="placeholder" \
-//                                                                    on-enter-callback="enterConnection(connection)" \
-//                                                                    on-add-callback="addConnection()" \
-//                                                                    on-edit-callback="editConnection(connection)" \
-//                                                                    on-upload-callback="uploadConnection(connection)" \
-//                                                                    on-remove-callback="removeConnection(connection)"> \
-//                                                              </alfred>'))($rootScope);
-//                scope.$digest();
-//
-//                var edit = element.find(".glyphicon-pencil"),
-//                    e = jQuery.Event("click");
-//                edit.trigger(e);
-//
-//                var remove = element.find(".glyphicon-trash");
-//                e = jQuery.Event("click");
-//                remove.trigger(e);
-//
-//                var add = element.find(".add");
-//                e = jQuery.Event("click");
-//                add.trigger(e);
-//
-//                jwerty.fire("rigth", element);
-//                var upload = element.find(".glyphicon-upload");
-//                e = jQuery.Event("click");
-//                upload.trigger(e);
-//            }
-//        );
-//
-//        it("should trigger jQuery events instead of callback",
-//            function() {
-//                var isMac = navigator.userAgent.toLowerCase().indexOf('mac') !== -1,
-//                    hotKey = isMac ? 'meta' : 'ctrl',
-//                    input;
-//                element = $compile(angular.element('<alfred connections="connections" histories="histories" amount="6" height-cell="42" placeholder="placeholder"></alfred>'))($rootScope);
-//                scope.$digest();
-//                input = element.find("#alfred-input");
-//
-//                var scopeDirective = element.isolateScope();
-//                listener = scopeDirective.listener;
-//
-//
-//                input.on("onEnterHostCallback", function(event, connection){
-//                    expect(connection.id).toBe(2);
-//                    expect(connection.label).toBe('2');
-//                });
-//                input.on("onEditHostCallback", function(event, connection){
-//                    expect(connection.id).toBe(2);
-//                    expect(connection.label).toBe('2');
-//                });
-//                input.on("onRemoveHostCallback", function(event, connection){
-//                    expect(connection.id).toBe(2);
-//                    expect(connection.label).toBe('2');
-//                });
-//                input.on("onAddHostCallback", function(event, connection){
-//                    expect(connection).not.toBeDefined();
-//                });
-//                input.on("onUploadCallback", function(event, connection){
-//                    expect(connection.hostname).toBe('history - hostname2');
-//                });
-//                jwerty.fire('cmd+2', element);
-//                scopeDirective.$digest();
-//                var edit = element.find(".glyphicon-pencil"),
-//                    e = jQuery.Event("click");
-//                edit.trigger(e);
-//
-//                var remove = element.find(".glyphicon-trash");
-//                e = jQuery.Event("click");
-//                remove.trigger(e);
-//
-//                var add = element.find(".add");
-//                e = jQuery.Event("click");
-//                add.trigger(e);
-//
-//                jwerty.fire("rigth", element)
-//                scopeDirective.$digest();
-//                var upload = element.find(".glyphicon-upload");
-//                e = jQuery.Event("click");
-//                upload.trigger(e);
-//            }
-//        );
-//    });
+
 
