@@ -322,3 +322,108 @@ span.display-block,
   height: 100% !important;
   margin-top: 0;
 }
+
+.hosts .list-row__primary .icon--l {
+  width: 20px;
+  height: 20px;
+}
+.hosts .list-row__primary .linux {
+  content: url("../img/icons/os_name/linux_icon_mono.png");
+}
+.hosts .list-row__primary .osx {
+  content: url("../img/icons/os_name/osx_icon_mono.png");
+}
+.hosts .list-row__primary .darvin {
+  content: url("../img/icons/os_name/osx_icon_mono.png");
+}
+.hosts .list-row__primary .ubuntu {
+  content: url("../img/icons/os_name/ubuntu_icon_mono.png");
+}
+.hosts .list-row__primary .redhat {
+  content: url("../img/icons/os_name/redhat_icon_mono.png");
+}
+.hosts .list-row__primary .centos {
+  content: url("../img/icons/os_name/centos_icon_mono.png");
+}
+.hosts .list-row__primary .fedora {
+  content: url("../img/icons/os_name/fedora_icon_mono.png");
+}
+.hosts .list-row__primary .debian {
+  content: url("../img/icons/os_name/debian_icon_mono.png");
+}
+.hosts .list-row__primary .gentoo {
+  content: url("../img/icons/os_name/gentoo_icon_mono.png");
+}
+.hosts .list-row__primary .mageia {
+  content: url("../img/icons/os_name/mageia_icon_mono.png");
+}
+.hosts .list-row__primary .arch {
+  content: url("../img/icons/os_name/arch_icon_mono.png");
+}
+.hosts .list-row__primary .raspbian {
+  content: url("../img/icons/os_name/raspbian_icon_mono.png");
+}
+.hosts .list-row__primary .freebsd {
+  content: url("../img/icons/os_name/freebsd_icon_mono.png");
+}
+.hosts .list-row__primary .openbsd {
+  content: url("../img/icons/os_name/openbsd_icon_mono.png");
+}
+.hosts .list-row__primary .netbsd {
+  content: url("../img/icons/os_name/netbsd_icon_mono.png");
+}
+.hosts .list-row__primary .suse {
+  content: url("../img/icons/os_name/suse_icon_mono.png");
+}
+.hosts .active .list-row__primary .icon--l {
+  width: 20px;
+  height: 20px;
+}
+.hosts .active .list-row__primary .linux {
+  content: url("../img/icons/os_name/linux_icon.png");
+}
+.hosts .active .list-row__primary .osx {
+  content: url("../img/icons/os_name/osx_icon.png");
+}
+.hosts .active .list-row__primary .darvin {
+  content: url("../img/icons/os_name/osx_icon.png");
+}
+.hosts .active .list-row__primary .ubuntu {
+  content: url("../img/icons/os_name/ubuntu_icon.png");
+}
+.hosts .active .list-row__primary .redhat {
+  content: url("../img/icons/os_name/redhat_icon.png");
+}
+.hosts .active .list-row__primary .centos {
+  content: url("../img/icons/os_name/centos_icon.png");
+}
+.hosts .active .list-row__primary .fedora {
+  content: url("../img/icons/os_name/fedora_icon.png");
+}
+.hosts .active .list-row__primary .debian {
+  content: url("../img/icons/os_name/debian_icon.png");
+}
+.hosts .active .list-row__primary .gentoo {
+  content: url("../img/icons/os_name/gentoo_icon.png");
+}
+.hosts .active .list-row__primary .mageia {
+  content: url("../img/icons/os_name/mageia_icon.png");
+}
+.hosts .active .list-row__primary .arch {
+  content: url("../img/icons/os_name/arch_icon.png");
+}
+.hosts .active .list-row__primary .raspbian {
+  content: url("../img/icons/os_name/raspbian_icon.png");
+}
+.hosts .active .list-row__primary .freebsd {
+  content: url("../img/icons/os_name/freebsd_icon.png");
+}
+.hosts .active .list-row__primary .openbsd {
+  content: url("../img/icons/os_name/openbsd_icon.png");
+}
+.hosts .active .list-row__primary .netbsd {
+  content: url("../img/icons/os_name/netbsd_icon.png");
+}
+.hosts .active .list-row__primary .suse {
+  content: url("../img/icons/os_name/suse_icon.png");
+}

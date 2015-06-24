@@ -118,9 +118,16 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
                     # Returns object username = {username: "username", is_merged: false}
                     username_object = $scope.hosts.models[key].get_merged_username()
                     if username_object and username_object.username
-                        val.username = username_object.username
+                        val[constant.host.username] = username_object[constant.host.username]
                     else
-                        val.username = null
+                        val[constant.host.username] = null
+
+                    os_name = do val[constant.host.os_name].toLowerCase
+                    console.log os_name
+                    if os_name and os_name isnt 'none'
+                        val[constant.host.os_name] = os_name
+                    else
+                        val[constant.host.os_name] = ''
 
 
             # Prepares entities for template

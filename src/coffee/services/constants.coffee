@@ -12,6 +12,7 @@ alfredDirective.constant("constant", {
         username: "username"
         address: "address"
         port: "port"
+        os_name: "os_name"
 
     tag_host:
         host: "host"

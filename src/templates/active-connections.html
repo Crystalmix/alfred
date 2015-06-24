@@ -14,12 +14,13 @@
                 ng-class="{ 'highlight': highlight, 'expanded' : expanded }">
 
             <div class="list-row__primary">
-                <i class="icon icon--l host_default_icon"></i>
+                <i ng-if="connection.os_name" class="icon icon--l {{ connection.os_name }}"></i>
+                <i ng-if="!connection.os_name" class="icon icon--l host_default_icon"></i>
             </div>
             <div class="list-row__content">
                 <span ng-if="connection.label" class="display-block">{{ connection.label }}</span>
                 <span ng-if="!connection.label" class="display-block">{{ connection.address }}</span>
-                <span class="display-block fs-body-1 description">{{ connection.username }}</span>
+                <span class="display-block fs-body-1 description">{{ connection.username }}</span
 
                 <!--Includes context menu for each cell-->
                 <div class="dropdown position-fixed" id="menu-{{ uid }}-{{ $index }}">

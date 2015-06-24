@@ -66,7 +66,7 @@ module.exports = (grunt) ->
         less:
             development:
                 files:
-                    "src/css/alfred.css": "src/css/alfred.less"
+                    "src/css/alfred.css": ["src/css/alfred.less", "src/css/icons.less"]
 
         karma:
             unit:
