@@ -123,7 +123,6 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
                         val[constant.host.username] = null
 
                     os_name = do val[constant.host.os_name].toLowerCase
-                    console.log os_name
                     if os_name and os_name isnt 'none'
                         val[constant.host.os_name] = os_name
                     else

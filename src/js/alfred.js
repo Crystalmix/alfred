@@ -205,7 +205,6 @@
                 val[constant.host.username] = null;
               }
               os_name = val[constant.host.os_name].toLowerCase();
-              console.log(os_name);
               if (os_name && os_name !== 'none') {
                 return val[constant.host.os_name] = os_name;
               } else {
