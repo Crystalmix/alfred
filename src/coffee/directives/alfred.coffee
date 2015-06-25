@@ -64,19 +64,23 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
             getGroups = () ->
                 current_group_id = if $scope.current_group then $scope.current_group.get("#{constant.local_id}") else null
 
-                $scope.path_groups = if current_group_id then $scope.groups.get_parent_groups(current_group_id) else []
-                do $scope.path_groups.reverse
+                path_groups = if current_group_id then $scope.groups.get_parent_groups(current_group_id) else []
+                do path_groups.reverse
 
-                $scope.children_group = if current_group_id then _.rest($scope.groups.get_all_children(current_group_id)) else $scope.groups.get_root()
+                children_group = if current_group_id then _.rest($scope.groups.get_all_children(current_group_id)) else $scope.groups.get_root()
 
-                _.each $scope.children_group, (val, key) ->
-                    $scope.children_group[key] = _.clone val.toJSON {do_not_encrypt: no}
+                _.each children_group, (val, key) ->
+                    children_group[key] = _.clone val.toJSON {do_not_encrypt: no}
 
-                _.each $scope.path_groups, (val, key) ->
-                    $scope.path_groups[key] = _.clone val.toJSON {do_not_encrypt: no}
+                _.each path_groups, (val, key) ->
+                    path_groups[key] = _.clone val.toJSON {do_not_encrypt: no}
+
+                # Sets scope variable
+                $scope.path_groups = path_groups
+                $scope.children_group = children_group
 
 
-            filter_hosts_by_chosen_tags = () ->
+            filter_hosts_by_chosen_tags = (connections) ->
                 tag_hosts = []
                 array_id_of_hosts = []
                 array_of_local_id_of_tags = []
@@ -92,29 +96,29 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
                         array_id_of_hosts = _.union array_id_of_hosts, val.get("#{constant.tag_host.host}")["#{constant.local_id}"]
 
                 # Merges connections
-                if tag_hosts.length
-                    $scope.connections = _.filter $scope.connections, (val) ->
-                        if _.contains array_id_of_hosts, val.get("#{constant.local_id}")
-                            return val
+                return connections = _.filter connections, (val) ->
+                    if _.contains array_id_of_hosts, val.get("#{constant.local_id}")
+                        return val
 
 
             getConnections = () ->
                 # Filters hosts by current_group
+                connections = []
                 if $scope.current_group
-                    $scope.connections = $scope.hosts.filter_by_group($scope.current_group.get("#{constant.local_id}"),
+                    connections = $scope.hosts.filter_by_group($scope.current_group.get("#{constant.local_id}"),
                         yes)
                 else
-                    $scope.connections = _.clone $scope.hosts.models
+                    connections = _.clone $scope.hosts.models
 
                 # Filters hosts by chosen_tags
-                do filter_hosts_by_chosen_tags
+                connections = filter_hosts_by_chosen_tags connections if $scope.chosen_tags.length
 
                 # Gets array of models - copy
-                _.each $scope.connections, (connection, key) =>
-                    $scope.connections[key] = $scope.connections[key].toJSON do_not_encrypt: no
+                _.each connections, (connection, key) =>
+                    connections[key] = connections[key].toJSON do_not_encrypt: no
 
                 # Sets username field
-                _.each $scope.connections, (val, key) ->
+                _.each connections, (val, key) ->
                     # Returns object username = {username: "username", is_merged: false}
                     username_object = $scope.hosts.models[key].get_merged_username()
                     if username_object and username_object.username
@@ -122,11 +126,15 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
                     else
                         val[constant.host.username] = null
 
+                    # Sets os_name field correctly
                     os_name = do val[constant.host.os_name].toLowerCase
                     if os_name and os_name isnt 'none'
                         val[constant.host.os_name] = os_name
                     else
                         val[constant.host.os_name] = ''
+
+                # Sets scope variable
+                $scope.connections = connections
 
 
             initChosenFlagsToTags = () ->
@@ -181,6 +189,11 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
 
             $scope.filterByTag = (tag) ->
                 if tag
+                    # Updates copy_tags if there is tag without local_id
+                    unless tag.local_id
+                        $scope.copy_tags = $scope.tags.toJSON({do_not_encrypt: no})
+                        tag = _.findWhere $scope.copy_tags, {label: tag.label}
+
                     if tag["is_chosen"] is yes
                         $scope.chosen_tags = _.without($scope.chosen_tags,
                             _.findWhere($scope.chosen_tags, {local_id: tag["#{constant.local_id}"]}))
@@ -191,7 +204,6 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
                 else
                     $scope.chosen_tags = []
                     do initChosenFlagsToTags
-
                 $timeout (-> do transformationData)
 
 
