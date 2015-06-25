@@ -9,7 +9,7 @@ module.exports = (grunt) ->
             coffeescript:
                 files: ["#{coffeePath}/**/*.coffee"],
                 tasks: ['default'],
-            dev:
+            demo:
                 files: ["demo/coffee/**/*.coffee"],
                 tasks: ['demo'],
             less:
@@ -84,6 +84,7 @@ module.exports = (grunt) ->
     grunt.loadNpmTasks 'grunt-hustler'
     grunt.loadNpmTasks 'grunt-contrib-less'
 
-    grunt.registerTask 'default', ['ngTemplateCache', 'concat:dist', 'coffee', 'concat:addTemplates', 'clean', 'less']
+    grunt.registerTask 'default', ['ngTemplateCache', 'concat:dist', 'coffee', 'concat:addTemplates', 'less']
     grunt.registerTask 'demo', ['coffee:dev']
     grunt.registerTask 'test', ['default', 'karma']
+    grunt.registerTask 'build', ['default', 'clean']
