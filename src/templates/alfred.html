@@ -112,7 +112,6 @@
                                         <ul class="tag-list">
                                             <li class="list-row list-row--has-primary">
                                                 <div class="list-primary-tile">
-                                                    <i ng-if="false" class="mdi mdi-check"></i>
                                                 </div>
                                                 <div class="list-content-tile">
                                                     <a class="dropdown-link"
@@ -121,7 +120,7 @@
                                             </li>
                                             <li class="list-row list-row--has-primary" ng-repeat="tag in copy_tags">
                                                 <div class="list-primary-tile">
-                                                    <i ng-if="isChosenTag(tag)" class="mdi mdi-check"></i>
+                                                    <i ng-if="tag.is_chosen" class="mdi mdi-check"></i>
                                                 </div>
 
                                                 <div class="list-content-tile">
@@ -165,8 +164,9 @@
                         </div>
                     </div>
                 </div>
+                <!--End List-->
             </div>
-            <!--End List-->
+
         </div>
 
         <!-- Add buttons -->

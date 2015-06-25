@@ -129,6 +129,11 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
                         val[constant.host.os_name] = ''
 
 
+            initChosenFlagsToTags = () ->
+                _.each $scope.copy_tags, (val, key) ->
+                    val["is_chosen"] = no
+
+
             # Prepares entities for template
             transformationData = () ->
                 # Gets clone tags
@@ -162,14 +167,6 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
                 $scope.$broadcast "setSelectedIndex", index
 
 
-            $scope.isChosenTag = (tag) ->
-                tag = if tag then _.findWhere($scope.chosen_tags, {local_id: tag["#{constant.local_id}"]}) else []
-                if tag
-                    return yes
-                else
-                    return no
-
-
             $scope.is_selectedIndex = () ->
                 if $scope.selectedIndex? and $scope.selectedIndex >= 0
                     return yes
@@ -184,13 +181,17 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
 
             $scope.filterByTag = (tag) ->
                 if tag
-                    if $scope.isChosenTag tag
+                    if tag["is_chosen"] is yes
                         $scope.chosen_tags = _.without($scope.chosen_tags,
                             _.findWhere($scope.chosen_tags, {local_id: tag["#{constant.local_id}"]}))
+                        tag["is_chosen"] = no
                     else
                         $scope.chosen_tags = _.union $scope.chosen_tags, tag
+                        tag["is_chosen"] = yes
                 else
                     $scope.chosen_tags = []
+                    do initChosenFlagsToTags
+
                 $timeout (-> do transformationData)
 
 
