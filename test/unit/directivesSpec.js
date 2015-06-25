@@ -91,7 +91,6 @@ describe('Unit test alfredDirectives: alfred', function () {
                 expect(scopeDirective.taghosts).toBeDefined();
                 expect(scopeDirective.tags).toBeDefined();
                 expect(scopeDirective.query).toEqual(null);
-                expect(scopeDirective.chosen_tags).toEqual([]);
                 expect(scopeDirective.current_group).toEqual(null);
                 expect(scopeDirective.children_group).toEqual([]);
                 expect(scopeDirective.path_groups).toEqual([]);
@@ -100,7 +99,6 @@ describe('Unit test alfredDirectives: alfred', function () {
                 expect(scopeDirective.filterByTag).toBeDefined();
                 expect(scopeDirective.setSelectedConnection).toBeDefined();
                 expect(scopeDirective.is_selectedIndex).toBeDefined();
-                expect(scopeDirective.isChosenTag).toBeDefined();
                 expect(scopeDirective.enter).toBeDefined();
                 expect(scopeDirective.editGroup).toBeDefined();
                 expect(scopeDirective.removeGroup).toBeDefined();
