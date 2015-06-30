@@ -430,7 +430,7 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
                 if uid is scope.uid
                     $timeout (->
                         do _setFocusAtInput
-                    )
+                    ), 100
 
 
             scope.$watch $input, () ->

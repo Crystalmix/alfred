@@ -172,6 +172,7 @@
   line-height: 31px;
   border: 1px solid #2196F3;
   color: #2196F3;
+  overflow: visible !important;
 }
 .alfred-widget .alfred .data-box .groups-toolbar .tags button {
   text-transform: none;

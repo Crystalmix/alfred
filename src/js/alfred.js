@@ -438,7 +438,7 @@
             if (uid === scope.uid) {
               return $timeout((function() {
                 return _setFocusAtInput();
-              }));
+              }), 100);
             }
           });
           scope.$watch($input, function() {
