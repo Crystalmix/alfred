@@ -19,17 +19,10 @@
                         </div>
 
                         <div class="menu-toolbar">
-
-                            <button class="btn btn--m btn--blue btn--flat" lx-ripple
-                                    ng-if="connectState || is_selectedIndex()" ng-click="enter()">
+                            <button class="btn btn--m btn--blue btn--flat" ng-class="{'btn--is-disabled': !connectState && !is_selectedIndex()}" lx-ripple
+                                    ng-click="enter()">
                                 <span>connect</span>
                             </button>
-
-                            <button class="btn btn--m btn--grey btn--flat btn--is-disabled" lx-ripple
-                                    ng-if="!connectState && !is_selectedIndex()">
-                                <span>connect</span>
-                            </button>
-                            <!--End Buttons for quick connect-->
                         </div>
                     </div>
                     <!--End Search field-->
