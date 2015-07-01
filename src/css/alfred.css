@@ -319,7 +319,7 @@ span.display-block,
 .alfred-widget[max-width^="500px"] .flex-list {
   width: 100% !important;
 }
-.alfred-widget[max-height^="750px"] .flex-list {
+.alfred-widget[max-height^="798px"] .flex-list {
   height: 100% !important;
   margin-top: 0;
 }
