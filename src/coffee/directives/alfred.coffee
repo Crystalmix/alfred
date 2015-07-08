@@ -8,6 +8,7 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
         templateUrl: "src/templates/alfred.html"
         scope:
             uid: "="
+            updateEvent: "="
             hosts: "="
             groups: "="
             taghosts: "="
@@ -35,30 +36,9 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
 
             # Private methods
 
-            # Binds Backbone.collection events to update view
-            collections_to_update = ["hosts", "groups", "tags", "taghosts"]
-
-            _.each collections_to_update, (val) ->
-                if $scope[val]
-                    $scope[val].on("change", (model) ->
-                        # We must make check because before we remove model, we set status
-                        if model.changed["status"] isnt constant.status.delete
-                            $timeout (->
-                                do transformationData
-                            )
-                    )
-
-                    $scope[val].on("add", () ->
-                        $timeout (->
-                            do transformationData
-                        )
-                    )
-
-                    $scope[val].on("destroy", () ->
-                        $timeout (->
-                            do transformationData
-                        )
-                    )
+            # Binds event to update view
+            $scope.$on $scope.updateEvent, () ->
+                do transformationData
 
 
             getGroups = () ->
