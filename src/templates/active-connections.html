@@ -1,26 +1,26 @@
 <div id="fixed">
     <ul class="list hosts">
         <li
-                ng-repeat="(key,connection) in filteredConnections = (connections | filterConnections:query:this) track by key"
-                id="{{ key }}"
+                bindonce ng-repeat="(key,connection) in filteredConnections = (connections | filterConnections:query:this) track by key"
+                bo-id="key"
                 ng-click="select(key)"
                 ng-dblclick="connect(connection, key)"
                 key="{{ key }}"
                 ng-class="{ active: (key === selectedIndex) }"
-                ng-style="setHeight()"
+                bo-style="setHeight()"
                 context-menu="select(key)" context-menu-disabled="is_disable_context_menu"
                 class="panel panel-default position-fixed list-row"
                 data-target="menu-{{ uid }}-{{ $index }}"
-                ng-class="{ 'highlight': highlight, 'expanded' : expanded }">
+                bo-class="{ 'highlight': highlight, 'expanded' : expanded }">
 
             <div class="list-row__primary">
-                <i ng-if="connection.os_name" class="icon icon--l {{ connection.os_name }}"></i>
-                <i ng-if="!connection.os_name" class="icon icon--l host_default_icon"></i>
+                <i bo-if="connection.os_name" class="icon icon--l" bo-class="connection.os_name"></i>
+                <i bo-if="!connection.os_name" class="icon icon--l host_default_icon"></i>
             </div>
             <div class="list-row__content">
-                <span ng-if="connection.label" class="display-block">{{ connection.label }}</span>
-                <span ng-if="!connection.label" class="display-block">{{ connection.address }}</span>
-                <span class="display-block fs-body-1 description">{{ connection.username }}</span>
+                <span ng-if="connection.label" class="display-block" ng-bind="connection.label"></span>
+                <span ng-if="!connection.label" class="display-block" ng-bind="connection.address"></span>
+                <span class="display-block fs-body-1 description" ng-bind="connection.username"></span>
 
                 <!--Includes context menu for each cell-->
                 <div class="dropdown position-fixed" id="menu-{{ uid }}-{{ $index }}">

@@ -18,8 +18,8 @@
                             </md-input-container>
                         </div>
 
-                        <div class="menu-toolbar">
-                            <button class="btn btn--m btn--blue btn--flat" ng-class="{'btn--is-disabled': !connectState && !is_selectedIndex()}" lx-ripple
+                        <div class="menu-toolbar" bindonce>
+                            <button class="btn btn--m btn--blue btn--flat" bo-class="{'btn--is-disabled': !connectState && !is_selectedIndex()}" lx-ripple
                                     ng-click="enter()">
                                 <span>connect</span>
                             </button>
@@ -35,7 +35,7 @@
             <div class="data-box">
                 <div class="groups-toolbar">
                     <div flex-container="row">
-                        <div flex-item="8" class="group-content">
+                        <div flex-item="8" class="group-content" bindonce>
                             <!--Path groups-->
                             <div ng-if="path_groups.length" class="parent-group">
                                 <ul>
@@ -45,7 +45,7 @@
                                     <li class="parent-group-list" ng-repeat="group in path_groups">
                                         <a ng-click="filterByGroup(group)">
                                             <i class="mdi mdi-chevron-right"></i>
-                                            {{ group.label }}
+                                            <span ng-bind="group.label"></span>
                                         </a>
                                     </li>
                                 </ul>
@@ -55,15 +55,15 @@
                             <!--Child groups-->
                             <div class="children-group">
                                 <ul>
-                                    <li ng-repeat="group in children_group"
+                                    <li bindonce ng-repeat="group in children_group"
                                         context-menu class="panel panel-default position-fixed"
                                         data-target="child_group-{{ uid }}-{{ $index }}"
-                                        ng-class="{ 'highlight': highlight, 'expanded' : expanded }">
+                                        bo-class="{ 'highlight': highlight, 'expanded' : expanded }">
 
                                         <button class="btn btn--l group-child" lx-ripple
                                                 ng-click="filterByGroup(group)">
                                             <i class="group-child"></i>
-                                            {{ group.label }}
+                                            <span ng-bind="group.label"></span>
                                         </button>
 
                                         <div class="dropdown position-fixed" id="child_group-{{ uid }}-{{ $index }}">
@@ -102,7 +102,7 @@
                                     </button>
 
                                     <lx-dropdown-menu class="tags-list">
-                                        <ul class="tag-list">
+                                        <ul class="tag-list" bindonce>
                                             <li class="list-row list-row--has-primary">
                                                 <div class="list-primary-tile">
                                                 </div>
@@ -113,12 +113,13 @@
                                             </li>
                                             <li class="list-row list-row--has-primary" ng-repeat="tag in copy_tags">
                                                 <div class="list-primary-tile">
-                                                    <i ng-if="tag.is_chosen" class="mdi mdi-check"></i>
+                                                    <i bo-if="tag.is_chosen" class="mdi mdi-check"></i>
                                                 </div>
 
                                                 <div class="list-content-tile">
                                                     <a class="dropdown-link"
-                                                       ng-click="filterByTag(tag)">{{ tag.label }}</a>
+                                                       ng-click="filterByTag(tag)">
+                                                        <span ng-bind="tag.label"></span></a>
                                                 </div>
                                             </li>
                                         </ul>
@@ -127,9 +128,10 @@
                                 <!--Template from LUMX-->
 
                                 <ul>
-                                    <li class="mb" ng-repeat="tag in chosen_tags">
+                                    <li class="mb" bindonce ng-repeat="tag in chosen_tags">
                                         <button class="btn btn--s btn--blue btn--raised" ng-click="filterByTag(tag)"
-                                                lx-ripple>{{ tag.label }}
+                                                lx-ripple>
+                                            <span ng-bind="tag.label"></span>
                                         </button>
                                     </li>
                                 </ul>
