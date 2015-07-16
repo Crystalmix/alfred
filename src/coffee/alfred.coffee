@@ -1,6 +1,6 @@
 'use strict';
 
-alfredDirective = angular.module("alfredDirective", ["pasvaz.bindonce"])
+alfredDirective = angular.module("alfredDirective", [])
 
 
 ###

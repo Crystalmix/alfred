@@ -6,7 +6,8 @@ angular.module( 'alfredApp', [
       'ng-context-menu',
       'alfredDirective',
       'lumx',
-      'ngMaterial'
+      'ngMaterial',
+      'pasvaz.bindonce'
 ]).
 config(['$stateProvider', '$urlRouterProvider', '$mdThemingProvider', ($stateProvider, $urlRouterProvider, $mdThemingProvider) ->
 

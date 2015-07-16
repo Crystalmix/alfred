@@ -2,15 +2,15 @@
     <ul class="list hosts">
         <li
                 bindonce ng-repeat="(key,connection) in filteredConnections = (connections | filterConnections:query:this) track by key"
-                bo-id="key"
+                id="{{::key}}"
                 ng-click="select(key)"
                 ng-dblclick="connect(connection, key)"
-                key="{{ key }}"
+                key="{{::key}}"
                 ng-class="{ active: (key === selectedIndex) }"
                 bo-style="setHeight()"
                 context-menu="select(key)" context-menu-disabled="is_disable_context_menu"
                 class="panel panel-default position-fixed list-row"
-                data-target="menu-{{ uid }}-{{ $index }}"
+                data-target="menu-{{::uid}}-{{::$index}}"
                 bo-class="{ 'highlight': highlight, 'expanded' : expanded }">
 
             <div class="list-row__primary">
@@ -23,7 +23,7 @@
                 <span class="display-block fs-body-1 description" ng-bind="connection.username"></span>
 
                 <!--Includes context menu for each cell-->
-                <div class="dropdown position-fixed" id="menu-{{ uid }}-{{ $index }}">
+                <div class="dropdown position-fixed" id="menu-{{::uid}}-{{::$index}}">
                     <ul class="list context-menu host-menu" role="menu">
                         <li class="list-row" ng-click="connect(connection, key)">
                             <div class="list-row__primary">
