@@ -116,15 +116,19 @@
           onRemoveHostCallback: "&"
         },
         controller: function($scope, $element) {
-          var filter_hosts_by_chosen_tags, getConnections, getGroups, initChosenFlagsToTags, parseConnect, transformationData;
+          var filter_hosts_by_chosen_tags, getConnections, getGroups, initChosenFlagsToTags, parseConnect;
           $scope.query = null;
           $scope.chosen_tags = [];
           $scope.current_group = null;
           $scope.children_group = [];
           $scope.path_groups = [];
-          $scope.$on($scope.updateEvent, function() {
-            return transformationData();
-          });
+          $scope.$on($scope.updateEvent, (function(_this) {
+            return function() {
+              return $timeout((function() {
+                return _this.transformationData();
+              }));
+            };
+          })(this));
           getGroups = function() {
             var children_group, current_group_id, path_groups;
             current_group_id = $scope.current_group ? $scope.current_group.get("" + constant.local_id) : null;
@@ -204,23 +208,6 @@
               return val["is_chosen"] = false;
             });
           };
-          transformationData = function() {
-            if ($scope.tags) {
-              if (!$scope.copy_tags || $scope.tags.length !== $scope.copy_tags.length) {
-                $scope.copy_tags = $scope.tags.toJSON({
-                  do_not_encrypt: false
-                });
-              }
-            } else {
-              $scope.copy_tags = [];
-            }
-            if ($scope.groups) {
-              getGroups();
-            }
-            if ($scope.hosts) {
-              return getConnections();
-            }
-          };
           parseConnect = (function(_this) {
             return function(json) {
               var connection, e;
@@ -248,7 +235,7 @@
             id = group ? group["" + constant.local_id] : null;
             $scope.current_group = id ? $scope.groups.get(id) : null;
             return $timeout((function() {
-              return transformationData();
+              return this.transformationData();
             }));
           };
           $scope.filterByTag = function(tag) {
@@ -275,8 +262,25 @@
               initChosenFlagsToTags();
             }
             return $timeout((function() {
-              return transformationData();
+              return this.transformationData();
             }));
+          };
+          this.transformationData = function() {
+            if ($scope.tags) {
+              if (!$scope.copy_tags || $scope.tags.length !== $scope.copy_tags.length) {
+                $scope.copy_tags = $scope.tags.toJSON({
+                  do_not_encrypt: false
+                });
+              }
+            } else {
+              $scope.copy_tags = [];
+            }
+            if ($scope.groups) {
+              getGroups();
+            }
+            if ($scope.hosts) {
+              return getConnections();
+            }
           };
           $scope.enter = (function(_this) {
             return function() {
@@ -387,10 +391,10 @@
               }
             }
           };
-          transformationData();
+          this.transformationData();
           return this;
         },
-        link: function(scope, element, attrs) {
+        link: function(scope, element, attrs, ctrl) {
           var $input, changeConnectState, checkQuery, initializeParameters, _is_interrupt_arrow_commands, _setFocusAtInput;
           $input = null;
           $timeout((function() {
@@ -419,6 +423,7 @@
           scope.$on("setFocus", function(event, uid) {
             if (uid === scope.uid) {
               return $timeout((function() {
+                ctrl.transformationData();
                 return _setFocusAtInput();
               }), 100);
             }

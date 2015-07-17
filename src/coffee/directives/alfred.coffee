@@ -37,8 +37,10 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
             # Private methods
 
             # Binds event to update view
-            $scope.$on $scope.updateEvent, () ->
-                do transformationData
+            $scope.$on $scope.updateEvent, () =>
+                $timeout (=>
+                    do @transformationData
+                )
 
 
             getGroups = () ->
@@ -122,23 +124,6 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
                     val["is_chosen"] = no
 
 
-            # Prepares entities for template
-            transformationData = () ->
-                # Gets clone tags
-                # TODO:It is not work correctly when 'edit tag' will appear
-                if $scope.tags
-                    if not $scope.copy_tags or $scope.tags.length isnt $scope.copy_tags.length
-                        $scope.copy_tags = $scope.tags.toJSON({do_not_encrypt: no})
-                else
-                    $scope.copy_tags = []
-
-                # Prepares all groups
-                do getGroups if $scope.groups
-
-                # Prepares all hosts
-                do getConnections if $scope.hosts
-
-
             # Parsers json
             parseConnect = (json) =>
                 try
@@ -164,7 +149,7 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
             $scope.filterByGroup = (group) ->
                 id = if group then group["#{constant.local_id}"] else null
                 $scope.current_group = if id then $scope.groups.get(id) else null
-                $timeout (-> do transformationData)
+                $timeout (-> do @transformationData)
 
 
             $scope.filterByTag = (tag) ->
@@ -184,7 +169,24 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
                 else
                     $scope.chosen_tags = []
                     do initChosenFlagsToTags
-                $timeout (-> do transformationData)
+                $timeout (-> do @transformationData)
+
+
+            # Prepares entities for template
+            @transformationData = () ->
+                # Gets clone tags
+                # TODO:It is not work correctly when 'edit tag' will appear
+                if $scope.tags
+                    if not $scope.copy_tags or $scope.tags.length isnt $scope.copy_tags.length
+                        $scope.copy_tags = $scope.tags.toJSON({do_not_encrypt: no})
+                else
+                    $scope.copy_tags = []
+
+                # Prepares all groups
+                do getGroups if $scope.groups
+
+                # Prepares all hosts
+                do getConnections if $scope.hosts
 
 
             $scope.enter = () =>
@@ -285,12 +287,12 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
                     if connection_model then $scope.onRemoveHostCallback {host: connection_model}
 
 
-            do transformationData
+            do @transformationData
 
             return @
 
 
-        link: (scope, element, attrs) ->
+        link: (scope, element, attrs, ctrl) ->
             $input = null
 
             $timeout (->
@@ -327,6 +329,7 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
             scope.$on "setFocus", (event, uid) ->
                 if uid is scope.uid
                     $timeout (->
+                        do ctrl.transformationData
                         do _setFocusAtInput
                     ), 100
 
@@ -358,3 +361,4 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
 
             do initializeParameters
 ]
+
