@@ -230,58 +230,45 @@
             }
             return false;
           };
-          $scope.filterByGroup = function(group) {
-            var id;
-            id = group ? group["" + constant.local_id] : null;
-            $scope.current_group = id ? $scope.groups.get(id) : null;
-            return $timeout((function() {
-              return this.transformationData();
-            }));
-          };
-          $scope.filterByTag = function(tag) {
-            if (tag) {
-              if (!tag.local_id) {
-                $scope.copy_tags = $scope.tags.toJSON({
-                  do_not_encrypt: false
-                });
-                tag = _.findWhere($scope.copy_tags, {
-                  label: tag.label
-                });
-              }
-              if (tag["is_chosen"] === true) {
-                $scope.chosen_tags = _.without($scope.chosen_tags, _.findWhere($scope.chosen_tags, {
-                  local_id: tag["" + constant.local_id]
-                }));
-                tag["is_chosen"] = false;
+          $scope.filterByGroup = (function(_this) {
+            return function(group) {
+              var id;
+              id = group ? group["" + constant.local_id] : null;
+              $scope.current_group = id ? $scope.groups.get(id) : null;
+              return $timeout((function() {
+                return _this.transformationData();
+              }));
+            };
+          })(this);
+          $scope.filterByTag = (function(_this) {
+            return function(tag) {
+              if (tag) {
+                if (!tag.local_id) {
+                  $scope.copy_tags = $scope.tags.toJSON({
+                    do_not_encrypt: false
+                  });
+                  tag = _.findWhere($scope.copy_tags, {
+                    label: tag.label
+                  });
+                }
+                if (tag["is_chosen"] === true) {
+                  $scope.chosen_tags = _.without($scope.chosen_tags, _.findWhere($scope.chosen_tags, {
+                    local_id: tag["" + constant.local_id]
+                  }));
+                  tag["is_chosen"] = false;
+                } else {
+                  $scope.chosen_tags = _.union($scope.chosen_tags, tag);
+                  tag["is_chosen"] = true;
+                }
               } else {
-                $scope.chosen_tags = _.union($scope.chosen_tags, tag);
-                tag["is_chosen"] = true;
+                $scope.chosen_tags = [];
+                initChosenFlagsToTags();
               }
-            } else {
-              $scope.chosen_tags = [];
-              initChosenFlagsToTags();
-            }
-            return $timeout((function() {
-              return this.transformationData();
-            }));
-          };
-          this.transformationData = function() {
-            if ($scope.tags) {
-              if (!$scope.copy_tags || $scope.tags.length !== $scope.copy_tags.length) {
-                $scope.copy_tags = $scope.tags.toJSON({
-                  do_not_encrypt: false
-                });
-              }
-            } else {
-              $scope.copy_tags = [];
-            }
-            if ($scope.groups) {
-              getGroups();
-            }
-            if ($scope.hosts) {
-              return getConnections();
-            }
-          };
+              return $timeout((function() {
+                return _this.transformationData();
+              }));
+            };
+          })(this);
           $scope.enter = (function(_this) {
             return function() {
               if ($scope.query && $scope.query.indexOf("ssh") !== -1) {
@@ -354,6 +341,23 @@
           /*
               Methods are api between alfred directive and child directives
            */
+          this.transformationData = function() {
+            if ($scope.tags) {
+              if (!$scope.copy_tags || $scope.tags.length !== $scope.copy_tags.length) {
+                $scope.copy_tags = $scope.tags.toJSON({
+                  do_not_encrypt: false
+                });
+              }
+            } else {
+              $scope.copy_tags = [];
+            }
+            if ($scope.groups) {
+              getGroups();
+            }
+            if ($scope.hosts) {
+              return getConnections();
+            }
+          };
           this.setSelectedIndex = function(key) {
             return $scope.setSelectedConnection(key);
           };

@@ -228,13 +228,13 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
                 return no
 
 
-            $scope.filterByGroup = (group) ->
+            $scope.filterByGroup = (group) =>
                 id = if group then group["#{constant.local_id}"] else null
                 $scope.current_group = if id then $scope.groups.get(id) else null
-                $timeout (-> do @transformationData)
+                $timeout (=> do @transformationData)
 
 
-            $scope.filterByTag = (tag) ->
+            $scope.filterByTag = (tag) =>
                 if tag
                     # Updates copy_tags if there is tag without local_id
                     unless tag.local_id
@@ -251,24 +251,7 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
                 else
                     $scope.chosen_tags = []
                     do initChosenFlagsToTags
-                $timeout (-> do @transformationData)
-
-
-            # Prepares entities for template
-            @transformationData = () ->
-                # Gets clone tags
-                # TODO:It is not work correctly when 'edit tag' will appear
-                if $scope.tags
-                    if not $scope.copy_tags or $scope.tags.length isnt $scope.copy_tags.length
-                        $scope.copy_tags = $scope.tags.toJSON({do_not_encrypt: no})
-                else
-                    $scope.copy_tags = []
-
-                # Prepares all groups
-                do getGroups if $scope.groups
-
-                # Prepares all hosts
-                do getConnections if $scope.hosts
+                $timeout (=> do @transformationData)
 
 
             $scope.enter = () =>
@@ -331,6 +314,24 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
             ###
                 Methods are api between alfred directive and child directives
             ###
+
+
+            # Prepares entities for template
+            @transformationData = () ->
+                # Gets clone tags
+                # TODO:It is not work correctly when 'edit tag' will appear
+                if $scope.tags
+                    if not $scope.copy_tags or $scope.tags.length isnt $scope.copy_tags.length
+                        $scope.copy_tags = $scope.tags.toJSON({do_not_encrypt: no})
+                else
+                    $scope.copy_tags = []
+
+                # Prepares all groups
+                do getGroups if $scope.groups
+
+                # Prepares all hosts
+                do getConnections if $scope.hosts
+
 
             # Sets selected item
             #
