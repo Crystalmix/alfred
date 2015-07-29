@@ -26,11 +26,13 @@ describe('Unit test alfredDirectives: alfred', function () {
                 sa.init().done((function (_this) {
                     return function () {
                         scope.uid = "1"
+                        scope.alfred_event_update = "alfred_event_update"
                         scope.hosts = sa.hosts;
                         scope.groups = sa.groups;
                         scope.taghosts = sa.taghosts;
                         scope.tags = sa.tags;
                         element = $compile(angular.element('<alfred uid="uid" \
+                                                                update_event="alfred_event_update" \
                                                                 hosts="hosts" \
                                                                 groups="groups" \
                                                                 taghosts="taghosts" \
@@ -114,13 +116,14 @@ describe('Unit test alfredDirectives: alfred', function () {
     describe('Alfred gets Backbone models, so Alfred should listen to changes with them', function () {
 
             it("should update models at template",
-                function (done) {
+                function () {
                     var scopeDirective = element.isolateScope();
                     // Update host
                     expect(scopeDirective.connections).toBeDefined();
                     expect(scopeDirective.connections.length).toEqual(0);
 
-                    sa.hosts.add({address: "localhost"});
+                    sa.hosts.add({address: "localhost", local_id: 1});
+                    scopeDirective.$broadcast("alfred_event_update");
                     $timeout.flush();
 
                     expect(scopeDirective.connections.length).toEqual(1);
@@ -132,6 +135,7 @@ describe('Unit test alfredDirectives: alfred', function () {
                     expect(scopeDirective.groups.length).toEqual(0);
 
                     sa.groups.add({label: "root_group"});
+                    scopeDirective.$broadcast("alfred_event_update");
                     $timeout.flush();
 
                     expect(scopeDirective.groups.length).toEqual(1);
@@ -142,6 +146,7 @@ describe('Unit test alfredDirectives: alfred', function () {
                     expect(scopeDirective.tags.length).toEqual(0);
 
                     sa.tags.add({label: "ubuntu"});
+                    scopeDirective.$broadcast("alfred_event_update");
                     $timeout.flush();
 
                     expect(scopeDirective.tags.length).toEqual(1);
@@ -150,7 +155,7 @@ describe('Unit test alfredDirectives: alfred', function () {
                     sa.hosts.reset();
                     sa.groups.reset();
                     sa.tags.reset();
-                    done();
+
                 }
             )
         }
@@ -161,6 +166,7 @@ describe('Unit test alfredDirectives: alfred', function () {
         beforeEach(function (done) {
             group = sa.groups.add({label: "localhost"});
             tag = sa.tags.add({label: "ubuntu"});
+            scope.$broadcast("alfred_event_update");
             $timeout.flush();
             var callback = function () {
                 tag.save().done(function () {
@@ -176,6 +182,7 @@ describe('Unit test alfredDirectives: alfred', function () {
             group.save({}, {wait: true}).done(function () {
                 first_host = sa.hosts.add({address: "remote.com"});
                 second_host = sa.hosts.add({address: "127.0.0.1", group: {local_id: group.get("local_id")}});
+                scope.$broadcast("alfred_event_update");
                 $timeout.flush();
                 first_host.save_all({}).done(function () {
                     second_host.save_all({}).done(function () {
@@ -222,9 +229,10 @@ describe('Unit test alfredDirectives: alfred', function () {
 
         var first_host, second_host, third_host;
         beforeEach(function (done) {
-            first_host = sa.hosts.add({address: "remote.com"});
-            second_host = sa.hosts.add({address: "127.0.0.1"});
-            third_host = sa.hosts.add({address: "o.com"});
+            first_host = sa.hosts.add({address: "remote.com", local_id: 1});
+            second_host = sa.hosts.add({address: "127.0.0.1", local_id: 2});
+            third_host = sa.hosts.add({address: "o.com", local_id: 3});
+            scope.$broadcast("alfred_event_update");
             $timeout.flush();
             first_host.save_all({}).done(function () {
                 second_host.save_all({}).done(function () {

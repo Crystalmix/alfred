@@ -179,14 +179,15 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
 
                 # Gets array of models - copy
                 _.each connections, (connection, key) =>
-                    connections[key] = connections[key].toJSON do_not_encrypt: no
+                    connections[key] = connections[key].toJSON {do_not_encrypt: no}
 
                 # Sets username field
-                _.each connections, (val, key) ->
+                _.each connections, (val) ->
                     # Returns object username = {username: "username", is_merged: false}
-                    username_object = $scope.hosts.models[key].get_merged_username()
-                    if username_object and username_object.username
-                        val[constant.host.username] = username_object[constant.host.username]
+                    if $scope.hosts.find_by_id(val)
+                        username_object = $scope.hosts.find_by_id(val).get_merged_username()
+                        if username_object and username_object.username
+                            val[constant.host.username] = username_object[constant.host.username]
                     else
                         val[constant.host.username] = null
 
