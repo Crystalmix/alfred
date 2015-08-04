@@ -185,9 +185,12 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
                 _.each connections, (val) ->
                     # Returns object username = {username: "username", is_merged: false}
                     if $scope.hosts.find_by_id(val)
-                        username_object = $scope.hosts.find_by_id(val).get_merged_username()
-                        if username_object and username_object.username
-                            val[constant.host.username] = username_object[constant.host.username]
+                        username_object = $scope.hosts.find_by_id(val).get_merged_identity()
+                        if username_object and username_object.ssh_identity
+                            # Returns visible ssh_identity
+                            val[constant.host.username] = username_object.ssh_identity.get constant.host.username
+                        else if username_object and username_object.username
+                            val[constant.host.username] = username_object.username[constant.host.username]
                     else
                         val[constant.host.username] = null
 
