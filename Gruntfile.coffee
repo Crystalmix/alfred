@@ -68,6 +68,13 @@ module.exports = (grunt) ->
                 files:
                     "src/css/alfred.css": ["src/css/alfred.less", "src/css/icons.less"]
 
+
+        uglify:
+            my_target:
+              files:
+                  "src/js/alfred.min.js": ["src/js/alfred.js"]
+
+
         karma:
             unit:
                 configFile: 'test/karma.conf.js',
@@ -83,8 +90,9 @@ module.exports = (grunt) ->
     grunt.loadNpmTasks 'grunt-contrib-clean'
     grunt.loadNpmTasks 'grunt-hustler'
     grunt.loadNpmTasks 'grunt-contrib-less'
+    grunt.loadNpmTasks 'grunt-contrib-uglify'
 
     grunt.registerTask 'default', ['ngTemplateCache', 'concat:dist', 'coffee', 'concat:addTemplates', 'less']
     grunt.registerTask 'demo', ['coffee:dev']
     grunt.registerTask 'test', ['default', 'karma']
-    grunt.registerTask 'build', ['default', 'clean']
+    grunt.registerTask 'build', ['default', 'clean', 'uglify']

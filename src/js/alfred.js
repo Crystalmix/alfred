@@ -115,293 +115,295 @@
           onEditHostCallback: "&",
           onRemoveHostCallback: "&"
         },
-        controller: function($scope, $element) {
-          var filter_hosts_by_chosen_tags, getConnections, getGroups, initChosenFlagsToTags, parseConnect;
-          $scope.query = null;
-          $scope.chosen_tags = [];
-          $scope.current_group = null;
-          $scope.children_group = [];
-          $scope.path_groups = [];
-          $scope.$on($scope.updateEvent, (function(_this) {
-            return function() {
-              return $timeout((function() {
-                return _this.transformationData();
-              }));
-            };
-          })(this));
-          getGroups = function() {
-            var children_group, current_group_id, path_groups;
-            current_group_id = $scope.current_group ? $scope.current_group.get("" + constant.local_id) : null;
-            path_groups = current_group_id ? $scope.groups.get_parent_groups(current_group_id) : [];
-            path_groups.reverse();
-            children_group = current_group_id ? _.rest($scope.groups.get_all_children(current_group_id)) : $scope.groups.get_root();
-            _.each(children_group, function(val, key) {
-              return children_group[key] = _.clone(val.toJSON({
-                do_not_encrypt: false
-              }));
-            });
-            _.each(path_groups, function(val, key) {
-              return path_groups[key] = _.clone(val.toJSON({
-                do_not_encrypt: false
-              }));
-            });
-            $scope.path_groups = path_groups;
-            return $scope.children_group = children_group;
-          };
-          filter_hosts_by_chosen_tags = function(connections) {
-            var array_id_of_hosts, array_of_local_id_of_tags, tag_hosts;
-            tag_hosts = [];
-            array_id_of_hosts = [];
-            array_of_local_id_of_tags = [];
-            _.each($scope.chosen_tags, function(val) {
-              return array_of_local_id_of_tags = _.union(array_of_local_id_of_tags, val["" + constant.local_id]);
-            });
-            tag_hosts = $scope.taghosts.intersection_by_tags(array_of_local_id_of_tags);
-            _.each(tag_hosts, function(val) {
-              if (val.get("" + constant.tag_host.host)["" + constant.local_id]) {
-                return array_id_of_hosts = _.union(array_id_of_hosts, val.get("" + constant.tag_host.host)["" + constant.local_id]);
-              }
-            });
-            return connections = _.filter(connections, function(val) {
-              if (_.contains(array_id_of_hosts, val.get("" + constant.local_id))) {
-                return val;
-              }
-            });
-          };
-          getConnections = function() {
-            var connections;
-            connections = [];
-            if ($scope.current_group) {
-              connections = $scope.hosts.filter_by_group($scope.current_group.get("" + constant.local_id), true);
-            } else {
-              connections = _.clone($scope.hosts.models);
-            }
-            if ($scope.chosen_tags.length) {
-              connections = filter_hosts_by_chosen_tags(connections);
-            }
-            _.each(connections, (function(_this) {
-              return function(connection, key) {
-                return connections[key] = connections[key].toJSON({
-                  do_not_encrypt: false
-                });
+        controller: [
+          "$scope", "$element", function($scope, $element) {
+            var filter_hosts_by_chosen_tags, getConnections, getGroups, initChosenFlagsToTags, parseConnect;
+            $scope.query = null;
+            $scope.chosen_tags = [];
+            $scope.current_group = null;
+            $scope.children_group = [];
+            $scope.path_groups = [];
+            $scope.$on($scope.updateEvent, (function(_this) {
+              return function() {
+                return $timeout((function() {
+                  return _this.transformationData();
+                }));
               };
             })(this));
-            _.each(connections, function(val) {
-              var os_name, username_object;
-              if ($scope.hosts.find_by_id(val)) {
-                username_object = $scope.hosts.find_by_id(val).get_merged_identity();
-                if (username_object && username_object.ssh_identity) {
-                  val[constant.host.username] = username_object.ssh_identity.get(constant.host.username);
-                } else if (username_object && username_object.username) {
-                  val[constant.host.username] = username_object.username[constant.host.username];
+            getGroups = function() {
+              var children_group, current_group_id, path_groups;
+              current_group_id = $scope.current_group ? $scope.current_group.get("" + constant.local_id) : null;
+              path_groups = current_group_id ? $scope.groups.get_parent_groups(current_group_id) : [];
+              path_groups.reverse();
+              children_group = current_group_id ? _.rest($scope.groups.get_all_children(current_group_id)) : $scope.groups.get_root();
+              _.each(children_group, function(val, key) {
+                return children_group[key] = _.clone(val.toJSON({
+                  do_not_encrypt: false
+                }));
+              });
+              _.each(path_groups, function(val, key) {
+                return path_groups[key] = _.clone(val.toJSON({
+                  do_not_encrypt: false
+                }));
+              });
+              $scope.path_groups = path_groups;
+              return $scope.children_group = children_group;
+            };
+            filter_hosts_by_chosen_tags = function(connections) {
+              var array_id_of_hosts, array_of_local_id_of_tags, tag_hosts;
+              tag_hosts = [];
+              array_id_of_hosts = [];
+              array_of_local_id_of_tags = [];
+              _.each($scope.chosen_tags, function(val) {
+                return array_of_local_id_of_tags = _.union(array_of_local_id_of_tags, val["" + constant.local_id]);
+              });
+              tag_hosts = $scope.taghosts.intersection_by_tags(array_of_local_id_of_tags);
+              _.each(tag_hosts, function(val) {
+                if (val.get("" + constant.tag_host.host)["" + constant.local_id]) {
+                  return array_id_of_hosts = _.union(array_id_of_hosts, val.get("" + constant.tag_host.host)["" + constant.local_id]);
                 }
+              });
+              return connections = _.filter(connections, function(val) {
+                if (_.contains(array_id_of_hosts, val.get("" + constant.local_id))) {
+                  return val;
+                }
+              });
+            };
+            getConnections = function() {
+              var connections;
+              connections = [];
+              if ($scope.current_group) {
+                connections = $scope.hosts.filter_by_group($scope.current_group.get("" + constant.local_id), true);
               } else {
-                val[constant.host.username] = null;
+                connections = _.clone($scope.hosts.models);
               }
-              os_name = val[constant.host.os_name].toLowerCase();
-              if (os_name && os_name !== 'none') {
-                return val[constant.host.os_name] = os_name;
-              } else {
-                return val[constant.host.os_name] = '';
+              if ($scope.chosen_tags.length) {
+                connections = filter_hosts_by_chosen_tags(connections);
               }
-            });
-            return $scope.connections = connections;
-          };
-          initChosenFlagsToTags = function() {
-            return _.each($scope.copy_tags, function(val, key) {
-              return val["is_chosen"] = false;
-            });
-          };
-          parseConnect = (function(_this) {
-            return function(json) {
-              var connection, e;
-              try {
-                connection = quickConnectParse.parse(json);
-                return _this.enterCallback(connection);
-              } catch (_error) {
-                e = _error;
-                return console.warn(e, json);
+              _.each(connections, (function(_this) {
+                return function(connection, key) {
+                  return connections[key] = connections[key].toJSON({
+                    do_not_encrypt: false
+                  });
+                };
+              })(this));
+              _.each(connections, function(val) {
+                var os_name, username_object;
+                if ($scope.hosts.find_by_id(val)) {
+                  username_object = $scope.hosts.find_by_id(val).get_merged_identity();
+                  if (username_object && username_object.ssh_identity) {
+                    val[constant.host.username] = username_object.ssh_identity.get(constant.host.username);
+                  } else if (username_object && username_object.username) {
+                    val[constant.host.username] = username_object.username[constant.host.username];
+                  }
+                } else {
+                  val[constant.host.username] = null;
+                }
+                os_name = val[constant.host.os_name].toLowerCase();
+                if (os_name && os_name !== 'none') {
+                  return val[constant.host.os_name] = os_name;
+                } else {
+                  return val[constant.host.os_name] = '';
+                }
+              });
+              return $scope.connections = connections;
+            };
+            initChosenFlagsToTags = function() {
+              return _.each($scope.copy_tags, function(val, key) {
+                return val["is_chosen"] = false;
+              });
+            };
+            parseConnect = (function(_this) {
+              return function(json) {
+                var connection, e;
+                try {
+                  connection = quickConnectParse.parse(json);
+                  return _this.enterCallback(connection);
+                } catch (_error) {
+                  e = _error;
+                  return console.warn(e, json);
+                }
+              };
+            })(this);
+            $scope.setSelectedConnection = function(index) {
+              $scope.selectedIndex = index;
+              return $scope.$broadcast("setSelectedIndex", index);
+            };
+            $scope.is_selectedIndex = function() {
+              if (($scope.selectedIndex != null) && $scope.selectedIndex >= 0) {
+                return true;
+              }
+              return false;
+            };
+            $scope.filterByGroup = (function(_this) {
+              return function(group) {
+                var id;
+                id = group ? group["" + constant.local_id] : null;
+                $scope.current_group = id ? $scope.groups.get(id) : null;
+                return $timeout((function() {
+                  return _this.transformationData();
+                }));
+              };
+            })(this);
+            $scope.filterByTag = (function(_this) {
+              return function(tag) {
+                if (tag) {
+                  if (!tag.local_id) {
+                    $scope.copy_tags = $scope.tags.toJSON({
+                      do_not_encrypt: false
+                    });
+                    tag = _.findWhere($scope.copy_tags, {
+                      label: tag.label
+                    });
+                  }
+                  if (tag["is_chosen"] === true) {
+                    $scope.chosen_tags = _.without($scope.chosen_tags, _.findWhere($scope.chosen_tags, {
+                      local_id: tag["" + constant.local_id]
+                    }));
+                    tag["is_chosen"] = false;
+                  } else {
+                    $scope.chosen_tags = _.union($scope.chosen_tags, tag);
+                    tag["is_chosen"] = true;
+                  }
+                } else {
+                  $scope.chosen_tags = [];
+                  initChosenFlagsToTags();
+                }
+                return $timeout((function() {
+                  return _this.transformationData();
+                }));
+              };
+            })(this);
+            $scope.enter = (function(_this) {
+              return function() {
+                if ($scope.query && $scope.query.indexOf("ssh") !== -1) {
+                  return parseConnect($scope.query);
+                }
+                if ($scope.is_selectedIndex()) {
+                  return _this.enterCallback($scope.connections[$scope.selectedIndex]);
+                }
+              };
+            })(this);
+            $scope.editGroup = function(group) {
+              var group_model;
+              group_model = $scope.groups.get(group["" + constant.local_id]) || $scope.groups.get(group.id);
+              if (group_model) {
+                return $scope.onEditGroupCallback({
+                  group: group_model
+                });
               }
             };
-          })(this);
-          $scope.setSelectedConnection = function(index) {
-            $scope.selectedIndex = index;
-            return $scope.$broadcast("setSelectedIndex", index);
-          };
-          $scope.is_selectedIndex = function() {
-            if (($scope.selectedIndex != null) && $scope.selectedIndex >= 0) {
-              return true;
-            }
-            return false;
-          };
-          $scope.filterByGroup = (function(_this) {
-            return function(group) {
-              var id;
-              id = group ? group["" + constant.local_id] : null;
-              $scope.current_group = id ? $scope.groups.get(id) : null;
-              return $timeout((function() {
-                return _this.transformationData();
-              }));
+            $scope.removeGroup = function(group) {
+              var group_model;
+              group_model = $scope.groups.get(group["" + constant.local_id]) || $scope.groups.get(group.id);
+              if (group_model) {
+                return $scope.onRemoveGroupCallback({
+                  group: group_model
+                });
+              }
             };
-          })(this);
-          $scope.filterByTag = (function(_this) {
-            return function(tag) {
-              if (tag) {
-                if (!tag.local_id) {
+            $scope.safeApply = function(expr) {
+              if (!$scope.$$phase) {
+                if (expr) {
+                  return $scope.$apply(expr);
+                } else {
+                  return $scope.$apply();
+                }
+              }
+            };
+            $scope.addConnection = function($event) {
+              $event.preventDefault();
+              $event.stopPropagation();
+              return $scope.onAddHostCallback({
+                parent_group: $scope.current_group
+              });
+            };
+            $scope.addGroup = function($event) {
+              $event.preventDefault();
+              $event.stopPropagation();
+              return $scope.onAddGroupCallback({
+                parent_group: $scope.current_group
+              });
+            };
+            jwerty.key('↑', (function() {
+              $scope.$broadcast("arrow", "up");
+              return false;
+            }), $element);
+            jwerty.key('↓', (function() {
+              $scope.$broadcast("arrow", "down");
+              return false;
+            }), $element);
+            jwerty.key('↩', ((function(_this) {
+              return function() {
+                if ($scope.query && $scope.query.indexOf("ssh") !== -1) {
+                  return parseConnect($scope.query);
+                } else {
+                  return $scope.$broadcast("enter");
+                }
+              };
+            })(this)), $element);
+
+            /*
+                Methods are api between alfred directive and child directives
+             */
+            this.transformationData = function() {
+              if ($scope.tags) {
+                if (!$scope.copy_tags || $scope.tags.length !== $scope.copy_tags.length) {
                   $scope.copy_tags = $scope.tags.toJSON({
                     do_not_encrypt: false
                   });
-                  tag = _.findWhere($scope.copy_tags, {
-                    label: tag.label
+                }
+              } else {
+                $scope.copy_tags = [];
+              }
+              if ($scope.groups) {
+                getGroups();
+              }
+              if ($scope.hosts) {
+                return getConnections();
+              }
+            };
+            this.setSelectedIndex = function(key) {
+              return $scope.setSelectedConnection(key);
+            };
+            this.enterCallback = function(host) {
+              var host_model;
+              if (host) {
+                host_model = $scope.hosts.get(host["" + constant.local_id]) || host;
+                if (host_model) {
+                  return $scope.onEnterHostCallback({
+                    host: host_model
                   });
                 }
-                if (tag["is_chosen"] === true) {
-                  $scope.chosen_tags = _.without($scope.chosen_tags, _.findWhere($scope.chosen_tags, {
-                    local_id: tag["" + constant.local_id]
-                  }));
-                  tag["is_chosen"] = false;
-                } else {
-                  $scope.chosen_tags = _.union($scope.chosen_tags, tag);
-                  tag["is_chosen"] = true;
+              }
+            };
+            this.edit = function(connection, always_open_form) {
+              var connection_model;
+              if (connection) {
+                connection_model = $scope.hosts.get(connection["" + constant.local_id]) || $scope.hosts.get(connection.id);
+                if (connection_model) {
+                  return $scope.onEditHostCallback({
+                    host: connection_model,
+                    always_open_form: always_open_form
+                  });
                 }
-              } else {
-                $scope.chosen_tags = [];
-                initChosenFlagsToTags();
-              }
-              return $timeout((function() {
-                return _this.transformationData();
-              }));
-            };
-          })(this);
-          $scope.enter = (function(_this) {
-            return function() {
-              if ($scope.query && $scope.query.indexOf("ssh") !== -1) {
-                return parseConnect($scope.query);
-              }
-              if ($scope.is_selectedIndex()) {
-                return _this.enterCallback($scope.connections[$scope.selectedIndex]);
               }
             };
-          })(this);
-          $scope.editGroup = function(group) {
-            var group_model;
-            group_model = $scope.groups.get(group["" + constant.local_id]) || $scope.groups.get(group.id);
-            if (group_model) {
-              return $scope.onEditGroupCallback({
-                group: group_model
-              });
-            }
-          };
-          $scope.removeGroup = function(group) {
-            var group_model;
-            group_model = $scope.groups.get(group["" + constant.local_id]) || $scope.groups.get(group.id);
-            if (group_model) {
-              return $scope.onRemoveGroupCallback({
-                group: group_model
-              });
-            }
-          };
-          $scope.safeApply = function(expr) {
-            if (!$scope.$$phase) {
-              if (expr) {
-                return $scope.$apply(expr);
-              } else {
-                return $scope.$apply();
-              }
-            }
-          };
-          $scope.addConnection = function($event) {
-            $event.preventDefault();
-            $event.stopPropagation();
-            return $scope.onAddHostCallback({
-              parent_group: $scope.current_group
-            });
-          };
-          $scope.addGroup = function($event) {
-            $event.preventDefault();
-            $event.stopPropagation();
-            return $scope.onAddGroupCallback({
-              parent_group: $scope.current_group
-            });
-          };
-          jwerty.key('↑', (function() {
-            $scope.$broadcast("arrow", "up");
-            return false;
-          }), $element);
-          jwerty.key('↓', (function() {
-            $scope.$broadcast("arrow", "down");
-            return false;
-          }), $element);
-          jwerty.key('↩', ((function(_this) {
-            return function() {
-              if ($scope.query && $scope.query.indexOf("ssh") !== -1) {
-                return parseConnect($scope.query);
-              } else {
-                return $scope.$broadcast("enter");
+            this.removeConnection = function(connection) {
+              var connection_model;
+              if (connection) {
+                connection_model = $scope.hosts.get(connection["" + constant.local_id]) || $scope.hosts.get(connection.id);
+                if (connection_model) {
+                  return $scope.onRemoveHostCallback({
+                    host: connection_model
+                  });
+                }
               }
             };
-          })(this)), $element);
-
-          /*
-              Methods are api between alfred directive and child directives
-           */
-          this.transformationData = function() {
-            if ($scope.tags) {
-              if (!$scope.copy_tags || $scope.tags.length !== $scope.copy_tags.length) {
-                $scope.copy_tags = $scope.tags.toJSON({
-                  do_not_encrypt: false
-                });
-              }
-            } else {
-              $scope.copy_tags = [];
-            }
-            if ($scope.groups) {
-              getGroups();
-            }
-            if ($scope.hosts) {
-              return getConnections();
-            }
-          };
-          this.setSelectedIndex = function(key) {
-            return $scope.setSelectedConnection(key);
-          };
-          this.enterCallback = function(host) {
-            var host_model;
-            if (host) {
-              host_model = $scope.hosts.get(host["" + constant.local_id]) || host;
-              if (host_model) {
-                return $scope.onEnterHostCallback({
-                  host: host_model
-                });
-              }
-            }
-          };
-          this.edit = function(connection, always_open_form) {
-            var connection_model;
-            if (connection) {
-              connection_model = $scope.hosts.get(connection["" + constant.local_id]) || $scope.hosts.get(connection.id);
-              if (connection_model) {
-                return $scope.onEditHostCallback({
-                  host: connection_model,
-                  always_open_form: always_open_form
-                });
-              }
-            }
-          };
-          this.removeConnection = function(connection) {
-            var connection_model;
-            if (connection) {
-              connection_model = $scope.hosts.get(connection["" + constant.local_id]) || $scope.hosts.get(connection.id);
-              if (connection_model) {
-                return $scope.onRemoveHostCallback({
-                  host: connection_model
-                });
-              }
-            }
-          };
-          this.transformationData();
-          return this;
-        },
+            this.transformationData();
+            return this;
+          }
+        ],
         link: function(scope, element, attrs, ctrl) {
           var $input, changeConnectState, checkQuery, initializeParameters, _is_interrupt_arrow_commands, _setFocusAtInput;
           $input = null;
@@ -487,27 +489,29 @@
         currentGroup: "=",
         uid: "="
       },
-      controller: function($scope) {
-        $scope.setHeight = function() {
-          return {
-            height: $scope.heightCell + 'px'
+      controller: [
+        "$scope", function($scope) {
+          $scope.setHeight = function() {
+            return {
+              height: $scope.heightCell + 'px'
+            };
           };
-        };
-        $scope.safeApply = function(expr) {
-          if (!$scope.$$phase) {
-            if (expr) {
-              return $scope.$apply(expr);
-            } else {
-              return $scope.$apply();
+          $scope.safeApply = function(expr) {
+            if (!$scope.$$phase) {
+              if (expr) {
+                return $scope.$apply(expr);
+              } else {
+                return $scope.$apply();
+              }
             }
-          }
-        };
-        this.select = function(key) {
-          setSelectedConnection(key);
-          return $scope.safeApply();
-        };
-        return this;
-      },
+          };
+          this.select = function(key) {
+            setSelectedConnection(key);
+            return $scope.safeApply();
+          };
+          return this;
+        }
+      ],
       link: function(scope, element, attrs, alfredCtrl) {
         var activateNextItem, activatePreviousItem, getSelectedConnection, setSelectedConnection;
         scope.alfredController = alfredCtrl;

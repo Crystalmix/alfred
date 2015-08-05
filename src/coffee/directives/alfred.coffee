@@ -27,7 +27,7 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
             onRemoveHostCallback: "&"
 
 
-        controller: ($scope, $element) ->
+        controller: ["$scope", "$element", ($scope, $element) ->
             $scope.query = null
             $scope.chosen_tags = []
             $scope.current_group = null
@@ -295,6 +295,7 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
             do @transformationData
 
             return @
+        ]
 
 
         link: (scope, element, attrs, ctrl) ->

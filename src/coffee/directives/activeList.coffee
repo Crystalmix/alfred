@@ -18,7 +18,7 @@ alfredDirective.directive "activeList",  () ->
             currentGroup:    "="
             uid:             "="
 
-        controller: ($scope) ->
+        controller: ["$scope", ($scope) ->
 
             $scope.setHeight = () ->
                 height: $scope.heightCell + 'px'
@@ -35,6 +35,7 @@ alfredDirective.directive "activeList",  () ->
                 do $scope.safeApply
 
             return @
+        ]
 
 
         link: (scope, element, attrs, alfredCtrl) ->
