@@ -117,7 +117,7 @@
         },
         controller: [
           "$scope", "$element", function($scope, $element) {
-            var filter_hosts_by_chosen_tags, getConnections, getGroups, initChosenFlagsToTags, parseConnect;
+            var are_tags_updated, filter_hosts_by_chosen_tags, getConnections, getGroups, initChosenFlagsToTags, parseConnect, update_chosen_data;
             $scope.query = null;
             $scope.chosen_tags = [];
             $scope.current_group = null;
@@ -130,12 +130,27 @@
                 }));
               };
             })(this));
+            update_chosen_data = function() {
+              $scope.current_group = $scope.current_group ? $scope.groups.find_by_id($scope.current_group) : null;
+              return _.each($scope.chosen_tags, function(chosen_tag, key) {
+                var json, tag_model;
+                tag_model = $scope.tags.find_by_id(chosen_tag);
+                if (tag_model) {
+                  json = _.extend(tag_model.toJSON({
+                    do_not_encrypt: false
+                  }), {
+                    is_chosen: true
+                  });
+                }
+                return $scope.chosen_tags[key] = json;
+              });
+            };
             getGroups = function() {
-              var children_group, current_group_id, path_groups;
-              current_group_id = $scope.current_group ? $scope.current_group.get("" + constant.local_id) : null;
-              path_groups = current_group_id ? $scope.groups.get_parent_groups(current_group_id) : [];
+              var children_group, current_group_local_id, path_groups;
+              current_group_local_id = $scope.current_group ? $scope.current_group.get("" + constant.local_id) : null;
+              path_groups = current_group_local_id ? $scope.groups.get_parent_groups(current_group_local_id) : [];
               path_groups.reverse();
-              children_group = current_group_id ? _.rest($scope.groups.get_all_children(current_group_id)) : $scope.groups.get_root();
+              children_group = current_group_local_id ? _.rest($scope.groups.get_all_children(current_group_local_id)) : $scope.groups.get_root();
               _.each(children_group, function(val, key) {
                 return children_group[key] = _.clone(val.toJSON({
                   do_not_encrypt: false
@@ -237,9 +252,9 @@
             };
             $scope.filterByGroup = (function(_this) {
               return function(group) {
-                var id;
-                id = group ? group["" + constant.local_id] : null;
-                $scope.current_group = id ? $scope.groups.get(id) : null;
+                var group_model;
+                group_model = group ? $scope.groups.find_by_id(group) : null;
+                $scope.current_group = group_model;
                 return $timeout((function() {
                   return _this.transformationData();
                 }));
@@ -247,6 +262,7 @@
             })(this);
             $scope.filterByTag = (function(_this) {
               return function(tag) {
+                var copy_tag;
                 if (tag) {
                   if (!tag.local_id) {
                     $scope.copy_tags = $scope.tags.toJSON({
@@ -260,10 +276,16 @@
                     $scope.chosen_tags = _.without($scope.chosen_tags, _.findWhere($scope.chosen_tags, {
                       local_id: tag["" + constant.local_id]
                     }));
-                    tag["is_chosen"] = false;
+                    copy_tag = _.findWhere($scope.copy_tags, {
+                      local_id: tag["" + constant.local_id]
+                    });
+                    copy_tag["is_chosen"] = false;
                   } else {
                     $scope.chosen_tags = _.union($scope.chosen_tags, tag);
-                    tag["is_chosen"] = true;
+                    copy_tag = _.findWhere($scope.copy_tags, {
+                      local_id: tag["" + constant.local_id]
+                    });
+                    copy_tag["is_chosen"] = true;
                   }
                 } else {
                   $scope.chosen_tags = [];
@@ -346,12 +368,30 @@
             /*
                 Methods are api between alfred directive and child directives
              */
+            are_tags_updated = function() {
+              return _.find($scope.copy_tags, function(copy_tag) {
+                return $scope.tags.find_by_id({
+                  local_id: copy_tag["" + constant.local_id]
+                }) === void 0;
+              });
+            };
             this.transformationData = function() {
+              var tags_are_updated;
+              update_chosen_data();
               if ($scope.tags) {
-                if (!$scope.copy_tags || $scope.tags.length !== $scope.copy_tags.length) {
-                  $scope.copy_tags = $scope.tags.toJSON({
-                    do_not_encrypt: false
-                  });
+                tags_are_updated = are_tags_updated();
+                if (!$scope.copy_tags || $scope.tags.length !== $scope.copy_tags.length || tags_are_updated) {
+                  if (tags_are_updated) {
+                    _.each($scope.copy_tags, function(copy_tag) {
+                      return copy_tag = $scope.tags.find_by_id(copy_tag) ? $scope.tags.find_by_id(copy_tag).toJSON({
+                        do_not_encrypt: false
+                      }) : null;
+                    });
+                  } else {
+                    $scope.copy_tags = $scope.tags.toJSON({
+                      do_not_encrypt: false
+                    });
+                  }
                 }
               } else {
                 $scope.copy_tags = [];

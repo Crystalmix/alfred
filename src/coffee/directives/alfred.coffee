@@ -42,14 +42,23 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
                     do @transformationData
                 )
 
+            update_chosen_data = () ->
+                # When user reload db, each model changes local_id so we should update them
+                $scope.current_group = if $scope.current_group then $scope.groups.find_by_id($scope.current_group) else null
+
+                _.each $scope.chosen_tags, (chosen_tag, key) ->
+                    tag_model = $scope.tags.find_by_id chosen_tag
+                    json = _.extend(tag_model.toJSON({do_not_encrypt: no}), {is_chosen: yes}) if tag_model
+                    $scope.chosen_tags[key] = json
+
 
             getGroups = () ->
-                current_group_id = if $scope.current_group then $scope.current_group.get("#{constant.local_id}") else null
+                current_group_local_id = if $scope.current_group then $scope.current_group.get("#{constant.local_id}") else null
 
-                path_groups = if current_group_id then $scope.groups.get_parent_groups(current_group_id) else []
+                path_groups = if current_group_local_id then $scope.groups.get_parent_groups(current_group_local_id) else []
                 do path_groups.reverse
 
-                children_group = if current_group_id then _.rest($scope.groups.get_all_children(current_group_id)) else $scope.groups.get_root()
+                children_group = if current_group_local_id then _.rest($scope.groups.get_all_children(current_group_local_id)) else $scope.groups.get_root()
 
                 _.each children_group, (val, key) ->
                     children_group[key] = _.clone val.toJSON {do_not_encrypt: no}
@@ -151,8 +160,8 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
 
 
             $scope.filterByGroup = (group) =>
-                id = if group then group["#{constant.local_id}"] else null
-                $scope.current_group = if id then $scope.groups.get(id) else null
+                group_model = if group then $scope.groups.find_by_id(group) else null
+                $scope.current_group = group_model
                 $timeout (=> do @transformationData)
 
 
@@ -166,10 +175,12 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
                     if tag["is_chosen"] is yes
                         $scope.chosen_tags = _.without($scope.chosen_tags,
                             _.findWhere($scope.chosen_tags, {local_id: tag["#{constant.local_id}"]}))
-                        tag["is_chosen"] = no
+                        copy_tag = _.findWhere($scope.copy_tags, {local_id: tag["#{constant.local_id}"]})
+                        copy_tag["is_chosen"] = no
                     else
                         $scope.chosen_tags = _.union $scope.chosen_tags, tag
-                        tag["is_chosen"] = yes
+                        copy_tag = _.findWhere($scope.copy_tags, {local_id: tag["#{constant.local_id}"]})
+                        copy_tag["is_chosen"] = yes
                 else
                     $scope.chosen_tags = []
                     do initChosenFlagsToTags
@@ -238,13 +249,27 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
             ###
 
 
+            are_tags_updated = () ->
+                # Checks if tags have been reloaded
+                _.find $scope.copy_tags, (copy_tag) ->
+                    $scope.tags.find_by_id({local_id: copy_tag["#{constant.local_id}"]}) is undefined
+
+
             # Prepares entities for template
             @transformationData = () ->
+
+                do update_chosen_data
+
                 # Gets clone tags
                 # TODO:It is not work correctly when 'edit tag' will appear
                 if $scope.tags
-                    if not $scope.copy_tags or $scope.tags.length isnt $scope.copy_tags.length
-                        $scope.copy_tags = $scope.tags.toJSON({do_not_encrypt: no})
+                    tags_are_updated = are_tags_updated()
+                    if not $scope.copy_tags or $scope.tags.length isnt $scope.copy_tags.length or tags_are_updated
+                        if tags_are_updated
+                            _.each $scope.copy_tags, (copy_tag) ->
+                                copy_tag = if $scope.tags.find_by_id(copy_tag) then $scope.tags.find_by_id(copy_tag).toJSON {do_not_encrypt: no} else null
+                        else
+                            $scope.copy_tags = $scope.tags.toJSON({do_not_encrypt: no})
                 else
                     $scope.copy_tags = []
 
