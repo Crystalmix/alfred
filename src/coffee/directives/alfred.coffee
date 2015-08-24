@@ -42,17 +42,10 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
                     do @transformationData
                 )
 
-            update_chosen_data = () ->
-                # When user reload db, each model changes local_id so we should update them
-                $scope.current_group = if $scope.current_group then $scope.groups.find_by_id($scope.current_group) else null
-
-                _.each $scope.chosen_tags, (chosen_tag, key) ->
-                    tag_model = $scope.tags.find_by_id chosen_tag
-                    json = _.extend(tag_model.toJSON({do_not_encrypt: no}), {is_chosen: yes}) if tag_model
-                    $scope.chosen_tags[key] = json
-
 
             getGroups = () ->
+                $scope.current_group = if $scope.current_group then $scope.groups.find_by_id($scope.current_group) else null
+
                 current_group_local_id = if $scope.current_group then $scope.current_group.get("#{constant.local_id}") else null
 
                 path_groups = if current_group_local_id then $scope.groups.get_parent_groups(current_group_local_id) else []
@@ -69,6 +62,22 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
                 # Sets scope variable
                 $scope.path_groups = path_groups
                 $scope.children_group = children_group
+
+
+            getTags = () ->
+                copy_tags = $scope.tags.toJSON {do_not_encrypt: no}
+                initChosenFlagsToTags copy_tags
+
+                _.each $scope.chosen_tags, (chosen_tag, key) ->
+                    tag_model = $scope.tags.find_by_id(chosen_tag)
+                    json = _.extend(tag_model.toJSON({do_not_encrypt: no}), {is_chosen: yes}) if tag_model
+                    $scope.chosen_tags[key] = if json then json else null
+
+                _.each $scope.chosen_tags, (chosen_tag) ->
+                    copy_tag = _.findWhere copy_tags, {local_id: chosen_tag["#{constant.local_id}"]}
+                    copy_tag["is_chosen"] = yes
+
+                $scope.copy_tags = copy_tags
 
 
             filter_hosts_by_chosen_tags = (connections) ->
@@ -132,8 +141,8 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
                 $scope.connections = connections
 
 
-            initChosenFlagsToTags = () ->
-                _.each $scope.copy_tags, (val, key) ->
+            initChosenFlagsToTags = (copy_tags = $scope.copy_tags) ->
+                _.each copy_tags, (val, key) ->
                     val["is_chosen"] = no
 
 
@@ -249,29 +258,10 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
             ###
 
 
-            are_tags_updated = () ->
-                # Checks if tags have been reloaded
-                _.find $scope.copy_tags, (copy_tag) ->
-                    $scope.tags.find_by_id({local_id: copy_tag["#{constant.local_id}"]}) is undefined
-
-
             # Prepares entities for template
             @transformationData = () ->
-
-                do update_chosen_data
-
-                # Gets clone tags
-                # TODO:It is not work correctly when 'edit tag' will appear
-                if $scope.tags
-                    tags_are_updated = are_tags_updated()
-                    if not $scope.copy_tags or $scope.tags.length isnt $scope.copy_tags.length or tags_are_updated
-                        if tags_are_updated
-                            _.each $scope.copy_tags, (copy_tag) ->
-                                copy_tag = if $scope.tags.find_by_id(copy_tag) then $scope.tags.find_by_id(copy_tag).toJSON {do_not_encrypt: no} else null
-                        else
-                            $scope.copy_tags = $scope.tags.toJSON({do_not_encrypt: no})
-                else
-                    $scope.copy_tags = []
+                # Prepares copy_tags
+                do getTags if $scope.tags
 
                 # Prepares all groups
                 do getGroups if $scope.groups

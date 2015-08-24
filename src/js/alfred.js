@@ -117,7 +117,7 @@
         },
         controller: [
           "$scope", "$element", function($scope, $element) {
-            var are_tags_updated, filter_hosts_by_chosen_tags, getConnections, getGroups, initChosenFlagsToTags, parseConnect, update_chosen_data;
+            var filter_hosts_by_chosen_tags, getConnections, getGroups, getTags, initChosenFlagsToTags, parseConnect;
             $scope.query = null;
             $scope.chosen_tags = [];
             $scope.current_group = null;
@@ -130,23 +130,9 @@
                 }));
               };
             })(this));
-            update_chosen_data = function() {
-              $scope.current_group = $scope.current_group ? $scope.groups.find_by_id($scope.current_group) : null;
-              return _.each($scope.chosen_tags, function(chosen_tag, key) {
-                var json, tag_model;
-                tag_model = $scope.tags.find_by_id(chosen_tag);
-                if (tag_model) {
-                  json = _.extend(tag_model.toJSON({
-                    do_not_encrypt: false
-                  }), {
-                    is_chosen: true
-                  });
-                }
-                return $scope.chosen_tags[key] = json;
-              });
-            };
             getGroups = function() {
               var children_group, current_group_local_id, path_groups;
+              $scope.current_group = $scope.current_group ? $scope.groups.find_by_id($scope.current_group) : null;
               current_group_local_id = $scope.current_group ? $scope.current_group.get("" + constant.local_id) : null;
               path_groups = current_group_local_id ? $scope.groups.get_parent_groups(current_group_local_id) : [];
               path_groups.reverse();
@@ -163,6 +149,33 @@
               });
               $scope.path_groups = path_groups;
               return $scope.children_group = children_group;
+            };
+            getTags = function() {
+              var copy_tags;
+              copy_tags = $scope.tags.toJSON({
+                do_not_encrypt: false
+              });
+              initChosenFlagsToTags(copy_tags);
+              _.each($scope.chosen_tags, function(chosen_tag, key) {
+                var json, tag_model;
+                tag_model = $scope.tags.find_by_id(chosen_tag);
+                if (tag_model) {
+                  json = _.extend(tag_model.toJSON({
+                    do_not_encrypt: false
+                  }), {
+                    is_chosen: true
+                  });
+                }
+                return $scope.chosen_tags[key] = json ? json : null;
+              });
+              _.each($scope.chosen_tags, function(chosen_tag) {
+                var copy_tag;
+                copy_tag = _.findWhere(copy_tags, {
+                  local_id: chosen_tag["" + constant.local_id]
+                });
+                return copy_tag["is_chosen"] = true;
+              });
+              return $scope.copy_tags = copy_tags;
             };
             filter_hosts_by_chosen_tags = function(connections) {
               var array_id_of_hosts, array_of_local_id_of_tags, tag_hosts;
@@ -223,8 +236,11 @@
               });
               return $scope.connections = connections;
             };
-            initChosenFlagsToTags = function() {
-              return _.each($scope.copy_tags, function(val, key) {
+            initChosenFlagsToTags = function(copy_tags) {
+              if (copy_tags == null) {
+                copy_tags = $scope.copy_tags;
+              }
+              return _.each(copy_tags, function(val, key) {
                 return val["is_chosen"] = false;
               });
             };
@@ -368,33 +384,9 @@
             /*
                 Methods are api between alfred directive and child directives
              */
-            are_tags_updated = function() {
-              return _.find($scope.copy_tags, function(copy_tag) {
-                return $scope.tags.find_by_id({
-                  local_id: copy_tag["" + constant.local_id]
-                }) === void 0;
-              });
-            };
             this.transformationData = function() {
-              var tags_are_updated;
-              update_chosen_data();
               if ($scope.tags) {
-                tags_are_updated = are_tags_updated();
-                if (!$scope.copy_tags || $scope.tags.length !== $scope.copy_tags.length || tags_are_updated) {
-                  if (tags_are_updated) {
-                    _.each($scope.copy_tags, function(copy_tag) {
-                      return copy_tag = $scope.tags.find_by_id(copy_tag) ? $scope.tags.find_by_id(copy_tag).toJSON({
-                        do_not_encrypt: false
-                      }) : null;
-                    });
-                  } else {
-                    $scope.copy_tags = $scope.tags.toJSON({
-                      do_not_encrypt: false
-                    });
-                  }
-                }
-              } else {
-                $scope.copy_tags = [];
+                getTags();
               }
               if ($scope.groups) {
                 getGroups();
