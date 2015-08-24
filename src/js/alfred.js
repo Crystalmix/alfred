@@ -166,8 +166,13 @@
                     is_chosen: true
                   });
                 }
-                return $scope.chosen_tags[key] = json ? json : null;
+                if (!json) {
+                  return $scope.chosen_tags[key] = null;
+                } else {
+                  return $scope.chosen_tags[key] = json;
+                }
               });
+              $scope.chosen_tags = _.compact($scope.chosen_tags);
               _.each($scope.chosen_tags, function(chosen_tag) {
                 var copy_tag;
                 copy_tag = _.findWhere(copy_tags, {

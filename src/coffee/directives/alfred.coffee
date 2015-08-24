@@ -71,7 +71,12 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
                 _.each $scope.chosen_tags, (chosen_tag, key) ->
                     tag_model = $scope.tags.find_by_id(chosen_tag)
                     json = _.extend(tag_model.toJSON({do_not_encrypt: no}), {is_chosen: yes}) if tag_model
-                    $scope.chosen_tags[key] = if json then json else null
+                    unless json
+                        $scope.chosen_tags[key] = null
+                    else
+                        $scope.chosen_tags[key] = json
+
+                $scope.chosen_tags = _.compact $scope.chosen_tags
 
                 _.each $scope.chosen_tags, (chosen_tag) ->
                     copy_tag = _.findWhere copy_tags, {local_id: chosen_tag["#{constant.local_id}"]}
