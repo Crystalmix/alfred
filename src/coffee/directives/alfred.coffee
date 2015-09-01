@@ -322,10 +322,22 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
             $input = null
 
             $timeout (->
-                $input = element.find '#alfred-input'
+                unless $input
+                    do _find_alfred_input
             )
 
+
+            _find_alfred_input = () ->
+                $input = element.find '#alfred-input'
+
+
             _setFocusAtInput = () ->
+                unless $input
+                    $timeout (->
+                        do _find_alfred_input
+                        do $input.focus
+                    )
+                    return no
                 do $input.focus
                 return no
 

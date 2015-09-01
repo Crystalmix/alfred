@@ -442,12 +442,24 @@
           }
         ],
         link: function(scope, element, attrs, ctrl) {
-          var $input, changeConnectState, checkQuery, initializeParameters, _is_interrupt_arrow_commands, _setFocusAtInput;
+          var $input, changeConnectState, checkQuery, initializeParameters, _find_alfred_input, _is_interrupt_arrow_commands, _setFocusAtInput;
           $input = null;
           $timeout((function() {
-            return $input = element.find('#alfred-input');
+            if (!$input) {
+              return _find_alfred_input();
+            }
           }));
+          _find_alfred_input = function() {
+            return $input = element.find('#alfred-input');
+          };
           _setFocusAtInput = function() {
+            if (!$input) {
+              $timeout((function() {
+                _find_alfred_input();
+                return $input.focus();
+              }));
+              return false;
+            }
             $input.focus();
             return false;
           };
