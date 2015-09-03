@@ -453,9 +453,9 @@
                 _find_alfred_input();
                 return $input.focus();
               }));
-              return false;
+            } else {
+              $input.focus();
             }
-            $input.focus();
             return false;
           };
           _is_interrupt_arrow_commands = true;

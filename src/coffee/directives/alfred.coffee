@@ -331,8 +331,8 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
                         do _find_alfred_input
                         do $input.focus
                     )
-                    return no
-                do $input.focus
+                else
+                    do $input.focus
                 return no
 
             # When user doesn't search any information, we should interrupt arrow hotkeys,
