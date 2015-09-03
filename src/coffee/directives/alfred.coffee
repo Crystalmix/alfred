@@ -321,12 +321,6 @@ alfredDirective.directive "alfred", ["quickConnectParse", "$timeout", "constant"
         link: (scope, element, attrs, ctrl) ->
             $input = null
 
-            $timeout (->
-                unless $input
-                    do _find_alfred_input
-            )
-
-
             _find_alfred_input = () ->
                 $input = element.find '#alfred-input'
 

@@ -444,11 +444,6 @@
         link: function(scope, element, attrs, ctrl) {
           var $input, changeConnectState, checkQuery, initializeParameters, _find_alfred_input, _is_interrupt_arrow_commands, _setFocusAtInput;
           $input = null;
-          $timeout((function() {
-            if (!$input) {
-              return _find_alfred_input();
-            }
-          }));
           _find_alfred_input = function() {
             return $input = element.find('#alfred-input');
           };
